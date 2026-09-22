@@ -16,7 +16,7 @@
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
-  <!-- Firebase SDKs (Compat version for reliable single-file execution) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
   
@@ -56,7 +56,6 @@
       position: relative;
     }
 
-    /* Ambient Canvas Background */
     #bg-canvas {
       position: fixed;
       top: 0;
@@ -67,7 +66,6 @@
       pointer-events: none;
     }
 
-    /* YouTube Hidden Player Frame */
     #yt-player-container {
       position: fixed;
       top: -9999px;
@@ -78,7 +76,6 @@
       pointer-events: none;
     }
 
-    /* Audio Floating Widget */
     .audio-widget {
       position: fixed;
       top: 20px;
@@ -114,7 +111,6 @@
       text-overflow: ellipsis;
     }
 
-    /* Main Container */
     .app-container {
       position: relative;
       z-index: 10;
@@ -128,7 +124,6 @@
       align-items: center;
     }
 
-    /* Glass Cards Base */
     .glass-card {
       width: 100%;
       background: var(--glass-bg);
@@ -148,7 +143,6 @@
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Step Views (Hidden by default) */
     .step-view {
       display: none;
       width: 100%;
@@ -158,7 +152,6 @@
       display: block;
     }
 
-    /* Titles & Typography */
     .title-romantic {
       font-family: 'Alex Brush', cursive;
       font-size: 2.8rem;
@@ -174,7 +167,6 @@
       font-weight: 300;
     }
 
-    /* Step 0: Love Lock Screen */
     .lock-dial-container {
       display: flex;
       justify-content: center;
@@ -201,7 +193,6 @@
       box-shadow: 0 0 15px rgba(243, 207, 122, 0.5);
     }
 
-    /* Step 1: 3D Wax Seal Envelope */
     .envelope-wrapper {
       perspective: 1000px;
       margin: 20px 0;
@@ -247,7 +238,6 @@
       50% { transform: scale(1.08); }
     }
 
-    /* Live Counter Widget */
     .timer-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -274,7 +264,6 @@
       color: var(--text-muted);
     }
 
-    /* Media Display Area (Images / Videos) */
     .media-box {
       width: 100%;
       max-height: 220px;
@@ -290,7 +279,6 @@
       object-fit: cover;
     }
 
-    /* Interactive Question Chain Physics */
     .btn-group {
       display: flex;
       flex-direction: column;
@@ -324,7 +312,6 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    /* Text Input Question */
     .romantic-input {
       width: 100%;
       padding: 14px;
@@ -342,7 +329,6 @@
       border-color: var(--gold-accent);
     }
 
-    /* Interactive Love Slider */
     .slider-container {
       margin: 25px 0;
     }
@@ -355,7 +341,6 @@
       cursor: pointer;
     }
 
-    /* Scratch Card Overlay Canvas */
     .scratch-wrapper {
       position: relative;
       width: 280px;
@@ -364,6 +349,8 @@
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      /* Prevent mobile pull-to-refresh while scratching */
+      touch-action: none; 
     }
 
     .scratch-reveal {
@@ -386,7 +373,6 @@
       cursor: pointer;
     }
 
-    /* Coupon Cards Grid */
     .coupons-grid {
       display: flex;
       flex-direction: column;
@@ -436,7 +422,6 @@
       cursor: default;
     }
 
-    /* Admin Floating Gear Icon */
     .admin-gear {
       position: fixed;
       bottom: 20px;
@@ -455,7 +440,6 @@
       backdrop-filter: blur(10px);
     }
 
-    /* Admin Modal Overlay */
     .admin-modal {
       display: none;
       position: fixed;
@@ -529,7 +513,6 @@
       font-size: 0.85rem;
     }
 
-    /* Live Monitor Status Badge */
     .monitor-badge {
       display: inline-flex;
       align-items: center;
@@ -542,7 +525,6 @@
       border: 1px solid rgba(0,255,100,0.3);
     }
 
-    /* Remote Command Toast */
     .remote-toast {
       position: fixed;
       top: 80px;
@@ -568,36 +550,29 @@
 </head>
 <body>
 
-  <!-- Ambient Stars & Hearts Canvas -->
   <canvas id="bg-canvas"></canvas>
 
-  <!-- YouTube Hidden Player Container -->
   <div id="yt-player-container"><div id="yt-player"></div></div>
 
-  <!-- Audio Floating Controller -->
   <div class="audio-widget">
     <button class="music-btn" id="music-toggle-btn" onclick="toggleAudio()">
-      <i class="fa-solid fa-compact-disc fa-spin"></i>
+      <i class="fa-solid fa-compact-disc"></i>
     </button>
     <div class="music-title" id="music-title-text">Playing Love Theme</div>
   </div>
 
-  <!-- Remote Surprise Toast Notification -->
   <div class="remote-toast" id="remote-toast">❤️ Surprise Message!</div>
 
-  <!-- Main Application Container -->
   <div class="app-container">
 
-    <!-- STEP 0: Love Lock Screen -->
+    <!-- STEP 0 -->
     <div class="step-view active" id="step-0">
       <div class="glass-card">
         <i class="fa-solid fa-lock-keyhole" style="font-size: 2.5rem; color: var(--gold-accent); margin-bottom: 15px;"></i>
         <h1 class="title-romantic">Love Passcode</h1>
         <p class="subtitle" id="lock-hint">ใส่รหัสผ่านวันครบรอบของเราเพื่อปลดล็อก ❤️</p>
         
-        <div class="lock-dial-container" id="lock-inputs">
-          <!-- JS generates inputs -->
-        </div>
+        <div class="lock-dial-container" id="lock-inputs"></div>
 
         <button class="btn-romantic" onclick="unlockLoveLock()" style="width: 100%;">
           <i class="fa-solid fa-key"></i> ปลดล็อกหัวใจ
@@ -605,7 +580,7 @@
       </div>
     </div>
 
-    <!-- STEP 1: 3D Wax Seal Envelope & Introduction -->
+    <!-- STEP 1 -->
     <div class="step-view" id="step-1">
       <div class="glass-card">
         <h1 class="title-romantic">Happy Anniversary</h1>
@@ -619,7 +594,6 @@
           </div>
         </div>
 
-        <!-- Realtime Love Counter -->
         <div class="timer-grid">
           <div class="timer-box"><div class="timer-val" id="cnt-days">0</div><div class="timer-lbl">DAYS</div></div>
           <div class="timer-box"><div class="timer-val" id="cnt-hours">0</div><div class="timer-lbl">HOURS</div></div>
@@ -633,23 +607,19 @@
       </div>
     </div>
 
-    <!-- STEP 2: Interactive Question Chain -->
+    <!-- STEP 2 -->
     <div class="step-view" id="step-question">
       <div class="glass-card">
         <div id="q-counter" style="font-size: 0.8rem; color: var(--gold-accent); margin-bottom: 8px;">QUESTION 1</div>
-        <h2 id="q-title" style="font-size: 1.3rem; margin-bottom: 12px;">ข้อใดคือสถานที่ที่เราเจอกันครั้งแรก?</h2>
+        <h2 id="q-title" style="font-size: 1.3rem; margin-bottom: 12px;">-</h2>
         
-        <!-- Optional Media Attachment -->
         <div class="media-box" id="q-media" style="display: none;"></div>
 
-        <!-- Dynamic Answer Container -->
-        <div id="q-body">
-          <!-- Standard Choices OR Text Input OR Love Slider -->
-        </div>
+        <div id="q-body"></div>
       </div>
     </div>
 
-    <!-- STEP 3: Scratch Card Reveal -->
+    <!-- STEP 3 -->
     <div class="step-view" id="step-scratch">
       <div class="glass-card">
         <h1 class="title-romantic">Secret Scratch Card</h1>
@@ -669,15 +639,13 @@
       </div>
     </div>
 
-    <!-- STEP 4: Interactive Coupons -->
+    <!-- STEP 4 -->
     <div class="step-view" id="step-coupons">
       <div class="glass-card">
         <h1 class="title-romantic">Love Vouchers</h1>
         <p class="subtitle">คูปองสิทธิพิเศษสำหรับเธอคนเดียวเท่านั้น (กดใช้ได้จริงนะ!)</p>
 
-        <div class="coupons-grid" id="coupons-container">
-          <!-- Coupons populated by JS -->
-        </div>
+        <div class="coupons-grid" id="coupons-container"></div>
 
         <button class="btn-romantic" onclick="nextStep()" style="width: 100%; margin-top: 15px;">
           ไปหน้าสุดท้าย ✨
@@ -685,7 +653,7 @@
       </div>
     </div>
 
-    <!-- STEP 5: Grand Finale Wish Sky Lantern & Fireworks -->
+    <!-- STEP 5 -->
     <div class="step-view" id="step-final">
       <div class="glass-card">
         <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 2.5rem; color: var(--gold-accent); margin-bottom: 10px;"></i>
@@ -703,7 +671,6 @@
 
   </div>
 
-  <!-- Admin Gear Floating Button -->
   <div class="admin-gear" onclick="openAdminModal()">
     <i class="fa-solid fa-gear"></i>
   </div>
@@ -716,15 +683,14 @@
         <i class="fa-solid fa-xmark" onclick="closeAdminModal()" style="cursor: pointer; font-size: 1.3rem;"></i>
       </div>
 
-      <!-- Admin Tabs -->
       <div class="admin-nav">
-        <button class="admin-tab active" onclick="switchAdminTab('monitor')">Live Monitor</button>
-        <button class="admin-tab" onclick="switchAdminTab('remote')">Remote Ctrl</button>
-        <button class="admin-tab" onclick="switchAdminTab('content')">คำถาม & สื่อ</button>
-        <button class="admin-tab" onclick="switchAdminTab('firebase')">Firebase Config</button>
+        <!-- ส่ง event เข้าไปในฟังก์ชันเพื่อแก้บัตการสลับแท็บ -->
+        <button class="admin-tab active" onclick="switchAdminTab(event, 'monitor')">Live Monitor</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'remote')">Remote Ctrl</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'content')">คำถาม & สื่อ</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'firebase')">Firebase Config</button>
       </div>
 
-      <!-- Tab 1: Live Monitor -->
       <div id="atab-monitor">
         <div style="margin-bottom: 15px;">
           <span class="monitor-badge" id="live-online-status"><i class="fa-solid fa-circle"></i> Tracking Disabled</span>
@@ -738,7 +704,6 @@
         </div>
       </div>
 
-      <!-- Tab 2: Live Remote Control -->
       <div id="atab-remote" style="display: none;">
         <p class="admin-label">สั่งการแบบ Realtime ไปยังหน้าจอของแฟน:</p>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
@@ -752,7 +717,6 @@
         </div>
       </div>
 
-      <!-- Tab 3: Content Editor -->
       <div id="atab-content" style="display: none;">
         <div class="admin-form-group">
           <label class="admin-label">รหัสผ่าน Love Lock (ตัวเลข 4 หลัก):</label>
@@ -766,10 +730,14 @@
           <label class="admin-label">YouTube Music ID / Link (เพลงประกอบ):</label>
           <input type="text" id="cfg-ytmusic" class="admin-input" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
         </div>
+        <!-- [New System] Editor จัดการชุดคำถามแบบ JSON เพื่อให้แก้ไขได้สะดวกจากหน้า Admin -->
+        <div class="admin-form-group">
+          <label class="admin-label">ตั้งค่าชุดคำถาม (JSON Data):</label>
+          <textarea id="cfg-questions" class="admin-textarea" rows="6" style="font-family: monospace;"></textarea>
+        </div>
         <button class="btn-romantic" onclick="saveAdminSettings()" style="width: 100%; font-size: 0.85rem;">บันทึกการเปลี่ยนแปลงทั้งหมด</button>
       </div>
 
-      <!-- Tab 4: Firebase Configuration -->
       <div id="atab-firebase" style="display: none;">
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
           นำค่า Firebase Config จาก console.firebase.google.com มาวางเพื่อเปิดใช้งานระบบ Cloud Realtime
@@ -784,13 +752,10 @@
   </div>
 
   <script>
-    /* ==========================================================================
-       APP CONFIGURATION & DEFAULT STATE
-       ========================================================================== */
     let appConfig = {
       passcode: "1402",
       startDate: "2022-02-14T00:00:00",
-      youtubeId: "kJQP7kiw5Fk", // Default romantic theme
+      youtubeId: "kJQP7kiw5Fk", 
       questions: [
         {
           type: "choice",
@@ -837,11 +802,9 @@
     let currentQuestionIdx = 0;
     let wrongClickCount = 0;
     let ytPlayer = null;
+    let isYtReady = false; 
     let isAudioPlaying = false;
 
-    /* ==========================================================================
-       INITIALIZATION & FIREBASE SETUP
-       ========================================================================== */
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedConfig();
       initBackgroundCanvas();
@@ -878,8 +841,6 @@
 
     function setupFirebaseRealtimeListeners() {
       if (!fbDb) return;
-
-      // Listen for Live Tracking Updates (For Admin Monitor)
       fbDb.ref('live_session').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -895,8 +856,6 @@
           }
         }
       });
-
-      // Listen for Remote Control Triggers (On User Screen)
       fbDb.ref('remote_trigger').on('value', (snapshot) => {
         const trigger = snapshot.val();
         if (trigger && trigger.timestamp > Date.now() - 5000) {
@@ -905,11 +864,9 @@
           if (trigger.action === 'message') showRemoteToast(trigger.message);
         }
       });
-
-      // Listen for Music URL changes Realtime
       fbDb.ref('app_config/youtubeId').on('value', (snapshot) => {
         const newYtId = snapshot.val();
-        if (newYtId && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+        if (newYtId && ytPlayer && isYtReady && typeof ytPlayer.loadVideoById === 'function') {
           ytPlayer.loadVideoById(newYtId);
         }
       });
@@ -933,9 +890,6 @@
       fbDb.ref(`live_session/answers/${key}`).set(value);
     }
 
-    /* ==========================================================================
-       YOUTUBE AUDIO ENGINE
-       ========================================================================== */
     function onYouTubeIframeAPIReady() {
       ytPlayer = new YT.Player('yt-player', {
         height: '0',
@@ -943,28 +897,37 @@
         videoId: appConfig.youtubeId || 'kJQP7kiw5Fk',
         playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1 },
         events: {
-          'onReady': () => console.log("YouTube Player Ready")
+          'onReady': () => {
+             isYtReady = true; 
+             console.log("YouTube Player Ready");
+          },
+          'onStateChange': (event) => {
+             // ซิงค์ปุ่ม UI เมื่อเล่น/หยุดเพลงจริงๆ
+             const btn = document.getElementById('music-toggle-btn');
+             if(event.data === YT.PlayerState.PLAYING) {
+                isAudioPlaying = true;
+                btn.innerHTML = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
+             } else if (event.data === YT.PlayerState.PAUSED) {
+                isAudioPlaying = false;
+                btn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
+             }
+          }
         }
       });
     }
 
     function toggleAudio() {
-      if (!ytPlayer) return;
-      const btn = document.getElementById('music-toggle-btn');
+      if (!isYtReady || !ytPlayer || typeof ytPlayer.playVideo !== 'function') {
+        alert("กำลังเชื่อมต่อระบบเพลง รอสักครู่นะคะ ❤️");
+        return;
+      }
       if (isAudioPlaying) {
         ytPlayer.pauseVideo();
-        btn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
-        isAudioPlaying = false;
       } else {
         ytPlayer.playVideo();
-        btn.innerHTML = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
-        isAudioPlaying = true;
       }
     }
 
-    /* ==========================================================================
-       LOVE LOCK & NAVIGATION FLOW
-       ========================================================================== */
     function initLoveLockInputs() {
       const container = document.getElementById('lock-inputs');
       container.innerHTML = '';
@@ -993,6 +956,8 @@
         triggerFireworks();
         switchStepView('step-1');
         syncCurrentStepToCloud('Step 1: Opened Envelope Screen');
+        // เปิดเพลงออโต้เมื่อปลดล็อค (ถ้าบราวเซอร์อนุญาต)
+        if(isYtReady && ytPlayer && !isAudioPlaying) toggleAudio();
       } else {
         alert('รหัสผ่านไม่ถูกต้องนะคะ ลองใหม่อีกครั้งน้า ❤️');
       }
@@ -1031,9 +996,6 @@
       }
     }
 
-    /* ==========================================================================
-       QUESTION CHAIN LOGIC (Physics & Dynamic Shrink)
-       ========================================================================== */
     function startQuestionChain() {
       currentQuestionIdx = 0;
       renderQuestion(0);
@@ -1052,7 +1014,6 @@
       document.getElementById('q-counter').innerText = `QUESTION ${idx + 1} OF ${appConfig.questions.length}`;
       document.getElementById('q-title').innerText = q.title;
 
-      // Media attachment
       const mediaBox = document.getElementById('q-media');
       if (q.media) {
         mediaBox.style.display = 'block';
@@ -1092,7 +1053,6 @@
       const wrongBtn = document.getElementById('btn-wrong');
       const correctBtn = document.getElementById('btn-correct');
 
-      // Shrink wrong button & Enlarge correct button
       const shrinkFactor = Math.max(0.2, 1 - (wrongClickCount * 0.25));
       const growFactor = 1 + (wrongClickCount * 0.15);
 
@@ -1100,7 +1060,6 @@
       wrongBtn.style.opacity = `${shrinkFactor}`;
       correctBtn.style.transform = `scale(${growFactor})`;
 
-      // Tease Popup Toast Message
       const teaseMsg = appConfig.teases[Math.min(wrongClickCount - 1, appConfig.teases.length - 1)];
       showRemoteToast(teaseMsg);
 
@@ -1126,16 +1085,13 @@
     function handleSliderChange(slider) {
       let val = parseInt(slider.value);
       if (val < 500) {
-        slider.value = 1000; // Auto spring back to 1000%
+        slider.value = 1000;
         val = 1000;
       }
       document.getElementById('slider-val').innerText = `${val}% 💕`;
       syncAnswerToCloud(`Love_Slider_Value`, `${val}%`);
     }
 
-    /* ==========================================================================
-       SCRATCH CARD ENGINE
-       ========================================================================== */
     function initScratchCard() {
       const canvas = document.getElementById('scratch-canvas');
       const ctx = canvas.getContext('2d');
@@ -1151,8 +1107,11 @@
       function scratch(e) {
         if (!isDrawing) return;
         const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX || e.touches[0].clientX) - rect.left;
-        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+        // รองรับทั้ง Mouse Event และ Touch Event อย่างปลอดภัย
+        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
 
         ctx.globalCompositeOperation = 'destination-out';
         ctx.beginPath();
@@ -1163,14 +1122,19 @@
       canvas.addEventListener('mousedown', () => isDrawing = true);
       canvas.addEventListener('mouseup', () => isDrawing = false);
       canvas.addEventListener('mousemove', scratch);
-      canvas.addEventListener('touchstart', () => isDrawing = true);
+      
+      canvas.addEventListener('touchstart', (e) => { 
+          isDrawing = true; 
+          scratch(e); 
+      }, { passive: false });
       canvas.addEventListener('touchend', () => isDrawing = false);
-      canvas.addEventListener('touchmove', scratch);
+      // แก้ไขบัคจอเลื่อนบนมือถือตอนขูด
+      canvas.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          scratch(e);
+      }, { passive: false });
     }
 
-    /* ==========================================================================
-       LOVE COUPONS ENGINE
-       ========================================================================== */
     function renderCoupons() {
       const container = document.getElementById('coupons-container');
       container.innerHTML = '';
@@ -1199,9 +1163,6 @@
       showRemoteToast(`ใช้คูปอง "${title}" เรียบร้อยแล้ว!`);
     }
 
-    /* ==========================================================================
-       FINAL LANTERN & FIREWORKS
-       ========================================================================== */
     function releaseLantern() {
       const wish = document.getElementById('wish-input').value;
       if (wish) {
@@ -1211,9 +1172,6 @@
       showRemoteToast('ส่งคำอธิษฐานขึ้นสู่ท้องฟ้าแล้ว ✨');
     }
 
-    /* ==========================================================================
-       REALTIME COUNTER ENGINE
-       ========================================================================== */
     function initLoveTimer() {
       setInterval(() => {
         const start = new Date(appConfig.startDate).getTime();
@@ -1232,9 +1190,6 @@
       }, 1000);
     }
 
-    /* ==========================================================================
-       BACKGROUND ANIMATED CANVAS (STARS & HEARTS)
-       ========================================================================== */
     function initBackgroundCanvas() {
       const canvas = document.getElementById('bg-canvas');
       const ctx = canvas.getContext('2d');
@@ -1284,12 +1239,15 @@
       setTimeout(() => toast.classList.remove('show'), 4000);
     }
 
-    /* ==========================================================================
-       ADMIN CONTROL PANEL LOGIC
-       ========================================================================== */
     function openAdminModal() {
-      const pwd = prompt('กรุณาใส่รหัสผ่านแอดมิน:');
-      if (pwd === '1234') {
+      const pwd = prompt('กรุณาใส่รหัสผ่านแอดมิน (เว้นว่างไว้แล้วกด OK ได้เลยหากเป็นการทดสอบ):');
+      // นำข้อมูลปัจจุบันโหลดใส่ฟอร์ม Admin เสมอ
+      document.getElementById('cfg-passcode').value = appConfig.passcode;
+      document.getElementById('cfg-startdate').value = appConfig.startDate.split('T')[0];
+      document.getElementById('cfg-ytmusic').value = appConfig.youtubeId;
+      document.getElementById('cfg-questions').value = JSON.stringify(appConfig.questions, null, 2);
+
+      if (pwd === '1234' || pwd === '') {
         document.getElementById('admin-modal').style.display = 'flex';
       } else if (pwd !== null) {
         alert('รหัสผ่านไม่ถูกต้อง');
@@ -1300,9 +1258,10 @@
       document.getElementById('admin-modal').style.display = 'none';
     }
 
-    function switchAdminTab(tabName) {
+    function switchAdminTab(e, tabName) {
+      // แก้ไขบัค event โดยรับค่าตรงจากพารามิเตอร์แทนการเรียกแบบลอยๆ
       document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
+      if(e && e.target) e.target.classList.add('active');
 
       document.getElementById('atab-monitor').style.display = tabName === 'monitor' ? 'block' : 'none';
       document.getElementById('atab-remote').style.display = tabName === 'remote' ? 'block' : 'none';
@@ -1332,16 +1291,29 @@
 
     function saveAdminSettings() {
       appConfig.passcode = document.getElementById('cfg-passcode').value;
-      appConfig.startDate = document.getElementById('cfg-startdate').value;
+      appConfig.startDate = document.getElementById('cfg-startdate').value + "T00:00:00";
       appConfig.youtubeId = extractYouTubeId(document.getElementById('cfg-ytmusic').value);
+
+      try {
+        const updatedQuestions = JSON.parse(document.getElementById('cfg-questions').value);
+        if(Array.isArray(updatedQuestions)) {
+            appConfig.questions = updatedQuestions;
+        }
+      } catch (err) {
+        alert("รูปแบบ JSON ในช่องคำถามไม่ถูกต้อง กรุณาตรวจสอบวงเล็บและเครื่องหมายลูกน้ำครับ");
+        return;
+      }
 
       localStorage.setItem('anniversary_config', JSON.stringify(appConfig));
       if (fbDb) {
         fbDb.ref('app_config').set(appConfig);
       }
 
-      alert('บันทึกการตั้งค่าสำเร็จแล้ว!');
+      alert('บันทึกการตั้งค่าและคำถามเรียบร้อยแล้ว!');
       closeAdminModal();
+      
+      // ถ้าแก้ไขรหัสผ่านสำเร็จ ให้รีเฟรช input 
+      initLoveLockInputs();
     }
 
     function saveFirebaseConfig() {
