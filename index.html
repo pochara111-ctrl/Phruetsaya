@@ -75,7 +75,7 @@
     }
 
     .glass-modal {
-      background: rgba(21, 2, 8, 0.92);
+      background: rgba(21, 2, 8, 0.88);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(212, 175, 55, 0.4);
@@ -281,10 +281,12 @@
         <!-- Interactive 3D Envelope Graphic -->
         <div onclick="openWaxEnvelope()" class="relative w-full h-56 sm:h-64 bg-burgundy-900 border-2 border-rosegold-400/40 rounded-2xl cursor-pointer shadow-2xl flex items-center justify-center my-6 group overflow-hidden hover:border-champagne-400 transition-all">
           <div class="absolute inset-0 bg-gradient-to-br from-rosegold-500/10 to-transparent"></div>
+          
+          <!-- Flap lines -->
           <div class="absolute top-0 inset-x-0 h-1/2 border-b border-rosegold-400/20 bg-burgundy-800/80 rounded-t-xl envelope-flap"></div>
           
           <!-- Wax Seal Button Center -->
-          <div id="waxSealBtn" class="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-red-800 via-red-600 to-rosegold-500 border-4 border-champagne-400 shadow-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300">
+          <div id="waxSealBtn" class="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-red-800 via-red-600 to-rosegold-500 border-4 border-champagne-400 shadow-2xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
             <i class="fa-solid fa-stamp text-2xl sm:text-3xl text-champagne-300"></i>
           </div>
           <span class="absolute bottom-4 text-xs text-champagne-300/80 tracking-widest font-cinzel uppercase">Click to Unseal</span>
@@ -335,7 +337,7 @@
 
       <!-- Scratch Card Canvas Container -->
       <div class="relative w-full aspect-square sm:w-80 sm:h-80 mx-auto rounded-2xl overflow-hidden border-2 border-champagne-500/40 shadow-2xl my-4">
-        <!-- Revealed Underlayer (Image/Text) -->
+        <!-- Revealed Underlayer (Image/Video/Text) -->
         <div id="scratchUnderlayer" class="absolute inset-0 bg-burgundy-900 flex flex-col items-center justify-center p-4 text-center">
           <img id="scratchImage" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover rounded-xl" alt="Secret Photo" onerror="this.src='https://placehold.co/400x400/2A0812/F7C5CC?text=Our+Love+Story';">
           <div id="scratchSecretText" class="absolute bottom-2 left-2 right-2 p-2 bg-burgundy-950/80 backdrop-blur rounded-lg text-xs text-champagne-300 font-medium">
@@ -479,8 +481,8 @@
             <h4 class="text-xs font-bold text-champagne-300 uppercase">รายการคำถามทั้งหมด</h4>
             <button onclick="addNewQuestionPrompt()" class="px-3 py-1.5 rounded-lg btn-gold text-xs"><i class="fa-solid fa-plus mr-1"></i> เพิ่มคำถาม</button>
           </div>
-          <div id="adminQuestionsList" class="space-y-4">
-            <!-- Rendered dynamically by JS -->
+          <div id="adminQuestionsList" class="space-y-3">
+            <!-- Rendered by JS -->
           </div>
         </div>
 
@@ -500,7 +502,7 @@
               <button onclick="addNewVoucherPrompt()" class="px-3 py-1.5 rounded-lg btn-gold text-xs"><i class="fa-solid fa-plus mr-1"></i> เพิ่มคูปอง</button>
             </div>
             <div id="adminVouchersList" class="space-y-2">
-              <!-- Rendered dynamically by JS -->
+              <!-- Rendered by JS -->
             </div>
           </div>
         </div>
@@ -553,25 +555,13 @@
   </div>
 
 
-  <!-- FIREBASE MODULAR ES SCRIPTS & REALTIME ENGINE -->
+  <!-- Firebase Modular ES Script Imports & Core Application Engine -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Firebase Credentials Integration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
-      authDomain: "my-anniversary-app.firebaseapp.com",
-      databaseURL: "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "my-anniversary-app",
-      storageBucket: "my-anniversary-app.firebasestorage.app",
-      messagingSenderId: "487064640701",
-      appId: "1:487064640701:web:0206b2da8138b7594f2bd4",
-      measurementId: "G-KVLWESYNZQ"
-    };
-
-    // Global App Configuration State
+    // Global App Configuration Data
     window.appData = {
       anniversaryDate: "2022-02-14T00:00",
       lockCode: "1402",
@@ -617,63 +607,60 @@
       ]
     };
 
+    // Firebase Persistent Remote Sync State
     let db = null;
     let auth = null;
     let sessionDocRef = null;
-    let lastProcessedTriggerTime = 0;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'anniversary-app';
 
+    // Initialize Firebase Engine Safely
     try {
-      const app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getFirestore(app);
+      if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
 
-      signInAnonymously(auth).then(() => {
-        sessionDocRef = doc(db, 'anniversary_app', 'live_session');
-        
-        // Listen for Realtime Sync & Remote Triggers
-        onSnapshot(sessionDocRef, (snap) => {
-          if (snap.exists()) {
-            const data = snap.data();
-            
-            // Execute Remote Actions with Timestamp Guard to avoid duplicates
-            if (data.triggerTime && data.triggerTime > lastProcessedTriggerTime) {
-              lastProcessedTriggerTime = data.triggerTime;
+        const initAuth = async () => {
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+        };
+
+        initAuth().then(() => {
+          sessionDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'love_session');
+          
+          // Listen for Live Remote Triggers from Admin
+          onSnapshot(sessionDocRef, (snap) => {
+            if (snap.exists()) {
+              const data = snap.data();
               if (data.remoteTrigger === 'fireworks') {
                 window.triggerFireworksEffect();
               } else if (data.remoteTrigger === 'music') {
                 window.toggleBgMusic();
-              } else if (data.remoteTrigger === 'popup' && data.remotePopupMsg) {
-                window.showCustomModal('เซอร์ไพรส์จากแอดมิน! ❤️', data.remotePopupMsg);
+              } else if (data.remotePopupMsg) {
+                window.showCustomModal('เซอร์ไพรส์จากแอดมิน!', data.remotePopupMsg);
               }
+              document.getElementById('remoteStatusBox').innerText = `อัปเดตล่าสุด: ${new Date().toLocaleTimeString('th-TH')}\nสถานะ: เชื่อมต่อสำเร็จ`;
             }
-
-            // Update Admin Status Monitor View
-            const statusBox = document.getElementById('remoteStatusBox');
-            if (statusBox) {
-              statusBox.innerHTML = `
-                <div class="text-green-400">● เชื่อมต่อระบบ Firebase Realtime สำเร็จ</div>
-                <div><span class="text-champagne-300">อัปเดตล่าสุด:</span> ${new Date().toLocaleTimeString('th-TH')}</div>
-                ${data.textAnswer ? `<div class="mt-2 p-2 bg-burgundy-900/80 rounded border border-rosegold-300/20 text-champagne-300">💬 ข้อความจากแฟน: "${data.textAnswer}"</div>` : ''}
-                ${data.usedVoucher ? `<div class="mt-1 p-2 bg-burgundy-900/80 rounded border border-rosegold-300/20 text-champagne-300">🎁 คูปองที่ถูกใช้: "${data.usedVoucher}"</div>` : ''}
-              `;
-            }
-          }
-        }, (err) => {
-          console.error("Firestore listener error:", err);
+          }, (err) => {
+            console.debug("Firestore listener error:", err);
+          });
         });
-      }).catch(err => console.error("Auth error:", err));
+      }
     } catch(e) {
-      console.error("Firebase init error:", e);
+      console.debug("Firebase setup skipped or running offline:", e);
     }
 
-    // Expose Sync Function
+    // Expose Sync Function to Window Scope
     window.syncToRemote = function(payload) {
       if (!db || !sessionDocRef) return;
-      setDoc(sessionDocRef, { ...payload, updatedAt: new Date().toISOString() }, { merge: true }).catch(err => console.error(err));
+      setDoc(sessionDocRef, { ...payload, updatedAt: new Date().toISOString() }, { merge: true }).catch(()=>{});
     };
   </script>
 
-  <!-- APPLICATION LOGIC & SOUND ENGINE -->
   <script>
     /* ============================================================
        WEB AUDIO SYNTHESIZER SOUND ENGINE (NO EXTERNAL MP3 NEEDED)
@@ -710,14 +697,15 @@
         osc.stop(now + 0.05);
       } else if (type === 'unlock') {
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.1);
-        osc.frequency.setValueAtTime(783.99, now + 0.2);
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+        osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
         gain.gain.setValueAtTime(0.2, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
         osc.start(now);
         osc.stop(now + 0.4);
       } else if (type === 'wax_break') {
+        // Noise synthesis for wax seal crunch
         const bufferSize = audioCtx.sampleRate * 0.1;
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -759,7 +747,7 @@
     let currentQIndex = 0;
     let isMusicPlaying = false;
 
-    // Load LocalStorage Saved Config
+    // Load LocalStorage Config if existing
     function loadSavedConfig() {
       const saved = localStorage.getItem('anniversary_cfg');
       if (saved) {
@@ -773,6 +761,7 @@
 
     window.onload = function() {
       initCanvasFX();
+      initScratchCardCanvas();
       startLoveTimer();
       renderCurrentQuestion();
       renderVouchersGrid();
@@ -861,6 +850,7 @@
       playSynthSound('pop');
       currentStep = stepNum;
 
+      // Hide all step sections
       for (let i = 1; i <= 6; i++) {
         const sec = document.getElementById(`step${i}`);
         if (sec) sec.classList.add('hidden');
@@ -869,11 +859,6 @@
       const activeSec = document.getElementById(`step${stepNum}`);
       if (activeSec) {
         activeSec.classList.remove('hidden');
-      }
-
-      // Initialize Scratch Card Canvas after making step 4 visible
-      if (stepNum === 4) {
-        setTimeout(initScratchCardCanvas, 100);
       }
 
       if (window.syncToRemote) {
@@ -894,7 +879,7 @@
         container.innerHTML = `
           <h3 class="text-lg sm:text-xl font-bold text-gradient-gold mb-6 text-center">${q.title}</h3>
           <div class="space-y-3 relative min-h-[180px]" id="choiceBtnArea">
-            ${(q.options || []).map((opt, i) => `
+            ${q.options.map((opt, i) => `
               <button onclick="handleChoiceClick(${i}, ${q.correctIndex})" id="optBtn_${i}" class="w-full py-3.5 px-4 rounded-xl glass-card border border-rosegold-300/30 text-sm font-medium hover:border-champagne-400 transition-all">
                 ${opt}
               </button>
@@ -935,6 +920,7 @@
           nextQuestion();
         }, 1200);
       } else {
+        // Runaway or Shrink effect on wrong button
         const btn = document.getElementById(`optBtn_${chosenIdx}`);
         if (btn) {
           btn.style.transform = `scale(0.7) translate(${Math.random()*60 - 30}px, ${Math.random()*40 - 20}px)`;
@@ -952,6 +938,7 @@
       let val = parseInt(slider.value);
 
       if (val < 50) {
+        // Automatically Snap back to 1000%
         slider.value = 100;
         valText.innerText = "1000% ❤️";
         triggerFireworksEffect();
@@ -977,7 +964,6 @@
       }
     }
 
-    /* Scratch Card Canvas Management */
     let scratchCanvas, scratchCtx, isScratching = false;
 
     function initScratchCardCanvas() {
@@ -985,19 +971,12 @@
       if (!scratchCanvas) return;
       scratchCtx = scratchCanvas.getContext('2d');
 
-      // Update Secret Scratch Media
-      const scratchImgEl = document.getElementById('scratchImage');
-      const scratchTextEl = document.getElementById('scratchSecretText');
-      if (scratchImgEl) scratchImgEl.src = window.appData.scratchImg;
-      if (scratchTextEl) scratchTextEl.innerText = window.appData.scratchText;
-
-      const parent = scratchCanvas.parentElement;
-      const width = parent.clientWidth || 320;
-      const height = parent.clientHeight || 320;
+      const width = scratchCanvas.offsetWidth || 320;
+      const height = scratchCanvas.offsetHeight || 320;
       scratchCanvas.width = width;
       scratchCanvas.height = height;
 
-      // Draw Gold Shiny Surface Coating
+      // Draw Gold Shiny Coating
       const grad = scratchCtx.createLinearGradient(0, 0, width, height);
       grad.addColorStop(0, '#D4AF37');
       grad.addColorStop(0.5, '#FFE5B4');
@@ -1005,18 +984,19 @@
       scratchCtx.fillStyle = grad;
       scratchCtx.fillRect(0, 0, width, height);
 
-      // Scratch Prompt Text
+      // Overlay text on scratch surface
       scratchCtx.fillStyle = '#2A0812';
       scratchCtx.font = 'bold 16px Noto Sans Thai';
       scratchCtx.textAlign = 'center';
       scratchCtx.fillText('ใช้เมาส์/นิ้ว ขูดตรงนี้ 🪙', width / 2, height / 2);
 
-      scratchCanvas.onmousedown = startScratch;
-      scratchCanvas.ontouchstart = startScratch;
-      window.onmouseup = stopScratch;
-      window.ontouchend = stopScratch;
-      scratchCanvas.onmousemove = doScratch;
-      scratchCanvas.ontouchmove = doScratch;
+      // Event Listeners for scratching
+      scratchCanvas.addEventListener('mousedown', startScratch);
+      scratchCanvas.addEventListener('touchstart', startScratch);
+      window.addEventListener('mouseup', stopScratch);
+      window.addEventListener('touchend', stopScratch);
+      scratchCanvas.addEventListener('mousemove', doScratch);
+      scratchCanvas.addEventListener('touchmove', doScratch);
     }
 
     function startScratch(e) {
@@ -1040,14 +1020,13 @@
 
       scratchCtx.globalCompositeOperation = 'destination-out';
       scratchCtx.beginPath();
-      scratchCtx.arc(x, y, 26, 0, Math.PI * 2);
+      scratchCtx.arc(x, y, 24, 0, Math.PI * 2);
       scratchCtx.fill();
 
       checkScratchPercentage();
     }
 
     function checkScratchPercentage() {
-      if (!scratchCanvas || !scratchCtx) return;
       const imgData = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
       let cleared = 0;
       for (let i = 3; i < imgData.data.length; i += 4) {
@@ -1056,7 +1035,7 @@
       const percent = Math.round((cleared / (imgData.data.length / 4)) * 100);
       document.getElementById('scratchPercentText').innerText = `ขูดแล้ว: ${percent}%`;
 
-      if (percent > 40) {
+      if (percent > 45) {
         document.getElementById('afterScratchBtn').classList.remove('hidden');
       }
     }
@@ -1099,6 +1078,7 @@
       playSynthSound('firework');
       document.getElementById('wishSentMessage').classList.remove('hidden');
 
+      // Create floating 3D lantern DOM nodes
       const container = document.getElementById('lanternsContainer');
       for (let i = 0; i < 5; i++) {
         setTimeout(() => {
@@ -1115,6 +1095,7 @@
         }, i * 600);
       }
 
+      // Continuous Fireworks Explosion
       let fireCount = 0;
       const interval = setInterval(() => {
         triggerFireworksEffect();
@@ -1190,7 +1171,7 @@
             alive = true;
             p.x += p.vx;
             p.y += p.vy;
-            p.vy += 0.08;
+            p.vy += 0.08; // gravity
             p.alpha -= 0.02;
             ctx.beginPath();
             ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
@@ -1205,12 +1186,13 @@
       render();
     }
 
+
     function toggleBgMusic() {
       initAudioContext();
       const audio = document.getElementById('bgAudio');
       const icon = document.getElementById('musicIcon');
 
-      if (!audio.src || audio.src !== window.appData.bgMusicUrl) {
+      if (!audio.src) {
         audio.src = window.appData.bgMusicUrl;
       }
 
@@ -1242,7 +1224,6 @@
     }
 
 
-    /* ADMIN PANEL FUNCTIONS */
     function openAdminModal() {
       initAudioContext();
       document.getElementById('adminModal').classList.remove('hidden');
@@ -1307,26 +1288,7 @@
             <span>#${i+1} [${q.type.toUpperCase()}]</span>
             <button onclick="removeQuestion(${i})" class="text-red-400 hover:text-white"><i class="fa-solid fa-trash"></i></button>
           </div>
-          <div>
-            <label class="block text-[10px] text-rosegold-300 mb-0.5">ประเภทคำถาม</label>
-            <select onchange="window.appData.questions[${i}].type=this.value; renderAdminQuestionsList();" class="w-full p-2 rounded bg-burgundy-950 text-xs">
-              <option value="choice" ${q.type === 'choice' ? 'selected' : ''}>ตัวเลือก (Multiple Choice)</option>
-              <option value="slider" ${q.type === 'slider' ? 'selected' : ''}>แถบเลื่อน (Slider)</option>
-              <option value="text" ${q.type === 'text' ? 'selected' : ''}>พิมพ์ตอบ (Text Input)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[10px] text-rosegold-300 mb-0.5">หัวข้อคำถาม</label>
-            <input type="text" value="${q.title || ''}" onchange="window.appData.questions[${i}].title=this.value" class="w-full p-2 rounded bg-burgundy-950 text-xs">
-          </div>
-          ${q.type === 'choice' ? `
-            <div class="pt-1">
-              <label class="block text-[10px] text-rosegold-300 mb-1">ตัวเลือกตอบ (คั่นด้วยเครื่องหมายจุลภาค , )</label>
-              <input type="text" value="${(q.options \vert{}\vert{} []).join(', ')}" onchange="window.appData.questions[${i}].options=this.value.split(',').map(s=>s.trim())" class="w-full p-2 rounded bg-burgundy-950 text-xs">
-              <label class="block text-[10px] text-rosegold-300 mt-1 mb-0.5">ดัชนีคำตอบที่ถูกต้อง (เริ่มต้น 0)</label>
-              <input type="number" value="${q.correctIndex \vert{}\vert{} 0}" onchange="window.appData.questions[${i}].correctIndex=parseInt(this.value)" class="w-full p-2 rounded bg-burgundy-950 text-xs">
-            </div>
-          ` : ''}
+          <input type="text" value="${q.title}" onchange="window.appData.questions[${i}].title=this.value" class="w-full p-2 rounded bg-burgundy-950 text-xs" placeholder="หัวข้อคำถาม">
         </div>
       `).join('');
     }
@@ -1335,7 +1297,7 @@
       window.appData.questions.push({
         id: Date.now(),
         type: "choice",
-        title: "คำถามใหม่เกี่ยวกับเรา",
+        title: "คำถามใหม่",
         options: ["คำตอบถูก", "คำตอบผิด 1", "คำตอบผิด 2"],
         correctIndex: 0
       });
@@ -1385,35 +1347,29 @@
       localStorage.setItem('anniversary_cfg', JSON.stringify(window.appData));
       applyBgMedia();
       renderVouchersGrid();
-      renderCurrentQuestion();
       
       closeAdminModal();
       showCustomModal("บันทึกสำเร็จ", "การตั้งค่าทั้งหมดถูกบันทึกลงระบบเรียบร้อยแล้วค่ะ!");
     }
 
+    /* Remote Commands Trigger Functions */
     function remoteTrigger(action) {
       if (window.syncToRemote) {
-        window.syncToRemote({ remoteTrigger: action, triggerTime: Date.now() });
+        window.syncToRemote({ remoteTrigger: action });
       }
     }
 
     function remoteTriggerPromptPopup() {
       const msg = prompt("พิมพ์ข้อความป๊อปอัปที่จะส่งไปยังหน้าจอผู้เล่น:");
       if (msg && window.syncToRemote) {
-        window.syncToRemote({ remoteTrigger: 'popup', remotePopupMsg: msg, triggerTime: Date.now() });
+        window.syncToRemote({ remotePopupMsg: msg });
       }
     }
 
     function copyJsonConfig() {
       const text = document.getElementById('jsonConfigTextarea').value;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          alert("คัดลอก JSON ไปยัง Clipboard เรียบร้อยแล้ว!");
-        });
-      } else {
-        document.execCommand('copy');
-        alert("คัดลอก JSON ไปยัง Clipboard เรียบร้อยแล้ว!");
-      }
+      document.execCommand('copy');
+      alert("คัดลอก JSON ไปยัง Clipboard เรียบร้อยแล้ว!");
     }
 
     function importJsonConfig() {
@@ -1432,9 +1388,9 @@
       const modal = document.createElement('div');
       modal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in";
       modal.innerHTML = `
-        <div class="glass-modal p-6 rounded-3xl max-w-sm w-full text-center border border-champagne-400 space-y-4 shadow-2xl">
+        <div class="glass-modal p-6 rounded-3xl max-w-sm w-full text-center border border-champagne-400 space-y-4">
           <h4 class="text-xl font-cinzel font-bold text-gradient-gold">${title}</h4>
-          <p class="text-sm text-rosegold-200 font-thai leading-relaxed">${msg}</p>
+          <p class="text-sm text-rosegold-200 font-thai">${msg}</p>
           <button onclick="this.closest('.fixed').remove()" class="w-full py-2.5 rounded-xl btn-gold text-xs font-bold">ตกลง</button>
         </div>
       `;
