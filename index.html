@@ -16,14 +16,16 @@
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (Compat version for existing code compatibility) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
   
   <!-- YouTube IFrame API -->
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <style>
+    /* สไตล์คงเดิมทั้งหมด */
     :root {
       --bg-deep: #1a0812;
       --primary-rose: #ea9ab2;
@@ -349,7 +351,6 @@
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-      /* Prevent mobile pull-to-refresh while scratching */
       touch-action: none; 
     }
 
@@ -684,11 +685,9 @@
       </div>
 
       <div class="admin-nav">
-        <!-- ส่ง event เข้าไปในฟังก์ชันเพื่อแก้บัตการสลับแท็บ -->
         <button class="admin-tab active" onclick="switchAdminTab(event, 'monitor')">Live Monitor</button>
         <button class="admin-tab" onclick="switchAdminTab(event, 'remote')">Remote Ctrl</button>
         <button class="admin-tab" onclick="switchAdminTab(event, 'content')">คำถาม & สื่อ</button>
-        <button class="admin-tab" onclick="switchAdminTab(event, 'firebase')">Firebase Config</button>
       </div>
 
       <div id="atab-monitor">
@@ -730,22 +729,11 @@
           <label class="admin-label">YouTube Music ID / Link (เพลงประกอบ):</label>
           <input type="text" id="cfg-ytmusic" class="admin-input" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
         </div>
-        <!-- [New System] Editor จัดการชุดคำถามแบบ JSON เพื่อให้แก้ไขได้สะดวกจากหน้า Admin -->
         <div class="admin-form-group">
           <label class="admin-label">ตั้งค่าชุดคำถาม (JSON Data):</label>
           <textarea id="cfg-questions" class="admin-textarea" rows="6" style="font-family: monospace;"></textarea>
         </div>
         <button class="btn-romantic" onclick="saveAdminSettings()" style="width: 100%; font-size: 0.85rem;">บันทึกการเปลี่ยนแปลงทั้งหมด</button>
-      </div>
-
-      <div id="atab-firebase" style="display: none;">
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          นำค่า Firebase Config จาก console.firebase.google.com มาวางเพื่อเปิดใช้งานระบบ Cloud Realtime
-        </p>
-        <div class="admin-form-group"><label class="admin-label">API Key:</label><input type="text" id="fb-apiKey" class="admin-input"></div>
-        <div class="admin-form-group"><label class="admin-label">Database URL:</label><input type="text" id="fb-databaseURL" class="admin-input"></div>
-        <div class="admin-form-group"><label class="admin-label">Project ID:</label><input type="text" id="fb-projectId" class="admin-input"></div>
-        <button class="btn-romantic" onclick="saveFirebaseConfig()" style="width: 100%; font-size: 0.85rem;">เชื่อมต่อ Firebase Cloud</button>
       </div>
 
     </div>
@@ -796,6 +784,18 @@
       ]
     };
 
+    // ฝัง Firebase Config ของคุณไว้ที่นี่
+    const myFirebaseConfig = {
+      apiKey: "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
+      authDomain: "my-anniversary-app.firebaseapp.com",
+      databaseURL: "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "my-anniversary-app",
+      storageBucket: "my-anniversary-app.firebasestorage.app",
+      messagingSenderId: "487064640701",
+      appId: "1:487064640701:web:0206b2da8138b7594f2bd4",
+      measurementId: "G-KVLWESYNZQ"
+    };
+
     let fbApp = null;
     let fbDb = null;
     let currentStepIndex = 0;
@@ -812,7 +812,7 @@
       initLoveTimer();
       initScratchCard();
       renderCoupons();
-      tryInitFirebase();
+      tryInitFirebase(); // เริ่มเชื่อมต่อ Firebase ทันทีที่โหลด
     });
 
     function loadSavedConfig() {
@@ -825,17 +825,29 @@
     }
 
     function tryInitFirebase() {
-      const fbCfgStr = localStorage.getItem('firebase_config');
-      if (fbCfgStr) {
-        try {
-          const fbConfig = JSON.parse(fbCfgStr);
-          if (fbConfig.apiKey && fbConfig.databaseURL) {
-            fbApp = firebase.initializeApp(fbConfig);
-            fbDb = firebase.database();
-            setupFirebaseRealtimeListeners();
-            updatePresence('online');
-          }
-        } catch(e) { console.error("Firebase init error", e); }
+      try {
+        // ทำการ Initialize Firebase ด้วย Config ของคุณ
+        if (!firebase.apps.length) {
+          fbApp = firebase.initializeApp(myFirebaseConfig);
+        } else {
+          fbApp = firebase.app();
+        }
+        
+        fbDb = firebase.database();
+        const analytics = firebase.analytics(); // เก็บข้อมูลสถิติ
+        
+        setupFirebaseRealtimeListeners();
+        updatePresence('online');
+        console.log("Firebase Connected Successfully!");
+        
+        // อัปเดตสถานะในหน้า Admin
+        const statusBadge = document.getElementById('live-online-status');
+        if(statusBadge) {
+          statusBadge.innerHTML = '<i class="fa-solid fa-circle"></i> Connected to Firebase';
+          statusBadge.style.color = '#00ff88';
+        }
+      } catch(e) { 
+        console.error("Firebase init error:", e); 
       }
     }
 
@@ -899,10 +911,8 @@
         events: {
           'onReady': () => {
              isYtReady = true; 
-             console.log("YouTube Player Ready");
           },
           'onStateChange': (event) => {
-             // ซิงค์ปุ่ม UI เมื่อเล่น/หยุดเพลงจริงๆ
              const btn = document.getElementById('music-toggle-btn');
              if(event.data === YT.PlayerState.PLAYING) {
                 isAudioPlaying = true;
@@ -956,7 +966,6 @@
         triggerFireworks();
         switchStepView('step-1');
         syncCurrentStepToCloud('Step 1: Opened Envelope Screen');
-        // เปิดเพลงออโต้เมื่อปลดล็อค (ถ้าบราวเซอร์อนุญาต)
         if(isYtReady && ytPlayer && !isAudioPlaying) toggleAudio();
       } else {
         alert('รหัสผ่านไม่ถูกต้องนะคะ ลองใหม่อีกครั้งน้า ❤️');
@@ -1107,7 +1116,6 @@
       function scratch(e) {
         if (!isDrawing) return;
         const rect = canvas.getBoundingClientRect();
-        // รองรับทั้ง Mouse Event และ Touch Event อย่างปลอดภัย
         const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
         const x = clientX - rect.left;
@@ -1128,7 +1136,6 @@
           scratch(e); 
       }, { passive: false });
       canvas.addEventListener('touchend', () => isDrawing = false);
-      // แก้ไขบัคจอเลื่อนบนมือถือตอนขูด
       canvas.addEventListener('touchmove', (e) => {
           e.preventDefault();
           scratch(e);
@@ -1241,7 +1248,6 @@
 
     function openAdminModal() {
       const pwd = prompt('กรุณาใส่รหัสผ่านแอดมิน (เว้นว่างไว้แล้วกด OK ได้เลยหากเป็นการทดสอบ):');
-      // นำข้อมูลปัจจุบันโหลดใส่ฟอร์ม Admin เสมอ
       document.getElementById('cfg-passcode').value = appConfig.passcode;
       document.getElementById('cfg-startdate').value = appConfig.startDate.split('T')[0];
       document.getElementById('cfg-ytmusic').value = appConfig.youtubeId;
@@ -1259,18 +1265,16 @@
     }
 
     function switchAdminTab(e, tabName) {
-      // แก้ไขบัค event โดยรับค่าตรงจากพารามิเตอร์แทนการเรียกแบบลอยๆ
       document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
       if(e && e.target) e.target.classList.add('active');
 
       document.getElementById('atab-monitor').style.display = tabName === 'monitor' ? 'block' : 'none';
       document.getElementById('atab-remote').style.display = tabName === 'remote' ? 'block' : 'none';
       document.getElementById('atab-content').style.display = tabName === 'content' ? 'block' : 'none';
-      document.getElementById('atab-firebase').style.display = tabName === 'firebase' ? 'block' : 'none';
     }
 
     function sendRemoteTrigger(action) {
-      if (!fbDb) return alert('กรุณาเชื่อมต่อ Firebase ในแท็บ Firebase Config ก่อนครับ');
+      if (!fbDb) return alert('Firebase ขัดข้อง ลองโหลดหน้าเว็บใหม่อีกครั้ง');
       fbDb.ref('remote_trigger').set({
         action: action,
         timestamp: Date.now()
@@ -1280,7 +1284,7 @@
     function sendRemoteMessage() {
       const msg = document.getElementById('remote-msg-input').value;
       if (!msg) return;
-      if (!fbDb) return alert('กรุณาเชื่อมต่อ Firebase ก่อนครับ');
+      if (!fbDb) return alert('Firebase ขัดข้อง ลองโหลดหน้าเว็บใหม่อีกครั้ง');
       fbDb.ref('remote_trigger').set({
         action: 'message',
         message: msg,
@@ -1311,21 +1315,7 @@
 
       alert('บันทึกการตั้งค่าและคำถามเรียบร้อยแล้ว!');
       closeAdminModal();
-      
-      // ถ้าแก้ไขรหัสผ่านสำเร็จ ให้รีเฟรช input 
       initLoveLockInputs();
-    }
-
-    function saveFirebaseConfig() {
-      const fbConfig = {
-        apiKey: document.getElementById('fb-apiKey').value.trim(),
-        databaseURL: document.getElementById('fb-databaseURL').value.trim(),
-        projectId: document.getElementById('fb-projectId').value.trim()
-      };
-
-      localStorage.setItem('firebase_config', JSON.stringify(fbConfig));
-      alert('บันทึก Firebase Config เรียบร้อย! ระบบจะทำการโหลดการเชื่อมต่อใหม่');
-      location.reload();
     }
 
     function extractYouTubeId(url) {
