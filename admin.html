@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Control Panel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{
+  rosegold:{100:'#FFF0F2',200:'#FBDDE1',300:'#F7C5CC',400:'#E8A2A8',500:'#B76E79',600:'#A15863'},
+  burgundy:{800:'#3D0C18',900:'#2A0812',950:'#150208'},
+  champagne:{300:'#FFE5B4',400:'#F3E0AA',500:'#D4AF37',600:'#AA771C'}},
+  fontFamily:{cinzel:['Cinzel','serif'],thai:['Noto Sans Thai','sans-serif']}}}}
+</script>
+<style>
+body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;min-height:100dvh}
+.glass{background:rgba(42,8,18,.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(247,197,204,.22);box-shadow:0 12px 40px rgba(0,0,0,.55)}
+.text-gradient-gold{background:linear-gradient(135deg,#FFE5B4,#D4AF37 60%,#AA771C);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.btn-gold{background:linear-gradient(135deg,#F3E0AA,#D4AF37 50%,#AA771C);color:#150208;font-weight:600;transition:.25s}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(212,175,55,.45)}
+.inp{width:100%;padding:.6rem .75rem;border-radius:.75rem;background:#150208;border:1px solid rgba(247,197,204,.22);font-size:12px;color:#FFF0F2;outline:none}
+.inp:focus{border-color:#D4AF37;box-shadow:0 0 0 3px rgba(212,175,55,.18)}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#150208}
+::-webkit-scrollbar-thumb{background:rgba(183,110,121,.5);border-radius:4px}
+.drop{border:2px dashed rgba(212,175,55,.5);border-radius:1rem;padding:1.5rem;text-align:center;cursor:pointer;transition:.2s;font-size:12px}
+.drop.over{background:rgba(212,175,55,.14);transform:scale(1.01)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fade{animation:fadeIn .35s ease both}
+</style>
+</head>
+<body class="p-3 sm:p-6">
+
+<!-- LOGIN -->
+<div id="loginView" class="min-h-[80dvh] flex items-center justify-center">
+  <div class="glass rounded-3xl p-8 w-full max-w-sm text-center space-y-4 fade">
+    <i class="fa-solid fa-shield-halved text-4xl text-champagne-400"></i>
+    <h1 class="text-xl font-cinzel font-bold text-gradient-gold">Admin Control Panel</h1>
+    <p id="loginStatus" class="text-xs text-rosegold-300">กำลังเชื่อมต่อ Firebase…</p>
+    <input type="password" id="passInput" class="inp text-center font-mono text-lg" placeholder="••••">
+    <button id="loginBtn" class="w-full py-3 rounded-xl btn-gold text-sm font-bold">เข้าสู่ระบบ</button>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div id="panel" class="hidden max-w-5xl mx-auto space-y-4 fade">
+  <div class="glass rounded-3xl p-4 flex flex-wrap items-center gap-3">
+    <i class="fa-solid fa-user-gear text-champagne-400 text-xl"></i>
+    <h1 class="text-lg font-cinzel font-bold text-gradient-gold flex-1">Admin Control Panel</h1>
+    <span id="fbBadge" class="text-[10px] px-2 py-1 rounded-full border border-rosegold-300/30">…</span>
+    <span id="onlineBadge" class="text-[10px] px-2 py-1 rounded-full border border-rosegold-300/30">👥 0 online</span>
+    <a id="openPlayer" href="index.html" target="_blank" class="text-[11px] px-3 py-1.5 rounded-lg bg-rosegold-500/30">เปิดหน้าแฟน ↗</a>
+    <button id="saveBtn" class="px-5 py-2 rounded-xl btn-gold text-xs font-bold">💾 บันทึกทั้งหมด</button>
+  </div>
+
+  <div class="glass rounded-3xl p-2 flex gap-2 overflow-x-auto text-xs">
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="general">⚙️ ทั่วไป</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="media">🖼️ รูป &amp; วิดีโอ</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="questions">❓ คำถาม</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="vouchers">🎁 คูปอง</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="live">📡 Live &amp; Remote</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="json">🧩 JSON</button>
+  </div>
+
+  <!-- GENERAL -->
+  <div id="tab-general" class="pane glass rounded-3xl p-5 space-y-4 hidden">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div><label class="block text-xs font-semibold text-champagne-300 mb-1">วันแรกที่คบกัน</label><input type="datetime-local" id="cfgDate" class="inp"></div>
+      <div><label class="block text-xs font-semibold text-champagne-300 mb-1">รหัสปลดล็อก (4 หลัก)</label><input id="cfgLock" maxlength="4" inputmode="numeric" class="inp font-mono"></div>
+      <div><label class="block text-xs font-semibold text-champagne-300 mb-1">คำใบ้รหัส</label><input id="cfgHint" class="inp"></div>
+      <div><label class="block text-xs font-semibold text-champagne-300 mb-1">รหัสผ่าน Admin</label><input id="cfgPass" class="inp font-mono"></div>
+    </div>
+    <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ลิงก์เพลงพื้นหลัง (.mp3) — หรืออัปโหลดในแท็บรูป &amp; วิดีโอ</label><input id="cfgMusic" class="inp"></div>
+    <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความในจดหมาย</label><textarea id="cfgLetter" rows="7" class="inp"></textarea></div>
+    <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความงอนเวลาตอบผิด (บรรทัดละ 1 ข้อความ เรียงจากเบา → งอนสุด)</label>
+      <textarea id="cfgTease" rows="5" class="inp"></textarea>
+      <p class="text-[11px] text-rosegold-400 mt-1">กดผิดครบจำนวนบรรทัดนี้ ปุ่มผิดจะปลิวหายเหลือแต่ข้อที่ถูก</p></div>
+    <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความลับใต้การ์ดขูด</label><input id="cfgScratchText" class="inp"></div>
+  </div>
+
+  <!-- MEDIA -->
+  <div id="tab-media" class="pane glass rounded-3xl p-5 space-y-6 hidden">
+    <div id="storageWarn" class="hidden text-[11px] p-3 rounded-xl bg-red-900/40 border border-red-400/40"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-champagne-300 uppercase">🌌 พื้นหลังเว็บ (รูป / วิดีโอ MP4)</h3>
+        <div class="drop" data-drop="bg">📥 ลากไฟล์มาวาง หรือคลิกเพื่อเลือก</div>
+        <div id="bgPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-32 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีพื้นหลัง</div>
+        <button data-clear="bgMediaUrl" class="text-[11px] px-3 py-1.5 rounded-lg bg-red-900/50 border border-red-400/30">ลบพื้นหลัง</button>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-champagne-300 uppercase">🎫 รูปใต้การ์ดขูด</h3>
+        <div class="drop" data-drop="scratch">📥 ลากรูปมาวาง หรือคลิก</div>
+        <div id="scratchPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-32 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีรูป</div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-champagne-300 uppercase">💌 รูปประกอบในจดหมาย</h3>
+        <div class="drop" data-drop="letter">📥 ลากรูปมาวาง หรือคลิก</div>
+        <div id="letterPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-32 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีรูป</div>
+        <button data-clear="letterImg" class="text-[11px] px-3 py-1.5 rounded-lg bg-red-900/50 border border-red-400/30">ลบรูปในจดหมาย</button>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-champagne-300 uppercase">🎵 ไฟล์เพลง MP3</h3>
+        <div class="drop" data-drop="music">📥 ลากไฟล์ MP3 มาวาง หรือคลิก</div>
+        <audio id="musicPrev" controls class="w-full hidden"></audio>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <h3 class="text-xs font-bold text-champagne-300 uppercase">📸 อัลบั้มรูปคู่ (โพลารอยด์ หน้าสุดท้าย) — เลือกได้หลายไฟล์</h3>
+      <div class="drop" data-drop="gallery">📥 ลากรูปหลายใบมาวางพร้อมกันได้เลย</div>
+      <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+    </div>
+
+    <div id="upBox" class="hidden space-y-1">
+      <div class="flex justify-between text-[11px]"><span id="upName">กำลังอัปโหลด…</span><span id="upPct">0%</span></div>
+      <div class="w-full h-2 bg-burgundy-900 rounded-full overflow-hidden">
+        <div id="upBar" class="h-full w-0 bg-gradient-to-r from-rosegold-400 to-champagne-500 transition-all"></div></div>
+    </div>
+    <p class="text-[11px] text-rosegold-400">รูปจะถูกย่อให้กว้างไม่เกิน 1600px และบีบเป็น JPEG อัตโนมัติก่อนอัปโหลด เพื่อให้โหลดเร็วบนมือถือ (GIF และวิดีโออัปตามต้นฉบับ)</p>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div id="tab-questions" class="pane glass rounded-3xl p-5 space-y-3 hidden">
+    <div class="flex justify-between items-center gap-2 flex-wrap">
+      <h3 class="text-xs font-bold text-champagne-300 uppercase">รายการคำถามทั้งหมด</h3>
+      <div class="flex gap-2">
+        <select id="newQType" class="inp w-auto">
+          <option value="choice">แบบช้อยส์ (เลือกตอบ)</option>
+          <option value="text">แบบถาม-ตอบ (พิมพ์เอง)</option>
+          <option value="slider">แบบสไลเดอร์ (เลื่อนแถบ)</option>
+        </select>
+        <button id="addQ" class="px-3 py-1.5 rounded-lg btn-gold text-xs whitespace-nowrap"><i class="fa-solid fa-plus mr-1"></i>เพิ่มคำถาม</button>
+      </div>
+    </div>
+    <div id="qList" class="space-y-3"></div>
+  </div>
+
+  <!-- VOUCHERS -->
+  <div id="tab-vouchers" class="pane glass rounded-3xl p-5 space-y-3 hidden">
+    <div class="flex justify-between items-center">
+      <h3 class="text-xs font-bold text-champagne-300 uppercase">รายการคูปอง</h3>
+      <button id="addV" class="px-3 py-1.5 rounded-lg btn-gold text-xs"><i class="fa-solid fa-plus mr-1"></i>เพิ่มคูปอง</button>
+    </div>
+    <div id="vList" class="space-y-2"></div>
+    <button id="resetV" class="px-3 py-1.5 rounded-lg bg-rosegold-500/30 text-xs">♻️ รีเซ็ตสถานะคูปองที่ใช้แล้ว</button>
+  </div>
+
+  <!-- LIVE -->
+  <div id="tab-live" class="pane glass rounded-3xl p-5 space-y-4 hidden">
+    <div class="p-4 rounded-xl bg-rosegold-500/10 border border-rosegold-400/30 text-center space-y-3">
+      <h3 class="text-sm font-bold text-champagne-300">⚡ Remote Command Center</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <button data-cmd="fireworks" class="p-3 rounded-xl bg-champagne-500/20 border border-champagne-400/40 hover:bg-champagne-500/40 text-xs font-bold text-champagne-300">💥 จุดพลุบนจอแฟน</button>
+        <button data-cmd="music" class="p-3 rounded-xl bg-champagne-500/20 border border-champagne-400/40 hover:bg-champagne-500/40 text-xs font-bold text-champagne-300">🎵 สลับเปิด/ปิดเพลง</button>
+        <button data-cmd="popup" class="p-3 rounded-xl bg-champagne-500/20 border border-champagne-400/40 hover:bg-champagne-500/40 text-xs font-bold text-champagne-300">💌 ส่งป๊อปอัปเซอร์ไพรส์</button>
+      </div>
+    </div>
+    <div id="statBox" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+    <div class="rounded-xl border border-rosegold-300/20 p-3">
+      <div class="flex justify-between items-center mb-2">
+        <h4 class="text-xs font-bold text-champagne-300">📡 Live Activity Feed</h4>
+        <button id="clearLog" class="text-[11px] text-red-300">ล้าง Log</button></div>
+      <div id="feed" class="text-[11px] font-mono text-rosegold-200 space-y-1 max-h-72 overflow-y-auto">—</div>
+    </div>
+    <div class="rounded-xl border border-rosegold-300/20 p-3">
+      <h4 class="text-xs font-bold text-champagne-300 mb-2">💬 คำตอบ &amp; คำอธิษฐานที่แฟนพิมพ์</h4>
+      <div id="answers" class="text-xs space-y-2 max-h-60 overflow-y-auto">—</div>
+    </div>
+  </div>
+
+  <!-- JSON -->
+  <div id="tab-json" class="pane glass rounded-3xl p-5 space-y-3 hidden">
+    <textarea id="jsonBox" rows="14" class="inp font-mono"></textarea>
+    <div class="flex gap-2 flex-wrap">
+      <button id="copyJson" class="flex-1 py-2 rounded-xl bg-rosegold-500/30 text-xs font-bold">คัดลอก JSON</button>
+      <button id="importJson" class="flex-1 py-2 rounded-xl btn-gold text-xs font-bold">นำเข้า JSON</button>
+      <button id="factory" class="flex-1 py-2 rounded-xl bg-red-900/50 border border-red-400/40 text-xs font-bold text-red-200">⚠️ คืนค่าเริ่มต้น</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-6 opacity-0 transition-all duration-300 z-50 px-5 py-3 rounded-full text-xs font-bold btn-gold pointer-events-none"></div>
+
+<script type="module">
+/* ═════════ ต้องตรงกับ index.html ═════════ */
+const firebaseConfig = {
+  apiKey:            "PASTE_YOUR_API_KEY_HERE",
+  authDomain:        "my-anniversary-app.firebaseapp.com",
+  databaseURL:       "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "my-anniversary-app",
+  storageBucket:     "my-anniversary-app.firebasestorage.app",
+  messagingSenderId: "487064640701",
+  appId:             "1:487064640701:web:0206b2da8138b7594f2bd4"
+};
+const ROOM_ID = "room-01";
+
+const DEFAULTS = {
+  anniversaryDate:"2022-02-14T00:00", lockCode:"1402",
+  lockHint:"หมุนรหัสวันครบรอบของเราเพื่อปลดล็อกหัวใจ (วว/ดด)",
+  adminPass:"1234",
+  bgMusicUrl:"https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  bgMediaUrl:"", bgMediaType:"", letterImg:"",
+  letterText:"สุขสันต์วันครบรอบนะคะคนเก่ง...\nขอบคุณสำหรับทุกๆ รอยยิ้ม ความสุข และความรักที่มอบให้กันเสมอมา\nไม่ว่าจะผ่านไปนานเท่าไหร่ เค้าก็ยังรักเธอมากขึ้นทุกๆ วัน\nขอบคุณที่เป็นโลกทั้งใบให้กันนะคะ ❤️",
+  scratchImg:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80",
+  scratchText:"ความทรงจำสุดพิเศษของเราสองคน ❤️",
+  gallery:[],
+  teasingQuotes:["แน่ใจเหรอคะ? 🥺","คิดใหม่อีกทีน้าาา 💕","แน่ะ ยังกดอีก! 😤","ใจร้ายจังเลย… 😢","โกรธแล้วนะ! 😡💢"],
+  questions:[
+    {id:1,type:"choice",title:"เรารู้จักกันครั้งแรกที่ไหน?",options:["ในหัวใจเธอ","ร้านกาแฟ","ที่โรงเรียน","โลกออนไลน์"],correctIndex:0},
+    {id:2,type:"slider",title:"เธอรักเค้ามากแค่ไหน? (เลื่อนแถบ)",minLabel:"น้อยนิด",maxLabel:"ล้นหัวใจ"},
+    {id:3,type:"text",title:"อยากบอกอะไรเค้าที่สุดในวันนี้?",placeholder:"พิมพ์ข้อความในใจ..."}
+  ],
+  vouchers:[
+    {id:1,title:"คูปองพาไปกินชาบู 1 มื้อ 🍲",code:"SHABU-LOVE",used:false},
+    {id:2,title:"คูปองห้ามงอน 1 วันเต็ม 🥺",code:"NO-SULK-24H",used:false},
+    {id:3,title:"คูปองนวดหลัง 30 นาที 💆",code:"MASSAGE-30M",used:false},
+    {id:4,title:"คูปองตามใจ 1 ข้อ 💖",code:"WISH-GRANTED",used:false}
+  ]
+};
+let cfg = structuredClone(DEFAULTS);
+
+const el=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function toast(m){const t=el("toast");t.textContent=m;t.style.opacity="1";t.style.transform="translate(-50%,0)";
+  clearTimeout(t._tm);t._tm=setTimeout(()=>{t.style.opacity="0";t.style.transform="translate(-50%,24px)";},2400);}
+
+/* ═════════ FIREBASE ═════════ */
+const FB_READY=!!(firebaseConfig.apiKey&&!firebaseConfig.apiKey.startsWith("PASTE"));
+const BASE=`rooms/${ROOM_ID}`, LKEY="anv_cfg_"+ROOM_ID;
+let M=null,db=null,R={},S=null,SM=null,storage=null;
+
+if(FB_READY){
+  try{
+    const [A,D,U,ST]=await Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js")
+    ]);
+    const app=A.initializeApp(firebaseConfig);
+    try{ await U.signInAnonymously(U.getAuth(app)); }catch(e){ console.warn("anon auth:",e.code); }
+    M=D; db=D.getDatabase(app);
+    R={config:D.ref(db,BASE+"/config"),command:D.ref(db,BASE+"/command"),presence:D.ref(db,BASE+"/presence"),
+       activity:D.ref(db,BASE+"/activity"),answers:D.ref(db,BASE+"/answers"),stats:D.ref(db,BASE+"/stats")};
+    if(firebaseConfig.storageBucket){ SM=ST; storage=ST.getStorage(app); }
+    el("loginStatus").textContent="🔥 เชื่อมต่อ Firebase สำเร็จ";
+    el("loginStatus").className="text-xs text-emerald-300";
+  }catch(e){
+    console.error(e); M=null;
+    el("loginStatus").textContent="⚠️ เชื่อม Firebase ไม่ได้ — ใช้โหมดออฟไลน์";
+    el("loginStatus").className="text-xs text-amber-300";
+  }
+}else{
+  el("loginStatus").textContent="⚠️ ยังไม่ได้ใส่ API Key — ใช้โหมดออฟไลน์";
+  el("loginStatus").className="text-xs text-amber-300";
+}
+function localLoad(){ try{const v=localStorage.getItem(LKEY); if(v) cfg={...structuredClone(DEFAULTS),...JSON.parse(v)};}catch(e){} }
+function localSave(){ try{ localStorage.setItem(LKEY,JSON.stringify(cfg)); }catch(e){} }
+async function pushConfig(){
+  localSave();
+  if(!M) return;
+  try{ await M.set(R.config,cfg); }catch(e){ toast("บันทึกขึ้น Firebase ไม่สำเร็จ ❌"); console.error(e); }
+}
+localLoad();
+if(M) M.onValue(R.config,s=>{ const v=s.val(); if(v){ cfg={...structuredClone(DEFAULTS),...v}; localSave(); } }, {onlyOnce:true});
+
+/* ═════════ LOGIN ═════════ */
+async function doLogin(){
+  if(M){ try{ const s=await M.get(R.config); if(s.exists()) cfg={...structuredClone(DEFAULTS),...s.val()}; }catch(e){} }
+  if(el("passInput").value!==String(cfg.adminPass)){ toast("รหัสผ่านไม่ถูกต้อง 🙅"); return; }
+  el("loginView").classList.add("hidden");
+  el("panel").classList.remove("hidden");
+  el("fbBadge").textContent = M ? "🔥 Firebase Online" : "💾 Local Mode";
+  el("fbBadge").className = "text-[10px] px-2 py-1 rounded-full border "+(M?"border-emerald-400/40 text-emerald-300 bg-emerald-400/10":"border-amber-400/40 text-amber-300");
+  if(M && !storage){ el("storageWarn").classList.remove("hidden");
+    el("storageWarn").textContent="⚠️ ยังไม่ได้เปิด Firebase Storage — ระบบจะเก็บรูปเป็น Base64 ในฐานข้อมูลแทน (ควรใช้ไฟล์เล็กกว่า 400KB)"; }
+  fillFields(); switchTab("general"); startLive();
+}
+el("loginBtn").onclick=doLogin;
+el("passInput").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
+
+/* ═════════ TABS ═════════ */
+function switchTab(n){
+  document.querySelectorAll(".tab").forEach(b=>{
+    const on=b.dataset.tab===n;
+    b.classList.toggle("btn-gold",on); b.classList.toggle("text-rosegold-300",!on);
+  });
+  document.querySelectorAll(".pane").forEach(p=>p.classList.add("hidden"));
+  el("tab-"+n).classList.remove("hidden");
+  if(n==="json") el("jsonBox").value=JSON.stringify(cfg,null,2);
+  if(n==="media") renderMedia();
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+
+/* ═════════ FIELDS ═════════ */
+function fillFields(){
+  el("cfgDate").value=cfg.anniversaryDate||"";
+  el("cfgLock").value=cfg.lockCode||"";
+  el("cfgHint").value=cfg.lockHint||"";
+  el("cfgPass").value=cfg.adminPass||"";
+  el("cfgMusic").value=cfg.bgMusicUrl||"";
+  el("cfgLetter").value=cfg.letterText||"";
+  el("cfgTease").value=(cfg.teasingQuotes||[]).join("\n");
+  el("cfgScratchText").value=cfg.scratchText||"";
+  renderQ(); renderV(); renderMedia();
+}
+async function saveAll(){
+  cfg.anniversaryDate=el("cfgDate").value||DEFAULTS.anniversaryDate;
+  cfg.lockCode=(el("cfgLock").value||"").replace(/\D/g,"").padStart(4,"0").slice(0,4);
+  cfg.lockHint=el("cfgHint").value;
+  cfg.adminPass=el("cfgPass").value||DEFAULTS.adminPass;
+  cfg.bgMusicUrl=el("cfgMusic").value.trim();
+  cfg.letterText=el("cfgLetter").value;
+  cfg.teasingQuotes=el("cfgTease").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  cfg.scratchText=el("cfgScratchText").value;
+  await pushConfig();
+  toast(M?"บันทึกขึ้น Firebase แล้ว ✅ หน้าแฟนอัปเดตทันที":"บันทึกลงเครื่องแล้ว 💾");
+}
+el("saveBtn").onclick=saveAll;
+
+/* ═════════ IMAGE COMPRESS + UPLOAD ═════════ */
+function compressImage(file,maxW=1600,quality=.85){
+  return new Promise(res=>{
+    if(!/^image\/(jpeg|png|webp)$/.test(file.type)) return res(file);
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      const scale=Math.min(1,maxW/img.width);
+      if(scale===1 && file.size<600*1024) return res(file);
+      const c=document.createElement("canvas");
+      c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      c.toBlob(b=>res(b?new File([b],file.name.replace(/\.\w+$/,"")+".jpg",{type:"image/jpeg"}):file),"image/jpeg",quality);
+    };
+    img.onerror=()=>res(file);
+    img.src=url;
+  });
+}
+const toBase64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});
+function showProgress(name,pct){
+  el("upBox").classList.remove("hidden");
+  el("upName").textContent=name; el("upPct").textContent=pct+"%"; el("upBar").style.width=pct+"%";
+  if(pct>=100) setTimeout(()=>el("upBox").classList.add("hidden"),900);
+}
+async function uploadFile(file){
+  const f = file.type.startsWith("image/") ? await compressImage(file) : file;
+  if(storage){
+    const path=`${BASE}/uploads/${Date.now()}_${f.name.replace(/[^\w.\-]/g,"_")}`;
+    const task=SM.uploadBytesResumable(SM.ref(storage,path),f,{contentType:f.type});
+    return await new Promise((res,rej)=>{
+      task.on("state_changed",
+        s=>showProgress(f.name,Math.round(s.bytesTransferred/s.totalBytes*100)),
+        err=>{ showProgress(f.name,100); rej(err); },
+        async()=>{ showProgress(f.name,100); res({url:await SM.getDownloadURL(task.snapshot.ref),path}); });
+    });
+  }
+  if(f.size>900*1024) throw new Error("ไฟล์ใหญ่เกินไปสำหรับโหมด Base64 (เกิน 900KB)");
+  showProgress(f.name,100);
+  return {url:await toBase64(f),path:""};
+}
+async function deleteUpload(path){
+  if(storage&&path){ try{ await SM.deleteObject(SM.ref(storage,path)); }catch(e){ console.warn("delete:",e.code); } }
+}
+
+/* ═════════ DROP ZONES ═════════ */
+function wireDrop(zone){
+  const kind=zone.dataset.drop;
+  const accept = kind==="music" ? "audio/*" : (kind==="bg" ? "image/*,video/*" : "image/*");
+  const multi  = kind==="gallery";
+  const input=document.createElement("input");
+  input.type="file"; input.accept=accept; input.multiple=multi; input.hidden=true;
+  document.body.appendChild(input);
+  zone.onclick=()=>input.click();
+  input.onchange=()=>{ handle([...input.files]); input.value=""; };
+  ["dragenter","dragover"].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add("over");}));
+  ["dragleave","drop"].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove("over");}));
+  zone.addEventListener("drop",e=>handle([...e.dataTransfer.files]));
+
+  async function handle(files){
+    if(!files.length) return;
+    try{
+      for(const f of (multi?files:[files[0]])){
+        const {url,path}=await uploadFile(f);
+        if(kind==="bg"){ await deleteUpload(cfg.bgMediaPath); cfg.bgMediaUrl=url; cfg.bgMediaPath=path; cfg.bgMediaType=f.type.startsWith("video")?"video":"image"; }
+        if(kind==="scratch"){ await deleteUpload(cfg.scratchPath); cfg.scratchImg=url; cfg.scratchPath=path; }
+        if(kind==="letter"){ await deleteUpload(cfg.letterImgPath); cfg.letterImg=url; cfg.letterImgPath=path; }
+        if(kind==="music"){ await deleteUpload(cfg.musicPath); cfg.bgMusicUrl=url; cfg.musicPath=path; el("cfgMusic").value=url; }
+        if(kind==="gallery"){ (cfg.gallery ||= []).push({url,path,cap:""}); }
+      }
+      await pushConfig(); renderMedia(); toast("อัปโหลดสำเร็จ ✅ หน้าแฟนอัปเดตแล้ว");
+    }catch(err){ console.error(err); toast("อัปโหลดไม่สำเร็จ: "+(err.message||err.code||"")); }
+  }
+}
+document.querySelectorAll("[data-drop]").forEach(wireDrop);
+
+function renderMedia(){
+  const bg=el("bgPrev");
+  bg.innerHTML = cfg.bgMediaUrl
+    ? (cfg.bgMediaType==="video"
+        ? `<video src="${esc(cfg.bgMediaUrl)}" class="w-full h-full object-cover" muted autoplay loop playsinline></video>`
+        : `<img src="${esc(cfg.bgMediaUrl)}" class="w-full h-full object-cover">`)
+    : `<span class="text-[11px] text-rosegold-400">ยังไม่มีพื้นหลัง</span>`;
+  el("scratchPrev").innerHTML = cfg.scratchImg?`<img src="${esc(cfg.scratchImg)}" class="w-full h-full object-cover">`:`<span class="text-[11px] text-rosegold-400">ยังไม่มีรูป</span>`;
+  el("letterPrev").innerHTML  = cfg.letterImg ?`<img src="${esc(cfg.letterImg)}"  class="w-full h-full object-cover">`:`<span class="text-[11px] text-rosegold-400">ยังไม่มีรูป</span>`;
+  const mp=el("musicPrev");
+  if(cfg.bgMusicUrl){ mp.src=cfg.bgMusicUrl; mp.classList.remove("hidden"); } else mp.classList.add("hidden");
+  const g=el("galleryGrid"), list=cfg.gallery||[];
+  g.innerHTML = list.length ? list.map((p,i)=>`
+    <div class="rounded-xl overflow-hidden bg-burgundy-900 border border-rosegold-300/20 relative">
+      <button data-galdel="${i}" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-red-300 text-xs z-10">✕</button>
+      <img src="${esc(p.url)}" class="w-full h-24 object-cover">
+      <input data-galcap="${i}" value="${esc(p.cap||"")}" placeholder="คำบรรยาย" class="w-full bg-transparent text-[11px] p-1.5 text-center outline-none">
+    </div>`).join("") : `<p class="text-[11px] text-rosegold-400 col-span-4 text-center py-4">ยังไม่มีรูปในอัลบั้ม</p>`;
+}
+el("galleryGrid").addEventListener("click",async e=>{
+  const b=e.target.closest("[data-galdel]"); if(!b) return;
+  const i=+b.dataset.galdel, item=cfg.gallery[i];
+  if(!confirm("ลบรูปนี้ออกจากอัลบั้มและ Storage?")) return;
+  await deleteUpload(item.path); cfg.gallery.splice(i,1);
+  await pushConfig(); renderMedia(); toast("ลบรูปแล้ว 🗑️");
+});
+el("galleryGrid").addEventListener("input",e=>{
+  const t=e.target; if(t.dataset.galcap==null) return;
+  cfg.gallery[+t.dataset.galcap].cap=t.value;
+});
+el("galleryGrid").addEventListener("change",()=>pushConfig());
+document.querySelectorAll("[data-clear]").forEach(b=>b.onclick=async()=>{
+  const k=b.dataset.clear;
+  if(k==="bgMediaUrl"){ await deleteUpload(cfg.bgMediaPath); cfg.bgMediaUrl=""; cfg.bgMediaPath=""; cfg.bgMediaType=""; }
+  if(k==="letterImg"){ await deleteUpload(cfg.letterImgPath); cfg.letterImg=""; cfg.letterImgPath=""; }
+  await pushConfig(); renderMedia(); toast("ลบแล้ว 🗑️");
+});
+
+/* ═════════ QUESTION EDITOR ═════════ */
+const TYPE_LABEL={choice:"ช้อยส์",text:"ถาม-ตอบ",slider:"สไลเดอร์"};
+function renderQ(){
+  const qs=cfg.questions||[];
+  el("qList").innerHTML = qs.length ? qs.map((q,i)=>{
+    let body="";
+    if(q.type==="choice"){
+      body=`<p class="text-[11px] text-champagne-300/80">ติ๊กวงกลมหน้าข้อที่เป็น <b>คำตอบที่ถูก</b></p>
+        <div class="space-y-2">${(q.options||[]).map((o,j)=>`
+          <div class="flex items-center gap-2">
+            <input type="radio" name="c_${i}" ${q.correctIndex===j?"checked":""} data-act="correct" data-q="${i}" data-o="${j}" class="w-4 h-4 accent-champagne-500 shrink-0">
+            <input class="inp flex-1" value="${esc(o)}" data-act="opt" data-q="${i}" data-o="${j}" placeholder="ตัวเลือกที่ ${j+1}">
+            <button data-act="delOpt" data-q="${i}" data-o="${j}" class="text-red-400 px-2 shrink-0">✕</button>
+          </div>`).join("")}</div>
+        <button data-act="addOpt" data-q="${i}" class="px-2.5 py-1.5 rounded-lg bg-rosegold-500/30 text-[11px] font-bold">+ เพิ่มตัวเลือก</button>`;
+    }else if(q.type==="text"){
+      body=`<input class="inp" value="${esc(q.placeholder||"")}" data-act="ph" data-q="${i}" placeholder="ข้อความ placeholder ในช่องคำตอบ">`;
+    }else{
+      body=`<div class="grid grid-cols-2 gap-2">
+        <input class="inp" value="${esc(q.minLabel||"")}" data-act="min" data-q="${i}" placeholder="ป้ายซ้าย เช่น น้อยนิด">
+        <input class="inp" value="${esc(q.maxLabel||"")}" data-act="max" data-q="${i}" placeholder="ป้ายขวา เช่น ล้นหัวใจ"></div>`;
+    }
+    return `<div class="rounded-xl border border-rosegold-300/20 p-3 space-y-2 bg-burgundy-900/40">
+      <div class="flex justify-between items-center gap-2">
+        <span class="text-xs font-bold text-champagne-300">ข้อ #${i+1}</span>
+        <div class="flex items-center gap-1">
+          <select data-act="type" data-q="${i}" class="inp w-auto py-1">
+            ${Object.entries(TYPE_LABEL).map(([k,v])=>`<option value="${k}" ${q.type===k?"selected":""}>${v}</option>`).join("")}
+          </select>
+          <button data-act="up" data-q="${i}" class="px-1.5 text-champagne-300">▲</button>
+          <button data-act="down" data-q="${i}" class="px-1.5 text-champagne-300">▼</button>
+          <button data-act="del" data-q="${i}" class="px-1.5 text-red-400">🗑</button>
+        </div>
+      </div>
+      <input class="inp" value="${esc(q.title||"")}" data-act="title" data-q="${i}" placeholder="ข้อความคำถาม">
+      ${body}</div>`;
+  }).join("") : `<p class="text-xs text-rosegold-300 text-center py-6">ยังไม่มีคำถาม กด “เพิ่มคำถาม” ได้เลย</p>`;
+}
+el("qList").addEventListener("input",e=>{
+  const t=e.target,a=t.dataset.act; if(!a) return;
+  const q=cfg.questions[+t.dataset.q]; if(!q) return;
+  if(a==="title") q.title=t.value;
+  if(a==="opt")   q.options[+t.dataset.o]=t.value;
+  if(a==="ph")    q.placeholder=t.value;
+  if(a==="min")   q.minLabel=t.value;
+  if(a==="max")   q.maxLabel=t.value;
+});
+el("qList").addEventListener("change",e=>{
+  const t=e.target,a=t.dataset.act; if(!a) return;
+  const i=+t.dataset.q,q=cfg.questions[i]; if(!q) return;
+  if(a==="correct") q.correctIndex=+t.dataset.o;
+  if(a==="type"){
+    q.type=t.value;
+    if(q.type==="choice"&&!Array.isArray(q.options)){ q.options=["คำตอบที่ถูก 💕","คำตอบผิด 😅"]; q.correctIndex=0; }
+    if(q.type==="text"&&q.placeholder==null) q.placeholder="พิมพ์คำตอบ...";
+    if(q.type==="slider"){ q.minLabel ??= "น้อยนิด"; q.maxLabel ??= "ล้นหัวใจ"; }
+    renderQ();
+  }
+});
+el("qList").addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const a=b.dataset.act,i=+b.dataset.q,qs=cfg.questions;
+  if(a==="addOpt"){ (qs[i].options ||= []).push("ตัวเลือกใหม่"); renderQ(); }
+  if(a==="delOpt"){
+    const j=+b.dataset.o;
+    if(qs[i].options.length<=2){ toast("ต้องมีอย่างน้อย 2 ตัวเลือก"); return; }
+    qs[i].options.splice(j,1);
+    if(qs[i].correctIndex>=qs[i].options.length) qs[i].correctIndex=0;
+    else if(qs[i].correctIndex>j) qs[i].correctIndex--;
+    renderQ();
+  }
+  if(a==="del"){ qs.splice(i,1); renderQ(); }
+  if(a==="up"&&i>0){ [qs[i-1],qs[i]]=[qs[i],qs[i-1]]; renderQ(); }
+  if(a==="down"&&i<qs.length-1){ [qs[i+1],qs[i]]=[qs[i],qs[i+1]]; renderQ(); }
+});
+el("addQ").onclick=()=>{
+  const type=el("newQType").value;
+  const q={id:Date.now(),type,title:"คำถามใหม่ของเรา?"};
+  if(type==="choice") Object.assign(q,{options:["คำตอบที่ถูก 💕","คำตอบผิด 😅"],correctIndex:0});
+  if(type==="text")   q.placeholder="พิมพ์คำตอบในใจ...";
+  if(type==="slider") Object.assign(q,{minLabel:"น้อยนิด",maxLabel:"ล้นหัวใจ"});
+  (cfg.questions ||= []).push(q); renderQ();
+  el("qList").lastElementChild?.scrollIntoView({behavior:"smooth",block:"center"});
+  toast(`เพิ่มคำถามแบบ${TYPE_LABEL[type]}แล้ว (อย่าลืมกดบันทึก)`);
+};
+
+/* ═════════ VOUCHERS ═════════ */
+function renderV(){
+  el("vList").innerHTML=(cfg.vouchers||[]).map((v,i)=>`
+    <div class="flex items-center gap-2 rounded-xl border border-rosegold-300/20 p-2 bg-burgundy-900/40">
+      <input class="inp flex-1" value="${esc(v.title)}" data-v="${i}" data-f="title" placeholder="ชื่อคูปอง">
+      <input class="inp w-32 font-mono" value="${esc(v.code)}" data-v="${i}" data-f="code" placeholder="CODE">
+      <span class="text-[10px] ${v.used?'text-emerald-300':'text-rosegold-400'} w-14 text-center">${v.used?'ใช้แล้ว':'ยังไม่ใช้'}</span>
+      <button data-vdel="${i}" class="text-red-400 px-2">🗑</button>
+    </div>`).join("")||`<p class="text-xs text-rosegold-300 text-center py-4">ยังไม่มีคูปอง</p>`;
+}
+el("vList").addEventListener("input",e=>{
+  const t=e.target; if(t.dataset.v==null) return;
+  cfg.vouchers[+t.dataset.v][t.dataset.f]=t.value;
+});
+el("vList").addEventListener("click",e=>{
+  const b=e.target.closest("[data-vdel]"); if(!b) return;
+  cfg.vouchers.splice(+b.dataset.vdel,1); renderV();
+});
+el("addV").onclick=()=>{ (cfg.vouchers ||= []).push({id:Date.now(),title:"คูปองใหม่ 🎁",code:"NEW-"+String(Date.now()).slice(-4),used:false}); renderV(); };
+el("resetV").onclick=async()=>{ (cfg.vouchers||[]).forEach(v=>v.used=false); await pushConfig(); renderV(); toast("รีเซ็ตคูปองแล้ว ♻️"); };
+
+/* ═════════ LIVE MONITOR ═════════ */
+function startLive(){
+  if(!M){ el("feed").textContent="โหมดออฟไลน์ — ไม่มีข้อมูลสด"; return; }
+  M.onValue(R.presence,s=>{
+    const n=Object.keys(s.val()||{}).length;
+    const b=el("onlineBadge"); b.textContent=`👥 ${n} online`;
+    b.className="text-[10px] px-2 py-1 rounded-full border "+(n?"border-emerald-400/40 text-emerald-300 bg-emerald-400/10":"border-rosegold-300/30 text-rosegold-300");
+  });
+  M.onValue(M.query(R.activity,M.limitToLast(150)),s=>{
+    const a=Object.values(s.val()||{}).sort((x,y)=>y.t-x.t);
+    el("feed").innerHTML=a.length?a.map(i=>
+      `<div class="flex gap-2"><span class="text-champagne-400 shrink-0">[${esc(i.time||"")}]</span><span>${esc(i.icon||"•")} ${esc(i.text)}</span></div>`).join(""):"ยังไม่มีกิจกรรม";
+  });
+  M.onValue(R.answers,s=>{
+    const a=Object.values(s.val()||{}).sort((x,y)=>y.t-x.t);
+    el("answers").innerHTML=a.length?a.map(x=>`
+      <div class="border-b border-rosegold-300/10 pb-1">
+        <div class="text-[11px] text-champagne-400">${esc(x.time||"")} · ${esc(x.type||"")}</div>
+        <div class="text-[11px] text-rosegold-300">${esc(x.q||"")}</div>
+        <div class="font-bold text-xs">${esc(x.answer||"")}</div></div>`).join(""):"—";
+  });
+  M.onValue(R.stats,s=>{
+    const st=s.val()||{};
+    el("statBox").innerHTML=[["😤 ตอบผิดสะสม",st.wrongTotal||0],["🎟️ คูปองที่ใช้",st.vouchersUsed||0],
+      ["🏮 คำอธิษฐาน",st.wishes||0],["🖼️ รูปในอัลบั้ม",(cfg.gallery||[]).length]]
+      .map(([l,v])=>`<div class="rounded-xl border border-rosegold-300/20 p-2.5 text-center">
+        <div class="text-lg font-bold text-gradient-gold">${v}</div><div class="text-[10px] text-rosegold-300">${l}</div></div>`).join("");
+  });
+}
+document.querySelectorAll("[data-cmd]").forEach(b=>b.onclick=async()=>{
+  const a=b.dataset.cmd;
+  let msg="";
+  if(a==="popup"){ msg=prompt("พิมพ์ข้อความป๊อปอัปที่จะส่งไปหน้าจอแฟน:")||""; if(!msg) return; }
+  if(!M){ toast("ต้องต่อ Firebase ก่อนถึงจะสั่งได้"); return; }
+  try{ await M.set(R.command,{action:a,msg,ts:Date.now()}); toast("ส่งคำสั่งแล้ว ✅"); }
+  catch(e){ toast("ส่งไม่สำเร็จ ❌"); }
+});
+el("clearLog").onclick=async()=>{ if(M){ await M.remove(R.activity); } el("feed").textContent="—"; toast("ล้าง Log แล้ว"); };
+
+/* ═════════ JSON ═════════ */
+el("copyJson").onclick=()=>{
+  navigator.clipboard?.writeText(el("jsonBox").value).then(()=>toast("คัดลอกแล้ว ✅"))
+    .catch(()=>{ el("jsonBox").select(); document.execCommand("copy"); toast("คัดลอกแล้ว"); });
+};
+el("importJson").onclick=async()=>{
+  try{ cfg={...structuredClone(DEFAULTS),...JSON.parse(el("jsonBox").value)};
+    await pushConfig(); fillFields(); toast("นำเข้าเรียบร้อย ✅"); }
+  catch(e){ toast("รูปแบบ JSON ไม่ถูกต้อง ❌"); }
+};
+el("factory").onclick=async()=>{
+  if(!confirm("คืนค่าเริ่มต้นทั้งหมด? (รูปที่อัปโหลดไว้จะไม่ถูกลบออกจาก Storage)")) return;
+  cfg=structuredClone(DEFAULTS); await pushConfig(); fillFields(); toast("คืนค่าเริ่มต้นแล้ว");
+};
+</script>
+</body>
+</html>
