@@ -4,21 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Little Space For Us 🤍</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg-color: #faf9f6;
-            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-bg: rgba(255, 255, 255, 0.92);
             --text-main: #333333;
             --text-sub: #888888;
             --accent: #e0a9af;
             --accent-hover: #d4959c;
             --border: #f0ece9;
-            --danger: #e76f51;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,6 +24,7 @@
             background-color: var(--bg-color);
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
             color: var(--text-main);
             display: flex;
             justify-content: center;
@@ -35,43 +32,63 @@
             min-height: 100vh;
             padding: 20px;
             transition: background 0.5s ease;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        /* ปุ่มควบคุมเพลงลอยมุมขวาบน */
+        .music-btn {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            background: white; border: 1px solid var(--border);
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            font-size: 1.2rem; transition: 0.3s;
+        }
+        .music-btn.playing { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         .container {
             background: var(--card-bg);
-            backdrop-filter: blur(8px);
-            padding: 35px 25px;
+            backdrop-filter: blur(10px);
+            padding: 30px 22px;
             border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 450px;
+            width: 100%; max-width: 450px;
             border: 1px solid var(--border);
+            position: relative; z-index: 10;
         }
+
+        /* นาฬิกานับวันครบรอบ */
+        .counter-box {
+            text-align: center; background: #fff5f6;
+            padding: 12px 15px; border-radius: 16px;
+            margin-bottom: 20px; border: 1px solid #fce4e6;
+        }
+        .counter-box .title { font-size: 0.78rem; color: #b57c83; font-weight: 500; }
+        .counter-box .days { font-size: 1.4rem; font-weight: 600; color: var(--accent); }
 
         .hero-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            display: none;
+            width: 100%; height: 180px; object-fit: cover;
+            border-radius: 16px; margin-bottom: 20px; display: none;
         }
 
-        h1 { font-size: 1.3rem; font-weight: 500; text-align: center; margin-bottom: 6px; }
-        p.subtitle { font-size: 0.85rem; color: var(--text-sub); text-align: center; margin-bottom: 25px; font-weight: 300; }
+        h1 { font-size: 1.25rem; font-weight: 500; text-align: center; margin-bottom: 6px; }
+        p.subtitle { font-size: 0.85rem; color: var(--text-sub); text-align: center; margin-bottom: 20px; }
 
-        .form-group { margin-bottom: 20px; }
-        label { font-size: 0.88rem; font-weight: 400; display: block; margin-bottom: 8px; color: #555; }
+        .form-group { margin-bottom: 18px; }
+        label { font-size: 0.88rem; display: block; margin-bottom: 8px; color: #555; }
 
         .slider-container { text-align: center; }
-        .percent-display { font-size: 2rem; font-weight: 500; color: var(--accent); margin-bottom: 5px; }
+        .percent-display { font-size: 2rem; font-weight: 600; color: var(--accent); margin-bottom: 5px; }
         input[type=range] {
             -webkit-appearance: none; width: 100%; height: 6px;
             background: #f0e6e7; border-radius: 5px; outline: none;
         }
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 20px; height: 20px;
+            -webkit-appearance: none; width: 22px; height: 22px;
             border-radius: 50%; background: var(--accent); cursor: pointer;
+            box-shadow: 0 2px 6px rgba(224, 169, 175, 0.5);
         }
 
         textarea {
@@ -82,24 +99,32 @@
         textarea:focus { border-color: var(--accent); background: #fff; }
         .char-count { font-size: 0.75rem; text-align: right; color: var(--text-sub); margin-top: 4px; }
 
-        button {
+        /* ปุ่มปฏิกิริยาด่วน */
+        .quick-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .chip {
+            font-size: 0.78rem; background: #fff; border: 1px solid var(--border);
+            padding: 5px 10px; border-radius: 20px; cursor: pointer; transition: 0.2s;
+        }
+        .chip:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+        button.btn-primary {
             width: 100%; padding: 14px; border: none; border-radius: 12px;
             background: var(--accent); color: white; font-family: 'Prompt', sans-serif;
-            font-size: 0.92rem; cursor: pointer; transition: 0.3s;
+            font-size: 0.92rem; font-weight: 500; cursor: pointer; transition: 0.3s;
         }
-        button:hover { background: var(--accent-hover); }
-        button:disabled { background: #e2dadb; cursor: not-allowed; }
+        button.btn-primary:hover { background: var(--accent-hover); }
+        button.btn-primary:disabled { background: #e2dadb; cursor: not-allowed; }
 
-        /* Chat */
+        /* Chat Section */
         #chatSection { display: none; }
         .chat-box {
             height: 300px; border: 1px solid var(--border);
             border-radius: 16px; padding: 15px; overflow-y: auto;
-            background: rgba(255,255,255,0.8); display: flex; flex-direction: column; gap: 10px;
+            background: rgba(255,255,255,0.85); display: flex; flex-direction: column; gap: 10px;
             margin-bottom: 12px;
         }
         .message {
-            max-width: 80%; padding: 10px 14px; border-radius: 14px;
+            max-width: 82%; padding: 10px 14px; border-radius: 14px;
             font-size: 0.88rem; line-height: 1.4; word-break: break-word;
         }
         .message.admin { align-self: flex-start; background: #fff; border: 1px solid var(--border); color: #333; }
@@ -111,14 +136,31 @@
             border-radius: 12px; outline: none; font-family: 'Prompt', sans-serif;
         }
         .chat-input-group button { width: auto; padding: 0 18px; }
+
+        /* เอฟเฟกต์หัวใจลอย */
+        .heart-particle {
+            position: fixed; bottom: -20px; font-size: 24px;
+            animation: floatUp 3s linear forwards; z-index: 999; pointer-events: none;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- เครื่องเล่นเพลง BGM -->
+    <!-- ปุ่มควบคุมเพลง BGM -->
+    <button class="music-btn" id="musicBtn" title="เปิด/ปิด เพลง">🎵</button>
     <audio id="bgm" loop></audio>
 
     <div class="container">
+        <!-- นับวันครบรอบ -->
+        <div class="counter-box">
+            <div class="title">เราเดินทางด้วยกันมาแล้ว 🤍</div>
+            <div class="days" id="dayCounter">0 วัน 0 ชั่วโมง</div>
+        </div>
+
         <img id="coverImg" class="hero-img" alt="Cover Image">
 
         <!-- Form หน้าแรก -->
@@ -136,9 +178,17 @@
                 <label id="lblMsg">อยากบอกอะไรกับเรามั้ย? ✨</label>
                 <textarea id="loveMsg" rows="3" placeholder="พิมพ์บอกความในใจตรงนี้ได้เลยน้า..." required></textarea>
                 <div class="char-count" id="charCount">0 / 50 ตัวอักษร</div>
+
+                <!-- ปุ่มตัวเลือกความรู้สึกด่วน -->
+                <div class="quick-chips">
+                    <span class="chip" onclick="addText('คิดถึงนะ ❤️')">คิดถึงนะ ❤️</span>
+                    <span class="chip" onclick="addText('ขอกอดหน่อย 🫂')">ขอกอดหน่อย 🫂</span>
+                    <span class="chip" onclick="addText('วันนี้เหนื่อยจัง 🥺')">วันนี้เหนื่อยจัง 🥺</span>
+                    <span class="chip" onclick="addText('รักที่สุด ✨')">รักที่สุด ✨</span>
+                </div>
             </div>
 
-            <button type="submit" id="submitBtn" disabled>ส่งความรู้สึกให้เธอ 💌</button>
+            <button type="submit" class="btn-primary" id="submitBtn" disabled>ส่งความรู้สึกให้เธอ 💌</button>
         </form>
 
         <!-- หน้า Live Chat -->
@@ -148,23 +198,70 @@
 
             <div class="chat-box" id="chatBox"></div>
 
+            <div class="quick-chips" style="margin-bottom: 10px;">
+                <span class="chip" onclick="sendQuickChat('คิดถึงจัง ❤️')">คิดถึงจัง ❤️</span>
+                <span class="chip" onclick="sendQuickChat('ทำอะไรอยู่เหรอ? 🤔')">ทำอะไรอยู่เหรอ? 🤔</span>
+                <span class="chip" onclick="sendQuickChat('ส่งความรักให้อยู่นะ ✨')">ส่งความรักให้อยู่นะ ✨</span>
+            </div>
+
             <div class="chat-input-group">
-                <input type="text" id="chatInput" placeholder="พิมพ์ข้อความ..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-                <button onclick="sendChatMessage()">ส่ง</button>
+                <input type="text" id="chatInput" placeholder="พิมพ์ข้อความ...">
+                <button class="btn-primary" id="sendBtn">ส่ง</button>
             </div>
         </div>
     </div>
 
-    <script>
-        const firebaseConfig = {
-            databaseURL: "https://YOUR-PROJECT-default-rtdb.firebaseio.com" // ใส่ Database URL ของคุณ
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const sessionId = "session_" + Date.now();
+    <!-- Firebase Script (Modular SDK v12) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getDatabase, ref, onValue, push, set, onChildAdded } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
-        // โหลดการตั้งค่าจากหน้า Admin แบบ Realtime
-        db.ref('settings').on('value', (snapshot) => {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
+            authDomain: "my-anniversary-app.firebaseapp.com",
+            databaseURL: "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "my-anniversary-app",
+            storageBucket: "my-anniversary-app.firebasestorage.app",
+            messagingSenderId: "487064640701",
+            appId: "1:487064640701:web:0206b2da8138b7594f2bd4",
+            measurementId: "G-KVLWESYNZQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const sessionId = "session_" + Date.now();
+        const audio = document.getElementById('bgm');
+        const musicBtn = document.getElementById('musicBtn');
+        let isPlaying = false;
+
+        // 1. จัดการระบบเพลง BGM
+        musicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.innerText = '🔇';
+            } else {
+                audio.play().then(() => {
+                    musicBtn.classList.add('playing');
+                    musicBtn.innerText = '🎵';
+                }).catch(() => {});
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // เปิดเพลงอัตโนมัติเมื่อผู้ใช้คลิกส่วนไหนก็ได้ในหน้าเว็บครั้งแรก
+        document.body.addEventListener('click', () => {
+            if(!isPlaying && audio.src) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    musicBtn.classList.add('playing');
+                    musicBtn.innerText = '🎵';
+                }).catch(() => {});
+            }
+        }, { once: true });
+
+        // 2. ดึงการตั้งค่าแบบ Realtime
+        onValue(ref(db, 'settings'), (snapshot) => {
             const data = snapshot.val();
             if(!data) return;
 
@@ -173,7 +270,8 @@
             if(data.qSlider) document.getElementById('lblSlider').innerText = data.qSlider;
             if(data.qMsg) document.getElementById('lblMsg').innerText = data.qMsg;
 
-            // รูปภาพ
+            if(data.startDate) updateDayCounter(data.startDate);
+
             if(data.imgUrl) {
                 const img = document.getElementById('coverImg');
                 img.src = data.imgUrl;
@@ -182,16 +280,22 @@
             if(data.bgUrl) {
                 document.body.style.backgroundImage = `url('${data.bgUrl}')`;
             }
-
-            // เพลง
-            if(data.musicUrl) {
-                const audio = document.getElementById('bgm');
+            if(data.musicUrl && audio.src !== data.musicUrl) {
                 audio.src = data.musicUrl;
-                audio.play().catch(() => {}); // เล่นอัตโนมัติเมื่อผู้ใช้คลิกหน้าจอ
             }
         });
 
-        // Slider & Validation
+        // คำนวณวันครบรอบ
+        function updateDayCounter(startDateStr) {
+            const start = new Date(startDateStr);
+            const now = new Date();
+            const diffTime = Math.abs(now - start);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const diffHours = Math.floor((diffTime / (1000 * 60 * 60)) % 24);
+            document.getElementById('dayCounter').innerText = `${diffDays} วัน ${diffHours} ชั่วโมง`;
+        }
+
+        // 3. UI Handlers
         const range = document.getElementById('loveRange');
         range.addEventListener('input', (e) => document.getElementById('loveVal').textContent = e.target.value);
 
@@ -203,19 +307,38 @@
             submitBtn.disabled = len < 50;
         });
 
-        // กดส่งฟอร์มเข้าสู่ Live Chat
+        window.addText = (text) => {
+            msgInput.value = text;
+            msgInput.dispatchEvent(new Event('input'));
+        };
+
+        // 4. เอฟเฟกต์หัวใจลอยกระจาย
+        function spawnHearts() {
+            for(let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart-particle');
+                    heart.innerText = ['❤️', '💖', '🤍', '✨', '🌸'][Math.floor(Math.random() * 5)];
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // 5. ส่งฟอร์มเข้าสู่ Live Chat
         document.getElementById('loveForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            // บันทึกคำตอบแรก
-            db.ref(`chats/${sessionId}`).push({
+            spawnHearts();
+
+            push(ref(db, `chats/${sessionId}`), {
                 sender: 'fan',
                 text: `[ตอบฟอร์ม: รัก ${range.value}%] ${msgInput.value}`,
                 time: Date.now()
             });
 
-            // แจ้งเตือนแอดมินว่ามี Session ใหม่
-            db.ref(`active_sessions/${sessionId}`).set({
+            set(ref(db, `active_sessions/${sessionId}`), {
                 lastMsg: msgInput.value,
                 time: Date.now()
             });
@@ -223,8 +346,7 @@
             document.getElementById('loveForm').style.display = 'none';
             document.getElementById('chatSection').style.display = 'block';
 
-            // ดึงข้อความแชต Realtime
-            db.ref(`chats/${sessionId}`).on('child_added', (snapshot) => {
+            onChildAdded(ref(db, `chats/${sessionId}`), (snapshot) => {
                 const data = snapshot.val();
                 const msgDiv = document.createElement('div');
                 msgDiv.classList.add('message', data.sender);
@@ -235,18 +357,25 @@
             });
         });
 
-        function sendChatMessage() {
+        // 6. ส่งแชต
+        function sendChatMessage(textOverride) {
             const input = document.getElementById('chatInput');
-            const text = input.value.trim();
+            const text = textOverride || input.value.trim();
             if (!text) return;
 
-            db.ref(`chats/${sessionId}`).push({
+            push(ref(db, `chats/${sessionId}`), {
                 sender: 'fan',
                 text: text,
                 time: Date.now()
             });
-            input.value = '';
+            if(!textOverride) input.value = '';
         }
+
+        window.sendQuickChat = (text) => sendChatMessage(text);
+        document.getElementById('sendBtn').addEventListener('click', () => sendChatMessage());
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') sendChatMessage();
+        });
     </script>
 </body>
 </html>
