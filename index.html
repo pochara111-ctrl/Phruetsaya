@@ -1,643 +1,579 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Our Endless Love Story ✨</title>
-  
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Charm:wght@400;700&family=Cinzel:wght@500;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Confetti & Firebase -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-  <script src="https://www.youtube.com/iframe_api"></script>
-
-  <style>
-    :root {
-      --bg-dark: #0a040a;
-      --accent-rose: #ff758c;
-      --accent-gold: #f7d070;
-      --glass-card: rgba(255, 255, 255, 0.07);
-      --glass-border: rgba(255, 255, 255, 0.18);
-      --text-main: #fff0f5;
-      --text-sub: #d1b3c4;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      font-family: 'Prompt', sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      overflow-x: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #bg-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* Floating Music Widget */
-    .vinyl-player {
-      position: fixed;
-      top: 20px; right: 20px;
-      z-index: 1000;
-      background: rgba(20, 10, 20, 0.7);
-      backdrop-filter: blur(15px);
-      border: 1px solid var(--glass-border);
-      padding: 8px 16px 8px 8px;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      cursor: pointer;
-    }
-
-    .vinyl-disc {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #333 30%, #111 70%);
-      border: 2px solid var(--accent-gold);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--accent-gold);
-      font-size: 0.8rem;
-    }
-
-    .vinyl-disc.spin {
-      animation: spin 4s linear infinite;
-    }
-
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-    .app-card {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 460px;
-      background: var(--glass-card);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid var(--glass-border);
-      border-radius: 30px;
-      padding: 30px 24px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(255, 117, 140, 0.15);
-      text-align: center;
-      margin: 20px;
-    }
-
-    .step-section { display: none; }
-    .step-section.active { display: block; animation: fadeInUp 0.5s forwards; }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .title-romantic {
-      font-family: 'Alex Brush', cursive;
-      font-size: 3.2rem;
-      color: var(--accent-gold);
-      text-shadow: 0 0 15px rgba(247, 208, 112, 0.3);
-    }
-
-    /* Lock Screen Inputs */
-    .pin-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 25px 0;
-    }
-
-    .pin-box {
-      width: 48px; height: 58px;
-      background: rgba(0,0,0,0.4);
-      border: 2px solid var(--accent-rose);
-      border-radius: 14px;
-      color: var(--accent-gold);
-      font-size: 1.6rem;
-      font-family: 'Cinzel', serif;
-      text-align: center;
-      outline: none;
-      transition: all 0.3s;
-    }
-
-    .pin-box:focus {
-      border-color: var(--accent-gold);
-      box-shadow: 0 0 15px rgba(247, 208, 112, 0.5);
-    }
-
-    /* Typewriter Letter Box */
-    .letter-box {
-      background: rgba(15, 5, 15, 0.6);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 22px;
-      text-align: left;
-      margin: 20px 0;
-      font-family: 'Charm', cursive, 'Prompt', sans-serif;
-      font-size: 1.2rem;
-      line-height: 1.8;
-      min-height: 140px;
-      color: #fff;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    }
-
-    /* Polaroid Gallery */
-    .polaroid-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      margin: 20px 0;
-    }
-
-    .polaroid-card {
-      background: #fff;
-      padding: 8px 8px 20px 8px;
-      border-radius: 6px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      transform: rotate(calc(var(--r, 0) * 1deg));
-    }
-
-    .polaroid-card:hover {
-      transform: scale(1.05) rotate(0deg);
-      z-index: 5;
-    }
-
-    .polaroid-img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .polaroid-caption {
-      color: #333;
-      font-size: 0.75rem;
-      font-family: 'Prompt', sans-serif;
-      margin-top: 6px;
-      font-weight: 500;
-    }
-
-    /* Timeline */
-    .timeline {
-      position: relative;
-      margin: 20px 0;
-      padding-left: 20px;
-      border-left: 2px dashed var(--accent-rose);
-      text-align: left;
-    }
-
-    .timeline-item {
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    .timeline-dot {
-      position: absolute;
-      left: -27px; top: 3px;
-      width: 12px; height: 12px;
-      background: var(--accent-gold);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--accent-gold);
-    }
-
-    .timeline-date {
-      font-size: 0.75rem;
-      color: var(--accent-gold);
-      font-weight: 600;
-    }
-
-    .timeline-title {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    /* Coupons Stamp Style */
-    .coupon-card {
-      position: relative;
-      background: rgba(20, 8, 18, 0.8);
-      border: 1px dashed var(--accent-gold);
-      padding: 16px;
-      border-radius: 18px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-align: left;
-      overflow: hidden;
-    }
-
-    .coupon-info h4 {
-      color: var(--accent-gold);
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-    }
-
-    .coupon-info p {
-      font-size: 0.75rem;
-      color: var(--text-sub);
-    }
-
-    .btn-use-coupon {
-      background: linear-gradient(135deg, var(--accent-rose), #c86b85);
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .stamp-overlay {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%) rotate(-12deg);
-      border: 2px solid #ff4757;
-      color: #ff4757;
-      font-size: 0.85rem;
-      font-weight: bold;
-      padding: 4px 10px;
-      border-radius: 8px;
-      background: rgba(0,0,0,0.6);
-      text-transform: uppercase;
-      animation: stampIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes stampIn {
-      from { transform: translateY(-50%) scale(2) rotate(0deg); opacity: 0; }
-      to { transform: translateY(-50%) scale(1) rotate(-12deg); opacity: 1; }
-    }
-
-    .btn-action {
-      background: linear-gradient(135deg, var(--accent-rose), #d65a8a);
-      color: #fff;
-      border: none;
-      width: 100%;
-      padding: 14px;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-family: 'Prompt', sans-serif;
-      font-weight: 500;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(255, 117, 140, 0.4);
-      margin-top: 10px;
-      transition: transform 0.2s;
-    }
-
-    .btn-action:active { transform: scale(0.96); }
-
-    /* Lightbox Modal */
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.9);
-      z-index: 3000;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .lightbox img, .lightbox video {
-      max-width: 90%;
-      max-height: 80vh;
-      border-radius: 15px;
-      box-shadow: 0 0 30px rgba(255,255,255,0.2);
-    }
-
-    .toast-msg {
-      position: fixed;
-      top: 75px; left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: var(--accent-gold);
-      color: #1a0812;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-weight: 600;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      z-index: 4000;
-      opacity: 0;
-      transition: all 0.4s ease;
-    }
-
-    .toast-msg.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-  </style>
-</head>
-<body>
-
-  <canvas id="bg-canvas"></canvas>
-  <div id="yt-player-container" style="display:none"><div id="yt-player"></div></div>
-
-  <div class="vinyl-player" onclick="toggleAudio()">
-    <div class="vinyl-disc" id="vinyl-disc"><i class="fa-solid fa-music"></i></div>
-    <span style="font-size: 0.8rem; color: var(--accent-gold);" id="song-label">Our Romantic Song</span>
-  </div>
-
-  <div class="toast-msg" id="toast-msg">❤️ Notification!</div>
-
-  <div class="app-card">
-
-    <!-- STEP 0: LOCK SCREEN -->
-    <div class="step-section active" id="step-lock">
-      <i class="fa-solid fa-heart-circle-bolt" style="font-size: 3rem; color: var(--accent-rose); margin-bottom: 10px;"></i>
-      <h1 class="title-romantic">Love Passcode</h1>
-      <p style="color: var(--text-sub); font-size: 0.85rem;">ใส่วันครบรอบของเราเพื่อเปิดกล่องความทรงจำ ✨</p>
-      
-      <div class="pin-container" id="pin-container"></div>
-
-      <button class="btn-action" onclick="checkPasscode()">ปลดล็อกด้วยความรัก 💕</button>
-    </div>
-
-    <!-- STEP 1: INTRO COUNTDOWN -->
-    <div class="step-section" id="step-countdown">
-      <h1 class="title-romantic">Happy Anniversary</h1>
-      <p style="color: var(--text-sub); font-size: 0.9rem; margin-bottom: 15px;">ระยะเวลาที่เราเดินทางร่วมกันมา...</p>
-
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 20px 0;">
-        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;"><div id="cnt-days" style="font-size: 1.4rem; color: var(--accent-gold); font-weight: bold;">0</div><div style="font-size:0.65rem;">DAYS</div></div>
-        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;"><div id="cnt-hours" style="font-size: 1.4rem; color: var(--accent-gold); font-weight: bold;">0</div><div style="font-size:0.65rem;">HOURS</div></div>
-        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;"><div id="cnt-mins" style="font-size: 1.4rem; color: var(--accent-gold); font-weight: bold;">0</div><div style="font-size:0.65rem;">MINS</div></div>
-        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;"><div id="cnt-secs" style="font-size: 1.4rem; color: var(--accent-gold); font-weight: bold;">0</div><div style="font-size:0.65rem;">SECS</div></div>
-      </div>
-
-      <button class="btn-action" onclick="goToFinalPage()">เปิดอ่านจดหมาย & ความทรงจำ 💌</button>
-    </div>
-
-    <!-- MAIN FINAL VIEW: LOVE LETTER, TIMELINE, GALLERY, COUPONS -->
-    <div class="step-section" id="step-final">
-      <h1 class="title-romantic">ถึงเธอที่รัก...</h1>
-
-      <!-- Typewriter Love Letter -->
-      <div class="letter-box">
-        <span id="typewriter-text"></span>
-      </div>
-
-      <!-- Love Timeline -->
-      <h3 style="font-size: 1rem; color: var(--accent-gold); text-align: left; margin: 20px 0 10px 0;">
-        <i class="fa-solid fa-route"></i> เส้นทางความรักของเรา
-      </h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">14 กุมภาพันธ์ 2022</div>
-          <div class="timeline-title">วันแรกที่เราได้พบและรู้จักกัน 🌸</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">1 มิถุนายน 2022</div>
-          <div class="timeline-title">ทริปต่างจังหวัดแรกของเราสองคน 🚗</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">วันนี้ & ตลอดไป</div>
-          <div class="timeline-title">จับมือเดินทางด้วยกันต่อไปนะ 💕</div>
-        </div>
-      </div>
-
-      <!-- Memory Gallery (Polaroid) -->
-      <h3 style="font-size: 1rem; color: var(--accent-gold); text-align: left; margin: 25px 0 10px 0;">
-        <i class="fa-solid fa-camera-retro"></i> ความทรงจำแสนพิเศษ
-      </h3>
-      <div class="polaroid-grid" id="gallery-grid"></div>
-
-      <!-- Coupons Zone -->
-      <h3 style="font-size: 1rem; color: var(--accent-gold); text-align: left; margin: 25px 0 10px 0;">
-        <i class="fa-solid fa-ticket"></i> คูปองสิทธิพิเศษสำหรับเธอ
-      </h3>
-      <div id="coupons-list"></div>
-
-      <button class="btn-action" onclick="fireConfetti()">🎉 จุดพลุเฉลิมฉลอง</button>
-    </div>
-
-  </div>
-
-  <!-- Lightbox Preview -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <div id="lightbox-content"></div>
-  </div>
-
-  <script>
-    const config = {
-      passcode: "1402",
-      startDate: "2022-02-14T00:00:00",
-      youtubeId: "kJQP7kiw5Fk",
-      letter: "ขอบคุณสำหรับความรักและความเข้าใจที่มีให้กันเสมอมานะ ตั้งแต่วันแรกจนถึงวันนี้ ทุกช่วงเวลาที่อยู่กับเธอคือช่วงเวลาที่มีความสุขที่สุด เค้ารักเธอมากขึ้นทุกวัน และจะอยู่ข้างๆ เป็นกำลังใจให้เธอแบบนี้ตลอดไปนะคะ ❤️",
-      gallery: [
-        { type: "image", url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600", caption: "เดตแรกของเรา ❤️", rot: -3 },
-        { type: "image", url: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600", caption: "รอยยิ้มแสนหวาน ✨", rot: 4 },
-        { type: "image", url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600", caption: "ทริปแสนพิเศษ 🌊", rot: -2 }
-      ],
-      coupons: [
-        { id: "c1", title: "คูปองพาไปกินชาบู/ปิ้งย่าง 1 มื้อ 🥩", desc: "ใช้ได้ทันทีไม่มีเงื่อนไข" },
-        { id: "c2", title: "คูปองห้ามงอน 1 วันเต็ม 😇", desc: "ชนะทุกการถกเถียงตลอดวัน" },
-        { id: "c3", title: "คูปองนวด VIP 30 นาที 💆‍♀️", desc: "พร้อมบริการระดับพรีเมียม" }
-      ]
-    };
-
-    let ytPlayer = null;
-    let isAudioPlaying = false;
-
-    window.addEventListener('DOMContentLoaded', () => {
-      buildPinInputs();
-      initTimer();
-      renderGallery();
-
-      // หากเคยเข้าชมจบแล้ว จะเข้าสู่หน้าโชว์การ์ดทันที!
-      if (localStorage.getItem('app_unlocked') === 'true') {
-        showSection('step-final');
-        startTypewriter();
-        renderCoupons();
-      }
-    });
-
-    function buildPinInputs() {
-      const container = document.getElementById('pin-container');
-      for (let i = 0; i < config.passcode.length; i++) {
-        const input = document.createElement('input');
-        input.type = 'password';
-        input.maxLength = 1;
-        input.className = 'pin-box';
-        input.addEventListener('input', (e) => {
-          if (e.target.value && i < config.passcode.length - 1) {
-            container.children[i + 1].focus();
-          }
-        });
-        container.appendChild(input);
-      }
-    }
-
-    function checkPasscode() {
-      const inputs = document.querySelectorAll('.pin-box');
-      let val = '';
-      inputs.forEach(i => val += i.value);
-
-      if (val === config.passcode) {
-        fireConfetti();
-        showSection('step-countdown');
-        toggleAudio();
-      } else {
-        showToast("รหัสผ่านไม่ถูกต้องลองใหม่อีกครั้งนะคะ ❤️");
-      }
-    }
-
-    function showSection(id) {
-      document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-
-    function goToFinalPage() {
-      localStorage.setItem('app_unlocked', 'true');
-      showSection('step-final');
-      startTypewriter();
-      renderCoupons();
-      fireConfetti();
-    }
-
-    function startTypewriter() {
-      const el = document.getElementById('typewriter-text');
-      el.innerHTML = '';
-      let i = 0;
-      function type() {
-        if (i < config.letter.length) {
-          el.innerHTML += config.letter.charAt(i);
-          i++;
-          setTimeout(type, 40);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Anniversary ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { font-family: 'Mitr', 'Sarabun', sans-serif; }
+        
+        /* Glassmorphism Background & Components */
+        body {
+            background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 50%, #fbcfe8 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-      }
-      type();
-    }
 
-    function renderGallery() {
-      const grid = document.getElementById('gallery-grid');
-      grid.innerHTML = '';
-      config.gallery.forEach(g => {
-        const div = document.createElement('div');
-        div.className = 'polaroid-card';
-        div.style.setProperty('--r', g.rot);
-        div.onclick = () => openLightbox(g.url, g.type);
-        div.innerHTML = `
-          <img src="${g.url}" class="polaroid-img" alt="Memory">
-          <div class="polaroid-caption">${g.caption}</div>
-        `;
-        grid.appendChild(div);
-      });
-    }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.15);
+        }
 
-    function renderCoupons() {
-      const list = document.getElementById('coupons-list');
-      list.innerHTML = '';
-      const used = JSON.parse(localStorage.getItem('redeemed_coupons') || '{}');
+        /* Floating Hearts Animation */
+        .heart-particle {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 8s linear infinite;
+            z-index: 0;
+        }
 
-      config.coupons.forEach(cpn => {
-        const isRedeemed = used[cpn.id] === true;
-        const div = document.createElement('div');
-        div.className = 'coupon-card';
-        div.innerHTML = `
-          <div class="coupon-info">
-            <h4>${cpn.title}</h4>
-            <p>${cpn.desc}</p>
-          </div>
-          ${isRedeemed ? 
-            `<div class="stamp-overlay">REDEEMED</div>` : 
-            `<button class="btn-use-coupon" onclick="useCoupon('${cpn.id}', '${cpn.title}')">กดใช้คูปอง</button>`
-          }
-        `;
-        list.appendChild(div);
-      });
-    }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
 
-    function useCoupon(id, title) {
-      const used = JSON.parse(localStorage.getItem('redeemed_coupons') || '{}');
-      used[id] = true;
-      localStorage.setItem('redeemed_coupons', JSON.stringify(used));
-      
-      fireConfetti();
-      renderCoupons();
-      showToast(`กดใช้คูปอง "${title}" สำเร็จแล้ว!`);
-    }
+        /* 3D Envelope Styles */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
 
-    function openLightbox(url, type) {
-      const lb = document.getElementById('lightbox');
-      const content = document.getElementById('lightbox-content');
-      content.innerHTML = type === 'video' ? `<video src="${url}" controls autoplay></video>` : `<img src="${url}">`;
-      lb.style.display = 'flex';
-    }
+        .envelope {
+            width: 300px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+        }
 
-    function closeLightbox() {
-      document.getElementById('lightbox').style.display = 'none';
-    }
+        .envelope-flap {
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #f43f5e;
+            transform-origin: top;
+            transition: transform 0.6s ease 0.2s, z-index 0.2s;
+            z-index: 3;
+        }
 
-    function initTimer() {
-      setInterval(() => {
-        const diff = new Date().getTime() - new Date(config.startDate).getTime();
-        document.getElementById('cnt-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-        document.getElementById('cnt-hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        document.getElementById('cnt-mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        document.getElementById('cnt-secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
-      }, 1000);
-    }
+        .envelope-open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
 
-    function fireConfetti() {
-      confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-    }
+        /* Shake & Pulse Effects */
+        .shake-effect { animation: shake 0.5s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
 
-    function showToast(msg) {
-      const t = document.getElementById('toast-msg');
-      t.innerText = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3500);
-    }
+        .pulse-aura {
+            animation: pulseAura 1.5s infinite;
+        }
+        @keyframes pulseAura {
+            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(244, 63, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+        }
 
-    function onYouTubeIframeAPIReady() {
-      ytPlayer = new YT.Player('yt-player', {
-        height: '0', width: '0',
-        videoId: config.youtubeId,
-        playerVars: { 'autoplay': 0, 'loop': 1 }
-      });
-    }
+        /* Scratch Card Canvas */
+        #scratchCanvas {
+            cursor: pointer;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 relative min-h-screen flex flex-col justify-between">
 
-    function toggleAudio() {
-      const disc = document.getElementById('vinyl-disc');
-      if (!ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
-      if (isAudioPlaying) {
-        ytPlayer.pauseVideo();
-        disc.classList.remove('spin');
-        isAudioPlaying = false;
-      } else {
-        ytPlayer.playVideo();
-        disc.classList.add('spin');
-        isAudioPlaying = true;
-      }
-    }
-  </script>
+    <div id="particleContainer" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <button onclick="openAdminAuth()" class="fixed top-4 right-4 z-50 p-2 bg-white/40 hover:bg-white/70 rounded-full backdrop-blur transition-all">
+        <i data-lucide="settings" class="w-5 h-5 text-pink-700"></i>
+    </button>
+
+    <main id="app" class="relative z-10 flex-1 flex flex-col items-center justify-center p-4 max-w-lg mx-auto w-full">
+
+        <section id="page1" class="w-full flex flex-col items-center space-y-6 text-center">
+            <h1 class="text-3xl font-bold text-rose-700 tracking-wide drop-shadow">Happy Anniversary ❤️</h1>
+            
+            <div class="glass-panel w-full p-4 rounded-2xl text-rose-800">
+                <p class="text-sm font-medium mb-1">เรารักกันมาแล้ว ✨</p>
+                <div id="loveTimer" class="text-lg font-semibold grid grid-cols-4 gap-2 text-rose-600">
+                    <div><span id="days">0</span><span class="text-xs block text-gray-500">วัน</span></div>
+                    <div><span id="hours">0</span><span class="text-xs block text-gray-500">ชม.</span></div>
+                    <div><span id="minutes">0</span><span class="text-xs block text-gray-500">นาที</span></div>
+                    <div><span id="seconds">0</span><span class="text-xs block text-gray-500">วิ</span></div>
+                </div>
+            </div>
+
+            <div class="envelope-wrapper my-8 cursor-pointer" onclick="openEnvelope()">
+                <div id="envelope" class="envelope bg-rose-300 rounded-b-lg shadow-xl flex items-center justify-center relative">
+                    <div id="flap" class="envelope-flap"></div>
+                    <div class="z-10 text-white font-bold bg-rose-500 px-4 py-2 rounded-full shadow-md flex items-center gap-1">
+                        <i data-lucide="heart" class="fill-current w-4 h-4"></i> กดเพื่อเปิดจดหมาย
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page2" class="w-full hidden flex-col items-center space-y-6">
+            <div class="glass-panel w-full p-6 rounded-3xl text-center space-y-4">
+                <span id="quizProgress" class="text-xs font-semibold px-3 py-1 bg-rose-100 text-rose-600 rounded-full">คำถามที่ 1</span>
+                <h2 id="quizQuestion" class="text-xl font-bold text-gray-800">โหลดคำถาม...</h2>
+                
+                <div id="quizContainer" class="flex flex-col gap-4 pt-4 min-h-[160px] justify-center items-center relative">
+                    <button id="btnCorrect" onclick="answerQuiz(true)" class="w-full py-3 bg-rose-500 text-white rounded-xl font-semibold shadow-lg hover:bg-rose-600 transition-all">
+                        คำตอบที่ถูก
+                    </button>
+                    <button id="btnWrong" onclick="answerQuiz(false)" class="w-full py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all">
+                        คำตอบที่ผิด
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="page3" class="w-full hidden flex-col items-center space-y-6 text-center">
+            <div class="glass-panel w-full p-6 rounded-3xl space-y-4">
+                <h2 class="text-2xl font-bold text-rose-600">ขอบคุณที่อยู่ข้างกันนะ 💕</h2>
+                <p id="finalMessage" class="text-sm text-gray-700 leading-relaxed">
+                    ความรักของเราเดินทางมาไกลแค่ไหนแล้ว ขอบคุณทุกรอยยิ้มและความทรงจำดีๆ ที่มีให้กันเสมอนะครับ
+                </p>
+
+                <div class="bg-white p-3 pt-4 rounded-xl shadow-md border max-w-[240px] mx-auto transform -rotate-1">
+                    <img id="polaroidImg" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500" class="w-full h-48 object-cover rounded-lg mb-2">
+                    <p id="polaroidCaption" class="text-xs font-semibold text-gray-500">Our Special Moment ✨</p>
+                </div>
+
+                <div class="pt-4 space-y-2">
+                    <p class="text-xs font-bold text-rose-500">🎁 คูปองพิเศษสำหรับเธอ (ใช้นิ้วขูดการ์ด):</p>
+                    <div class="relative w-64 h-32 mx-auto rounded-xl overflow-hidden shadow-inner bg-rose-100 flex items-center justify-center">
+                        <div id="scratchReward" class="absolute inset-0 flex items-center justify-center font-bold text-rose-600 p-2 text-center">
+                            คูปองกินชาบูฟรี 1 มื้อ! 🍲
+                        </div>
+                        <canvas id="scratchCanvas" width="256" height="128" class="absolute inset-0 z-10"></canvas>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-rose-200/60 flex justify-center gap-3">
+                    <button onclick="sendReaction('❤️')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-xl">❤️</button>
+                    <button onclick="sendReaction('🥰')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-xl">🥰</button>
+                    <button onclick="sendReaction('😘')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-xl">😘</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="audioControls" class="fixed bottom-4 left-4 z-40 hidden">
+        <button onclick="toggleAudio()" class="glass-panel p-3 rounded-full shadow-lg flex items-center gap-2 text-xs text-rose-600 font-semibold">
+            <i data-lucide="music" class="w-4 h-4"></i> <span id="audioStatus">เล่นเพลง</span>
+        </button>
+        <audio id="bgAudio" loop></audio>
+    </div>
+
+    <div id="poutModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-panel bg-white/90 max-w-xs w-full p-6 rounded-2xl text-center space-y-3 shake-effect">
+            <div class="text-4xl">🥺</div>
+            <p id="poutText" class="text-sm font-semibold text-rose-700">ไม่ใช่อันนี้นะคะ เลือกอีกอันสิ!</p>
+            <button onclick="closePoutModal()" class="w-full py-2 bg-rose-500 text-white rounded-lg text-xs font-semibold">ตกลงค่ะ</button>
+        </div>
+    </div>
+
+    <div id="adminModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white max-w-2xl w-full max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="bg-rose-500 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold flex items-center gap-2"><i data-lucide="layout-dashboard"></i> Admin Dashboard</h3>
+                <button onclick="closeAdmin()" class="text-white/80 hover:text-white"><i data-lucide="x"></i></button>
+            </div>
+
+            <div class="flex border-b text-xs font-semibold bg-gray-50 overflow-x-auto">
+                <button onclick="switchTab(1)" class="tab-btn px-4 py-3 border-b-2 border-rose-500 text-rose-600">Live Monitor</button>
+                <button onclick="switchTab(2)" class="tab-btn px-4 py-3 text-gray-500">Content Editor</button>
+                <button onclick="switchTab(3)" class="tab-btn px-4 py-3 text-gray-500">Media</button>
+                <button onclick="switchTab(4)" class="tab-btn px-4 py-3 text-gray-500">Audio</button>
+                <button onclick="switchTab(5)" class="tab-btn px-4 py-3 text-gray-500">Settings</button>
+            </div>
+
+            <div class="p-4 overflow-y-auto flex-1 text-xs space-y-4">
+                <div id="tab1" class="tab-content space-y-3">
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold">Status:</span>
+                        <span id="liveStatus" class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold">Offline</span>
+                    </div>
+                    <div class="border rounded-lg p-3 bg-gray-50 max-h-48 overflow-y-auto space-y-1" id="activityLogs">
+                        <div class="text-gray-400">ยังไม่มี Activity Log...</div>
+                    </div>
+                </div>
+
+                <div id="tab2" class="tab-content hidden space-y-3">
+                    <div>
+                        <label class="block font-medium mb-1">วันที่เริ่มคบกัน (YYYY-MM-DD)</label>
+                        <input type="date" id="cfgStartDate" class="w-full border p-2 rounded">
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">ข้อความอวยพรหน้าสุดท้าย</label>
+                        <textarea id="cfgFinalMsg" class="w-full border p-2 rounded h-20"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-medium mb-1">รางวัลในบัตรขูด</label>
+                        <input type="text" id="cfgReward" class="w-full border p-2 rounded">
+                    </div>
+                </div>
+
+                <div id="tab3" class="tab-content hidden space-y-3">
+                    <label class="block font-medium mb-1">รูปโพลารอยด์ (Upload หรือ URL)</label>
+                    <input type="file" accept="image/*" onchange="handleImageUpload(event)" class="w-full border p-1 rounded">
+                    <input type="text" id="cfgPolaroidUrl" placeholder="หรือใส่ Image URL" class="w-full border p-2 rounded">
+                </div>
+
+                <div id="tab4" class="tab-content hidden space-y-3">
+                    <label class="block font-medium mb-1">ลิงก์เพลงประกอบ (MP3 Direct Link)</label>
+                    <input type="text" id="cfgAudioUrl" placeholder="https://example.com/music.mp3" class="w-full border p-2 rounded">
+                </div>
+
+                <div id="tab5" class="tab-content hidden space-y-3">
+                    <label class="block font-medium mb-1">ตั้งค่า Firebase Config (JSON)</label>
+                    <textarea id="cfgFirebase" placeholder='{"apiKey": "...", ...}' class="w-full border p-2 rounded h-24 font-mono text-[10px]"></textarea>
+                    <button onclick="saveAdminSettings()" class="w-full bg-rose-500 text-white py-2 rounded font-bold">บันทึกการตั้งค่าทั้งหมด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // CONFIG DEFAULT / FALLBACK STORAGE
+        window.defaultConfig = {
+            startDate: "2023-01-01",
+            finalMsg: "ความรักของเราเดินทางมาไกลแค่ไหนแล้ว ขอบคุณทุกรอยยิ้มและความทรงจำดีๆ ที่มีให้กันเสมอนะครับ 💕",
+            reward: "คูปองกินชาบูฟรี 1 มื้อ! 🍲",
+            polaroidUrl: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500",
+            audioUrl: "",
+            firebase: null
+        };
+
+        window.appConfig = JSON.parse(localStorage.getItem("anniv_config")) || window.defaultConfig;
+        
+        // Initialize Firebase if configured
+        let db = null;
+        if (window.appConfig.firebase) {
+            try {
+                const app = initializeApp(window.appConfig.firebase);
+                db = getDatabase(app);
+                window.fbDb = db;
+                
+                // Track online status
+                const statusRef = ref(db, 'status/online');
+                set(statusRef, true);
+                onDisconnect(statusRef).set(false);
+
+                // Admin live monitor listener
+                onValue(ref(db, 'logs'), (snapshot) => {
+                    const data = snapshot.val();
+                    if(data && document.getElementById('activityLogs')) {
+                        const container = document.getElementById('activityLogs');
+                        container.innerHTML = Object.values(data).map(l => 
+                            `<div class="text-[11px]"><span class="text-gray-400">[${l.time}]</span> ${l.msg}</div>`
+                        ).join('');
+                    </div>
+                });
+
+                onValue(ref(db, 'status/online'), (snap) => {
+                    const statusEl = document.getElementById('liveStatus');
+                    if(statusEl) statusEl.innerText = snap.val() ? "Online 🟢" : "Offline 🔴";
+                });
+            } catch(e) { console.error("Firebase init error:", e); }
+        }
+
+        // Global Logger Function
+        window.logActivity = function(message) {
+            const time = new Date().toLocaleTimeString('th-TH');
+            console.log(`[LOG ${time}]: ${message}`);
+            if (window.fbDb) {
+                push(ref(window.fbDb, 'logs'), { time, msg: message });
+            }
+        };
+
+        window.logActivity("แฟนเปิดเข้ามาดูเว็บแล้ว 💌");
+    </script>
+
+    <script>
+        // Quiz Data & Pout Logic Array
+        const quizData = [
+            { q: "จำวันแรกที่เราเดทกันได้ไหม?", correct: "จำได้สิ! 🥰", wrong: "ลืมไปแล้วอะ 😜" },
+            { q: "ใครเป็นคนบอกรักก่อน?", correct: "เธอไงงง 💕", wrong: "จำไม่ได้แล้ว 🙈" }
+        ];
+
+        const poutMessages = [
+            "ไม่ใช่อันนี้นะคะ/ครับ เลือกอีกอันสิ 🥺",
+            "แน่ะ ยังจะกดอีก! เลือกใหม่เลย 😤",
+            "ใจร้ายจัง! ตอบให้ถูกสิคะ 💔",
+            "โกรธแล้วนะ! 😡💢"
+        ];
+
+        let currentQuizIndex = 0;
+        let wrongAttemptCount = 0;
+
+        // Init App
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            initParticles();
+            startTimer();
+            loadConfigToUI();
+            initScratchCard();
+        });
+
+        function loadConfigToUI() {
+            document.getElementById('finalMessage').innerText = window.appConfig.finalMsg;
+            document.getElementById('scratchReward').innerText = window.appConfig.reward;
+            document.getElementById('polaroidImg').src = window.appConfig.polaroidUrl;
+            
+            if(window.appConfig.audioUrl) {
+                const audio = document.getElementById('bgAudio');
+                audio.src = window.appConfig.audioUrl;
+                document.getElementById('audioControls').classList.remove('hidden');
+            }
+        }
+
+        // Floating Hearts Animation
+        function initParticles() {
+            const container = document.getElementById('particleContainer');
+            for(let i=0; i<15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-particle text-rose-300/40 text-xl';
+                heart.innerHTML = '❤️';
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                heart.style.fontSize = `${Math.random() * 20 + 10}px`;
+                container.appendChild(heart);
+            }
+        }
+
+        // Love Timer Logic
+        function startTimer() {
+            function update() {
+                const start = new Date(window.appConfig.startDate).getTime();
+                const now = new Date().getTime();
+                const diff = now - start;
+
+                if (isNaN(diff)) return;
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days;
+                document.getElementById('hours').innerText = hours;
+                document.getElementById('minutes').innerText = minutes;
+                document.getElementById('seconds').innerText = seconds;
+            }
+            update();
+            setInterval(update, 1000);
+        }
+
+        // Page Navigation
+        function openEnvelope() {
+            document.getElementById('envelope').classList.add('envelope-open');
+            window.logActivity("แฟนเปิดอ่านซองจดหมายแล้ว 💌");
+            setTimeout(() => {
+                document.getElementById('page1').classList.add('hidden');
+                document.getElementById('page2').classList.remove('hidden');
+                document.getElementById('page2').classList.add('flex');
+                loadQuiz();
+            }, 1000);
+        }
+
+        // Quiz Logic
+        function loadQuiz() {
+            const q = quizData[currentQuizIndex];
+            document.getElementById('quizProgress').innerText = `คำถามที่ ${currentQuizIndex + 1}/${quizData.length}`;
+            document.getElementById('quizQuestion').innerText = q.q;
+            document.getElementById('btnCorrect').innerText = q.correct;
+            document.getElementById('btnWrong').innerText = q.wrong;
+            
+            // Reset button styles
+            wrongAttemptCount = 0;
+            const btnWrong = document.getElementById('btnWrong');
+            const btnCorrect = document.getElementById('btnCorrect');
+            btnWrong.style.display = 'block';
+            btnWrong.style.transform = 'scale(1)';
+            btnCorrect.style.transform = 'scale(1)';
+            btnCorrect.classList.remove('pulse-aura');
+        }
+
+        function answerQuiz(isCorrect) {
+            if(isCorrect) {
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+                window.logActivity(`ตอบคำถามข้อที่ ${currentQuizIndex + 1} ถูกต้อง! 🎉`);
+                currentQuizIndex++;
+                if(currentQuizIndex < quizData.length) {
+                    loadQuiz();
+                } else {
+                    // Show Final Page
+                    document.getElementById('page2').classList.add('hidden');
+                    document.getElementById('page3').classList.remove('hidden');
+                    document.getElementById('page3').classList.add('flex');
+                    confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+                    window.logActivity("เข้าสู่หน้าสุดท้าย (Scratch Card & Final Message) ✨");
+                }
+            } else {
+                wrongAttemptCount++;
+                window.logActivity(`กดตอบผิดครั้งที่ ${wrongAttemptCount} 🥺`);
+                
+                // Show Pout Modal
+                const poutIdx = Math.min(wrongAttemptCount - 1, poutMessages.length - 1);
+                document.getElementById('poutText').innerText = poutMessages[poutIdx];
+                document.getElementById('poutModal').classList.remove('hidden');
+
+                // Dynamic UI Changes
+                const btnWrong = document.getElementById('btnWrong');
+                const btnCorrect = document.getElementById('btnCorrect');
+
+                if(wrongAttemptCount >= poutMessages.length) {
+                    btnWrong.style.display = 'none'; // Disappear
+                } else {
+                    btnWrong.style.transform = `scale(${1 - wrongAttemptCount * 0.15})`;
+                }
+
+                btnCorrect.style.transform = `scale(${1 + wrongAttemptCount * 0.1})`;
+                btnCorrect.classList.add('pulse-aura');
+            }
+        }
+
+        function closePoutModal() {
+            document.getElementById('poutModal').classList.add('hidden');
+        }
+
+        // Scratch Card Logic
+        function initScratchCard() {
+            const canvas = document.getElementById('scratchCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Cover with silver/pink pattern
+            ctx.fillStyle = '#f472b6';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '14px Mitr';
+            ctx.fillText('ใช้นิ้วขูดตรงนี้เพื่อดูของขวัญ ✨', 20, 70);
+
+            let isScratching = false;
+
+            function scratch(e) {
+                if(!isScratching) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 15, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            canvas.addEventListener('mousedown', () => isScratching = true);
+            canvas.addEventListener('mouseup', () => isScratching = false);
+            canvas.addEventListener('mousemove', scratch);
+
+            canvas.addEventListener('touchstart', () => isScratching = true);
+            canvas.addEventListener('touchend', () => isScratching = false);
+            canvas.addEventListener('touchmove', scratch);
+        }
+
+        function sendReaction(emoji) {
+            confetti({ particleCount: 30, spread: 50 });
+            window.logActivity(`แฟนส่ง Reaction: ${emoji}`);
+            alert(`ส่ง ${emoji} ให้แฟนเรียบร้อยแล้วค่ะ! ❤️`);
+        }
+
+        // Audio Toggle
+        function toggleAudio() {
+            const audio = document.getElementById('bgAudio');
+            const status = document.getElementById('audioStatus');
+            if(audio.paused) {
+                audio.play();
+                status.innerText = "หยุดเพลง";
+            } else {
+                audio.pause();
+                status.innerText = "เล่นเพลง";
+            }
+        }
+
+        // Admin Dashboard Functions
+        function openAdminAuth() {
+            const pass = prompt("กรุณากรอกรหัสผ่าน Admin:");
+            if(pass === "1234") { // Default password
+                document.getElementById('adminModal').classList.remove('hidden');
+            } else if(pass !== null) {
+                alert("รหัสผ่านไม่ถูกต้อง!");
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function switchTab(idx) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('border-b-2', 'border-rose-500', 'text-rose-600');
+                el.classList.add('text-gray-500');
+            });
+            
+            document.getElementById(`tab${idx}`).classList.remove('hidden');
+            event.target.classList.add('border-b-2', 'border-rose-500', 'text-rose-600');
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    window.appConfig.polaroidUrl = event.target.result;
+                    document.getElementById('polaroidImg').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveAdminSettings() {
+            const startDate = document.getElementById('cfgStartDate').value;
+            const finalMsg = document.getElementById('cfgFinalMsg').value;
+            const reward = document.getElementById('cfgReward').value;
+            const polaroidUrl = document.getElementById('cfgPolaroidUrl').value;
+            const audioUrl = document.getElementById('cfgAudioUrl').value;
+            const fbConfig = document.getElementById('cfgFirebase').value;
+
+            if(startDate) window.appConfig.startDate = startDate;
+            if(finalMsg) window.appConfig.finalMsg = finalMsg;
+            if(reward) window.appConfig.reward = reward;
+            if(polaroidUrl) window.appConfig.polaroidUrl = polaroidUrl;
+            if(audioUrl) window.appConfig.audioUrl = audioUrl;
+
+            if(fbConfig) {
+                try {
+                    window.appConfig.firebase = JSON.parse(fbConfig);
+                } catch(e) {
+                    alert("รูปแบบ JSON ของ Firebase ไม่ถูกต้อง");
+                    return;
+                }
+            }
+
+            localStorage.setItem("anniv_config", JSON.stringify(window.appConfig));
+            alert("บันทึกข้อมูลเรียบร้อยแล้ว! (รีโหลดหน้าเว็บเพื่อแสดงผลใหม่)");
+            location.reload();
+        }
+    </script>
 </body>
 </html>
