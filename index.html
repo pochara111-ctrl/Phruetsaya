@@ -3,38 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Our Special Anniversary ✨</title>
+  <title>Our Endless Love Story ✨</title>
   
-  <!-- Google Fonts -->
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;700&family=Mitr:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&family=Charm:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Charm:wght@400;700&family=Cinzel:wght@500;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Canvas Confetti -->
+  <!-- Confetti & Firebase -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
-  
-  <!-- YouTube IFrame API -->
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <style>
     :root {
-      --bg-deep: #1a0812;
-      --primary-rose: #ea9ab2;
-      --gold-accent: #f3cf7a;
-      --gold-dark: #c59b3f;
-      --glass-bg: rgba(255, 240, 245, 0.12);
-      --glass-border: rgba(255, 215, 225, 0.25);
-      --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(234, 154, 178, 0.2);
-      --text-light: #fff5f8;
-      --text-muted: #e6c8d2;
+      --bg-dark: #0a040a;
+      --accent-rose: #ff758c;
+      --accent-gold: #f7d070;
+      --glass-card: rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --text-main: #fff0f5;
+      --text-sub: #d1b3c4;
     }
 
     * {
@@ -47,905 +38,456 @@
 
     body {
       font-family: 'Prompt', sans-serif;
-      background: var(--bg-deep);
-      color: var(--text-light);
+      background: var(--bg-dark);
+      color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
     }
 
     #bg-canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       z-index: 0;
       pointer-events: none;
     }
 
-    #yt-player-container {
+    /* Floating Music Widget */
+    .vinyl-player {
       position: fixed;
-      top: -9999px;
-      left: -9999px;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .audio-widget {
-      position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 20px; right: 20px;
       z-index: 1000;
-      background: rgba(30, 10, 20, 0.6);
-      backdrop-filter: blur(12px);
+      background: rgba(20, 10, 20, 0.7);
+      backdrop-filter: blur(15px);
       border: 1px solid var(--glass-border);
-      padding: 8px 16px;
-      border-radius: 30px;
+      padding: 8px 16px 8px 8px;
+      border-radius: 40px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      transition: all 0.3s ease;
-    }
-
-    .music-btn {
-      background: none;
-      border: none;
-      color: var(--gold-accent);
-      font-size: 1.2rem;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       cursor: pointer;
-      outline: none;
     }
 
-    .music-title {
+    .vinyl-disc {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #333 30%, #111 70%);
+      border: 2px solid var(--accent-gold);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--accent-gold);
       font-size: 0.8rem;
-      color: var(--text-muted);
-      max-width: 120px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    .app-container {
+    .vinyl-disc.spin {
+      animation: spin 4s linear infinite;
+    }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .app-card {
       position: relative;
       z-index: 10;
       width: 100%;
-      max-width: 480px;
-      min-height: 90vh;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .glass-card {
-      width: 100%;
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      max-width: 460px;
+      background: var(--glass-card);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       border: 1px solid var(--glass-border);
-      border-radius: 28px;
-      padding: 28px 22px;
-      box-shadow: var(--card-shadow);
+      border-radius: 30px;
+      padding: 30px 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(255, 117, 140, 0.15);
       text-align: center;
-      position: relative;
-      animation: fadeIn 0.6s ease-out;
+      margin: 20px;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px) scale(0.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    .step-section { display: none; }
+    .step-section.active { display: block; animation: fadeInUp 0.5s forwards; }
 
-    .step-view {
-      display: none;
-      width: 100%;
-    }
-
-    .step-view.active {
-      display: block;
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .title-romantic {
       font-family: 'Alex Brush', cursive;
-      font-size: 2.8rem;
-      color: var(--gold-accent);
-      text-shadow: 0 0 10px rgba(243, 207, 122, 0.4);
-      margin-bottom: 5px;
+      font-size: 3.2rem;
+      color: var(--accent-gold);
+      text-shadow: 0 0 15px rgba(247, 208, 112, 0.3);
     }
 
-    .subtitle {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-      font-weight: 300;
-    }
-
-    .lock-dial-container {
+    /* Lock Screen Inputs */
+    .pin-container {
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       margin: 25px 0;
     }
 
-    .lock-input {
-      width: 45px;
-      height: 55px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 2px solid var(--primary-rose);
-      border-radius: 12px;
-      color: var(--gold-accent);
-      font-size: 1.5rem;
+    .pin-box {
+      width: 48px; height: 58px;
+      background: rgba(0,0,0,0.4);
+      border: 2px solid var(--accent-rose);
+      border-radius: 14px;
+      color: var(--accent-gold);
+      font-size: 1.6rem;
       font-family: 'Cinzel', serif;
       text-align: center;
       outline: none;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
     }
 
-    .lock-input:focus {
-      border-color: var(--gold-accent);
-      box-shadow: 0 0 15px rgba(243, 207, 122, 0.5);
+    .pin-box:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 15px rgba(247, 208, 112, 0.5);
     }
 
-    .envelope-wrapper {
-      perspective: 1000px;
-      margin: 20px 0;
-      cursor: pointer;
-    }
-
-    .envelope {
-      width: 100%;
-      height: 220px;
-      background: #3b1424;
-      border-radius: 15px;
-      position: relative;
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 15px 25px rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      transition: transform 0.5s ease;
-    }
-
-    .wax-seal {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, #c59b3f, #f3cf7a);
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #1a0812;
-      font-size: 1.8rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-      z-index: 5;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-
-    .timer-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin: 20px 0;
-    }
-
-    .timer-box {
-      background: rgba(0,0,0,0.3);
-      padding: 10px 5px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .timer-val {
-      font-family: 'Cinzel', serif;
-      font-size: 1.3rem;
-      color: var(--gold-accent);
-      font-weight: bold;
-    }
-
-    .timer-lbl {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-    }
-
-    .media-box {
-      width: 100%;
-      max-height: 220px;
-      border-radius: 16px;
-      overflow: hidden;
-      margin: 15px 0;
-      border: 1px solid var(--glass-border);
-    }
-
-    .media-box img, .media-box video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Style สำหรับจดหมายความในใจ */
-    .letter-card {
-      background: rgba(30, 10, 22, 0.6);
+    /* Typewriter Letter Box */
+    .letter-box {
+      background: rgba(15, 5, 15, 0.6);
       border: 1px solid var(--glass-border);
       border-radius: 20px;
-      padding: 20px;
+      padding: 22px;
       text-align: left;
-      margin: 15px 0;
+      margin: 20px 0;
       font-family: 'Charm', cursive, 'Prompt', sans-serif;
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       line-height: 1.8;
+      min-height: 140px;
       color: #fff;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
-      max-height: 280px;
-      overflow-y: auto;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
     }
 
-    .letter-title {
-      color: var(--gold-accent);
-      font-family: 'Prompt', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    /* Media Gallery (รูปและวิดีโอ) */
-    .gallery-grid {
+    /* Polaroid Gallery */
+    .polaroid-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin: 15px 0;
+      gap: 15px;
+      margin: 20px 0;
     }
 
-    .gallery-item {
-      position: relative;
-      border-radius: 14px;
-      overflow: hidden;
-      height: 130px;
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    .polaroid-card {
+      background: #fff;
+      padding: 8px 8px 20px 8px;
+      border-radius: 6px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      transform: rotate(calc(var(--r, 0) * 1deg));
     }
 
-    .gallery-item img, .gallery-item video {
+    .polaroid-card:hover {
+      transform: scale(1.05) rotate(0deg);
+      z-index: 5;
+    }
+
+    .polaroid-img {
       width: 100%;
-      height: 100%;
+      height: 120px;
       object-fit: cover;
+      border-radius: 4px;
     }
 
-    .gallery-caption {
+    .polaroid-caption {
+      color: #333;
+      font-size: 0.75rem;
+      font-family: 'Prompt', sans-serif;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      margin: 20px 0;
+      padding-left: 20px;
+      border-left: 2px dashed var(--accent-rose);
+      text-align: left;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline-dot {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.8));
-      padding: 5px 8px;
-      font-size: 0.7rem;
-      color: #fff;
-      text-align: center;
+      left: -27px; top: 3px;
+      width: 12px; height: 12px;
+      background: var(--accent-gold);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-gold);
     }
 
-    .btn-group {
+    .timeline-date {
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .timeline-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Coupons Stamp Style */
+    .coupon-card {
+      position: relative;
+      background: rgba(20, 8, 18, 0.8);
+      border: 1px dashed var(--accent-gold);
+      padding: 16px;
+      border-radius: 18px;
+      margin-bottom: 12px;
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 20px;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      overflow: hidden;
     }
 
-    .btn-romantic {
-      background: linear-gradient(135deg, var(--primary-rose), #c86b85);
+    .coupon-info h4 {
+      color: var(--accent-gold);
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .coupon-info p {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+
+    .btn-use-coupon {
+      background: linear-gradient(135deg, var(--accent-rose), #c86b85);
       color: #fff;
       border: none;
-      padding: 14px 24px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .stamp-overlay {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-12deg);
+      border: 2px solid #ff4757;
+      color: #ff4757;
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.6);
+      text-transform: uppercase;
+      animation: stampIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes stampIn {
+      from { transform: translateY(-50%) scale(2) rotate(0deg); opacity: 0; }
+      to { transform: translateY(-50%) scale(1) rotate(-12deg); opacity: 1; }
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, var(--accent-rose), #d65a8a);
+      color: #fff;
+      border: none;
+      width: 100%;
+      padding: 14px;
       border-radius: 50px;
       font-size: 1rem;
       font-family: 'Prompt', sans-serif;
       font-weight: 500;
       cursor: pointer;
-      box-shadow: 0 5px 15px rgba(234, 154, 178, 0.4);
-      transition: all 0.3s ease;
-      outline: none;
+      box-shadow: 0 8px 20px rgba(255, 117, 140, 0.4);
+      margin-top: 10px;
+      transition: transform 0.2s;
     }
 
-    .btn-romantic:active {
-      transform: scale(0.95);
-    }
+    .btn-action:active { transform: scale(0.96); }
 
-    .btn-wrong {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-muted);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .romantic-input {
-      width: 100%;
-      padding: 14px;
-      background: rgba(0,0,0,0.3);
-      border: 1px solid var(--glass-border);
-      border-radius: 15px;
-      color: #fff;
-      font-family: 'Prompt', sans-serif;
-      font-size: 1rem;
-      outline: none;
-      margin-bottom: 15px;
-    }
-
-    .slider-container {
-      margin: 25px 0;
-    }
-
-    .romantic-slider {
-      width: 100%;
-      accent-color: var(--primary-rose);
-      height: 8px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .scratch-wrapper {
-      position: relative;
-      width: 280px;
-      height: 180px;
-      margin: 15px auto;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-      touch-action: none; 
-    }
-
-    .scratch-reveal {
-      width: 100%;
-      height: 100%;
-      background: #2a0e1a;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 15px;
-    }
-
-    #scratch-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-
-    .coupons-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin: 15px 0;
-      max-height: 260px;
-      overflow-y: auto;
-      padding-right: 5px;
-    }
-
-    .coupon-card {
-      background: rgba(0,0,0,0.35);
-      border: 1px dashed var(--gold-accent);
-      padding: 12px 16px;
-      border-radius: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-align: left;
-    }
-
-    .coupon-title {
-      font-weight: 500;
-      color: var(--gold-accent);
-      font-size: 0.9rem;
-    }
-
-    .coupon-desc {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .btn-use-coupon {
-      background: var(--gold-accent);
-      color: #1a0812;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-use-coupon.used {
-      background: rgba(255,255,255,0.15);
-      color: #888;
-      cursor: not-allowed;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .admin-gear {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      z-index: 1000;
-      background: rgba(20, 5, 12, 0.7);
-      border: 1px solid var(--glass-border);
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-    }
-
-    .admin-modal {
+    /* Lightbox Modal */
+    .lightbox {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(15px);
-      z-index: 2000;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.9);
+      z-index: 3000;
       justify-content: center;
       align-items: center;
       padding: 20px;
     }
 
-    .admin-content {
-      width: 100%;
-      max-width: 650px;
-      max-height: 85vh;
-      background: #1a0a14;
-      border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 25px;
-      overflow-y: auto;
-      color: var(--text-light);
-      text-align: left;
+    .lightbox img, .lightbox video {
+      max-width: 90%;
+      max-height: 80vh;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.2);
     }
 
-    .admin-nav {
-      display: flex;
-      gap: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-    }
-
-    .admin-tab {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      padding: 8px 12px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border-radius: 8px;
-    }
-
-    .admin-tab.active {
-      background: var(--primary-rose);
-      color: #fff;
-    }
-
-    .admin-form-group {
-      margin-bottom: 15px;
-    }
-
-    .admin-label {
-      font-size: 0.85rem;
-      color: var(--gold-accent);
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .admin-input, .admin-textarea {
-      width: 100%;
-      padding: 10px;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid var(--glass-border);
-      border-radius: 10px;
-      color: #fff;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.85rem;
-    }
-
-    .remote-toast {
+    .toast-msg {
       position: fixed;
-      top: 80px;
-      left: 50%;
+      top: 75px; left: 50%;
       transform: translateX(-50%) translateY(-100px);
-      background: linear-gradient(135deg, var(--gold-accent), var(--gold-dark));
+      background: var(--accent-gold);
       color: #1a0812;
-      padding: 14px 28px;
+      padding: 12px 24px;
       border-radius: 30px;
       font-weight: 600;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      z-index: 3000;
+      z-index: 4000;
       opacity: 0;
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      pointer-events: none;
+      transition: all 0.4s ease;
     }
 
-    .remote-toast.show {
+    .toast-msg.show {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
-    }
-
-    .badge-completed {
-      background: rgba(243, 207, 122, 0.2);
-      border: 1px solid var(--gold-accent);
-      color: var(--gold-accent);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      display: inline-block;
-      margin-bottom: 12px;
     }
   </style>
 </head>
 <body>
 
   <canvas id="bg-canvas"></canvas>
-  <div id="yt-player-container"><div id="yt-player"></div></div>
+  <div id="yt-player-container" style="display:none"><div id="yt-player"></div></div>
 
-  <div class="audio-widget">
-    <button class="music-btn" id="music-toggle-btn" onclick="toggleAudio()">
-      <i class="fa-solid fa-compact-disc"></i>
-    </button>
-    <div class="music-title" id="music-title-text">Playing Love Song</div>
+  <div class="vinyl-player" onclick="toggleAudio()">
+    <div class="vinyl-disc" id="vinyl-disc"><i class="fa-solid fa-music"></i></div>
+    <span style="font-size: 0.8rem; color: var(--accent-gold);" id="song-label">Our Romantic Song</span>
   </div>
 
-  <div class="remote-toast" id="remote-toast">❤️ Surprise Message!</div>
+  <div class="toast-msg" id="toast-msg">❤️ Notification!</div>
 
-  <div class="app-container">
+  <div class="app-card">
 
     <!-- STEP 0: LOCK SCREEN -->
-    <div class="step-view active" id="step-0">
-      <div class="glass-card">
-        <i class="fa-solid fa-lock-keyhole" style="font-size: 2.5rem; color: var(--gold-accent); margin-bottom: 15px;"></i>
-        <h1 class="title-romantic">Love Passcode</h1>
-        <p class="subtitle" id="lock-hint">ใส่รหัสผ่านวันครบรอบของเราเพื่อปลดล็อก ❤️</p>
-        
-        <div class="lock-dial-container" id="lock-inputs"></div>
+    <div class="step-section active" id="step-lock">
+      <i class="fa-solid fa-heart-circle-bolt" style="font-size: 3rem; color: var(--accent-rose); margin-bottom: 10px;"></i>
+      <h1 class="title-romantic">Love Passcode</h1>
+      <p style="color: var(--text-sub); font-size: 0.85rem;">ใส่วันครบรอบของเราเพื่อเปิดกล่องความทรงจำ ✨</p>
+      
+      <div class="pin-container" id="pin-container"></div>
 
-        <button class="btn-romantic" onclick="unlockLoveLock()" style="width: 100%;">
-          <i class="fa-solid fa-key"></i> ปลดล็อกหัวใจ
-        </button>
-      </div>
+      <button class="btn-action" onclick="checkPasscode()">ปลดล็อกด้วยความรัก 💕</button>
     </div>
 
-    <!-- STEP 1: ENVELOPE & COUNTDOWN -->
-    <div class="step-view" id="step-1">
-      <div class="glass-card">
-        <h1 class="title-romantic">Happy Anniversary</h1>
-        <p class="subtitle">มีจดหมายฉบับพิเศษส่งถึงเธอ... กดเปิดสิคะ</p>
+    <!-- STEP 1: INTRO COUNTDOWN -->
+    <div class="step-section" id="step-countdown">
+      <h1 class="title-romantic">Happy Anniversary</h1>
+      <p style="color: var(--text-sub); font-size: 0.9rem; margin-bottom: 15px;">ระยะเวลาที่เราเดินทางร่วมกันมา...</p>
 
-        <div class="envelope-wrapper" onclick="openEnvelope()">
-          <div class="envelope" id="envelope-elem">
-            <div class="wax-seal">
-              <i class="fa-solid fa-heart"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="timer-grid">
-          <div class="timer-box"><div class="timer-val" id="cnt-days">0</div><div class="timer-lbl">DAYS</div></div>
-          <div class="timer-box"><div class="timer-val" id="cnt-hours">0</div><div class="timer-lbl">HOURS</div></div>
-          <div class="timer-box"><div class="timer-val" id="cnt-mins">0</div><div class="timer-lbl">MINS</div></div>
-          <div class="timer-box"><div class="timer-val" id="cnt-secs">0</div><div class="timer-lbl">SECS</div></div>
-        </div>
-
-        <button class="btn-romantic" id="start-btn" onclick="nextStep()" style="width: 100%; display: none;">
-          เปิดอ่านจดหมาย ✨
-        </button>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 20px 0;">
+        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;"><div id="cnt-days" style="font-size: 1.4rem; color: var(--accent-gold); font-weight: bold;">0</div><div style="font-size:0.65rem;">DAYS</div></div>
+        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;"><div id="cnt-hours" style="font-size: 1.4rem; color: var(--accent-gold); font-weight: bold;">0</div><div style="font-size:0.65rem;">HOURS</div></div>
+        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;"><div id="cnt-mins" style="font-size: 1.4rem; color: var(--accent-gold); font-weight: bold;">0</div><div style="font-size:0.65rem;">MINS</div></div>
+        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;"><div id="cnt-secs" style="font-size: 1.4rem; color: var(--accent-gold); font-weight: bold;">0</div><div style="font-size:0.65rem;">SECS</div></div>
       </div>
+
+      <button class="btn-action" onclick="goToFinalPage()">เปิดอ่านจดหมาย & ความทรงจำ 💌</button>
     </div>
 
-    <!-- STEP 2: QUESTIONS CHAIN -->
-    <div class="step-view" id="step-question">
-      <div class="glass-card">
-        <div id="q-counter" style="font-size: 0.8rem; color: var(--gold-accent); margin-bottom: 8px;">QUESTION 1</div>
-        <h2 id="q-title" style="font-size: 1.3rem; margin-bottom: 12px;">-</h2>
-        
-        <div class="media-box" id="q-media" style="display: none;"></div>
+    <!-- MAIN FINAL VIEW: LOVE LETTER, TIMELINE, GALLERY, COUPONS -->
+    <div class="step-section" id="step-final">
+      <h1 class="title-romantic">ถึงเธอที่รัก...</h1>
 
-        <div id="q-body"></div>
+      <!-- Typewriter Love Letter -->
+      <div class="letter-box">
+        <span id="typewriter-text"></span>
       </div>
-    </div>
 
-    <!-- STEP 3: SCRATCH CARD -->
-    <div class="step-view" id="step-scratch">
-      <div class="glass-card">
-        <h1 class="title-romantic">Secret Scratch Card</h1>
-        <p class="subtitle">ใช้นิ้วขูดการ์ดเพื่อดูความลับที่ซ่อนอยู่ ❤️</p>
-
-        <div class="scratch-wrapper">
-          <div class="scratch-reveal">
-            <i class="fa-solid fa-crown" style="font-size: 2rem; color: var(--gold-accent); margin-bottom: 10px;"></i>
-            <h3 style="font-size: 1.1rem; color: #fff;" id="scratch-text">เธอคือของขวัญที่ดีที่สุดในชีวิตเค้าเลยนะ!</h3>
-          </div>
-          <canvas id="scratch-canvas" width="280" height="180"></canvas>
+      <!-- Love Timeline -->
+      <h3 style="font-size: 1rem; color: var(--accent-gold); text-align: left; margin: 20px 0 10px 0;">
+        <i class="fa-solid fa-route"></i> เส้นทางความรักของเรา
+      </h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">14 กุมภาพันธ์ 2022</div>
+          <div class="timeline-title">วันแรกที่เราได้พบและรู้จักกัน 🌸</div>
         </div>
-
-        <button class="btn-romantic" onclick="nextStep()" style="width: 100%; margin-top: 15px;">
-          อ่านจดหมายความในใจ 💌
-        </button>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">1 มิถุนายน 2022</div>
+          <div class="timeline-title">ทริปต่างจังหวัดแรกของเราสองคน 🚗</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">วันนี้ & ตลอดไป</div>
+          <div class="timeline-title">จับมือเดินทางด้วยกันต่อไปนะ 💕</div>
+        </div>
       </div>
-    </div>
 
-    <!-- MAIN VIEW / STEP FINAL: LOVE LETTER, MEDIA & COUPONS -->
-    <!-- (หากเคยเปิดแล้ว ระบบจะเด้งมาที่หน้านี้ทันที!) -->
-    <div class="step-view" id="step-final">
-      <div class="glass-card">
-        <span class="badge-completed"><i class="fa-solid fa-heart"></i> Special Anniversary Memory</span>
-        <h1 class="title-romantic" id="final-title">ถึงเธอที่รักของเค้า...</h1>
+      <!-- Memory Gallery (Polaroid) -->
+      <h3 style="font-size: 1rem; color: var(--accent-gold); text-align: left; margin: 25px 0 10px 0;">
+        <i class="fa-solid fa-camera-retro"></i> ความทรงจำแสนพิเศษ
+      </h3>
+      <div class="polaroid-grid" id="gallery-grid"></div>
 
-        <!-- จดหมายความในใจ -->
-        <div class="letter-card">
-          <div class="letter-title">💌 ข้อความอวยพรถึงเธอ</div>
-          <div id="letter-content-text">
-            ขอบคุณสำหรับเวลาและความรักที่มีให้กันเสมอมานะ ตั้งแต่วันแรกจนถึงวันนี้ ทุกช่วงเวลาที่อยู่กับเธอคือช่วงเวลาที่มีความสุขที่สุด เค้ารักเธอมากขึ้นทุก ๆ วัน และจะอยู่ข้าง ๆ เป็นกำลังใจให้เธอแบบนี้ไปนาน ๆ นะคะ ❤️
-          </div>
-        </div>
+      <!-- Coupons Zone -->
+      <h3 style="font-size: 1rem; color: var(--accent-gold); text-align: left; margin: 25px 0 10px 0;">
+        <i class="fa-solid fa-ticket"></i> คูปองสิทธิพิเศษสำหรับเธอ
+      </h3>
+      <div id="coupons-list"></div>
 
-        <!-- แกลเลอรีรูปภาพและวิดีโอความทรงจำ -->
-        <h3 style="font-size: 0.95rem; color: var(--gold-accent); margin-top: 15px; text-align: left;">
-          <i class="fa-solid fa-images"></i> รูปและวิดีโอความทรงจำของเรา
-        </h3>
-        <div class="gallery-grid" id="gallery-container">
-          <!-- ตัวอย่างรูปและคลิปวิดีโอ สามารถเปลี่ยน URL ใน Admin ได้ -->
-        </div>
-
-        <!-- โซนคูปองหัวใจที่กดใช้ได้จริง -->
-        <h3 style="font-size: 0.95rem; color: var(--gold-accent); margin-top: 20px; text-align: left;">
-          <i class="fa-solid fa-ticket"></i> คูปองสิทธิพิเศษสำหรับเธอ (กดใช้ได้จริง)
-        </h3>
-        <div class="coupons-grid" id="coupons-container"></div>
-
-        <button class="btn-romantic" onclick="triggerFireworks()" style="width: 100%; margin-top: 10px;">
-          🎉 จุดพลุเฉลิมฉลองอีกครั้ง
-        </button>
-      </div>
+      <button class="btn-action" onclick="fireConfetti()">🎉 จุดพลุเฉลิมฉลอง</button>
     </div>
 
   </div>
 
-  <div class="admin-gear" onclick="openAdminModal()">
-    <i class="fa-solid fa-gear"></i>
-  </div>
-
-  <!-- ADMIN CONTROL PANEL MODAL -->
-  <div class="admin-modal" id="admin-modal">
-    <div class="admin-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="color: var(--gold-accent);"><i class="fa-solid fa-user-shield"></i> Admin Control Center</h3>
-        <i class="fa-solid fa-xmark" onclick="closeAdminModal()" style="cursor: pointer; font-size: 1.3rem;"></i>
-      </div>
-
-      <div class="admin-nav">
-        <button class="admin-tab active" onclick="switchAdminTab(event, 'content')">เนื้อหา & จดหมาย</button>
-        <button class="admin-tab" onclick="switchAdminTab(event, 'remote')">Remote สั่งการสด</button>
-      </div>
-
-      <div id="atab-content">
-        <div class="admin-form-group">
-          <label class="admin-label">รหัสผ่าน Love Lock (ตัวเลข 4 หลัก):</label>
-          <input type="text" id="cfg-passcode" class="admin-input" value="1402">
-        </div>
-        <div class="admin-form-group">
-          <label class="admin-label">วันเริ่มคบกัน (YYYY-MM-DD):</label>
-          <input type="text" id="cfg-startdate" class="admin-input" value="2022-02-14">
-        </div>
-        <div class="admin-form-group">
-          <label class="admin-label">ข้อความในจดหมายถึงแฟน (Love Letter):</label>
-          <textarea id="cfg-letter" class="admin-textarea" rows="4"></textarea>
-        </div>
-        <div class="admin-form-group">
-          <label class="admin-label">ลิงก์ YouTube เพลงประกอบ:</label>
-          <input type="text" id="cfg-ytmusic" class="admin-input">
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
-          <button class="btn-romantic" onclick="saveAdminSettings()" style="flex: 1; font-size: 0.85rem;">บันทึกการเปลี่ยนแปลง</button>
-          <button class="btn-romantic" onclick="resetUserVisitedState()" style="background: #a32b47; font-size: 0.85rem;">รีเซ็ตสถานะการเล่นใหม่</button>
-        </div>
-      </div>
-
-      <div id="atab-remote" style="display: none;">
-        <p class="admin-label">สั่งการแบบ Realtime ไปยังหน้าจอของแฟน:</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-          <button class="btn-romantic" onclick="sendRemoteTrigger('fireworks')" style="font-size: 0.8rem;">💥 จุดพลุฉลอง</button>
-          <button class="btn-romantic" onclick="sendRemoteTrigger('hearts')" style="font-size: 0.8rem;">❤️ พายุหัวใจ</button>
-        </div>
-        <div class="admin-form-group">
-          <label class="admin-label">ส่งข้อความป๊อปอัปเด้งด่วนสดๆ:</label>
-          <input type="text" id="remote-msg-input" class="admin-input" placeholder="ข้อความจะเด้งบนจอทันที...">
-          <button class="btn-romantic" onclick="sendRemoteMessage()" style="width: 100%; margin-top: 8px; font-size: 0.85rem;">ส่งข้อความด่วน</button>
-        </div>
-      </div>
-    </div>
+  <!-- Lightbox Preview -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div id="lightbox-content"></div>
   </div>
 
   <script>
-    let appConfig = {
+    const config = {
       passcode: "1402",
       startDate: "2022-02-14T00:00:00",
-      youtubeId: "kJQP7kiw5Fk", 
-      letterText: "ขอบคุณสำหรับเวลาและความรักที่มีให้กันเสมอมานะ ตั้งแต่วันแรกจนถึงวันนี้ ทุกช่วงเวลาที่อยู่กับเธอคือช่วงเวลาที่มีความสุขที่สุด เค้ารักเธอมากขึ้นทุก ๆ วัน และจะอยู่ข้าง ๆ เป็นกำลังใจให้เธอแบบนี้ไปนาน ๆ นะคะ ❤️",
+      youtubeId: "kJQP7kiw5Fk",
+      letter: "ขอบคุณสำหรับความรักและความเข้าใจที่มีให้กันเสมอมานะ ตั้งแต่วันแรกจนถึงวันนี้ ทุกช่วงเวลาที่อยู่กับเธอคือช่วงเวลาที่มีความสุขที่สุด เค้ารักเธอมากขึ้นทุกวัน และจะอยู่ข้างๆ เป็นกำลังใจให้เธอแบบนี้ตลอดไปนะคะ ❤️",
       gallery: [
-        { type: "image", url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80", caption: "ทริปแรกของเรา 💖" },
-        { type: "image", url: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80", caption: "เดตสุดพิเศษ ✨" },
-        { type: "image", url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80", caption: "รอยยิ้มของเธอที่เค้ารัก 😊" }
-      ],
-      questions: [
-        {
-          type: "choice",
-          title: "ข้อใดคือสถานที่ที่เราเจอกันครั้งแรก?",
-          correct: "คาเฟ่แมวสุดน่ารัก 🐱",
-          wrong: "ร้านหมูกระทะหน้ามหาลัย 🥓",
-          media: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80"
-        },
-        {
-          type: "choice",
-          title: "ใครเป็นคนเอ่ยปากจีบก่อนน้า?",
-          correct: "เธอแน่นอน ยอมรับมาซะดีๆ! 😜",
-          wrong: "เค้าเองมั้ง... หางานให้ตัวเองแล้ว",
-          media: ""
-        },
-        {
-          type: "slider",
-          title: "เธอรักเค้ามากขนาดไหนลองเลื่อนสิ?",
-          media: ""
-        }
-      ],
-      teases: [
-        "ไม่ใช่ข้อนี้สักหน่อย เลือกใหม่เร็ว!",
-        "แน่ะ ยังจะกดข้อนี้อีก งอนแล้วนะ!",
-        "กดผิดบ่อยขนาดนี้ อยากโดนหยิกใช่ไหมคะ!"
+        { type: "image", url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600", caption: "เดตแรกของเรา ❤️", rot: -3 },
+        { type: "image", url: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600", caption: "รอยยิ้มแสนหวาน ✨", rot: 4 },
+        { type: "image", url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600", caption: "ทริปแสนพิเศษ 🌊", rot: -2 }
       ],
       coupons: [
-        { id: "c1", title: "คูปองพาไปกินชาบู/ปิ้งย่าง 1 มื้อ 🥩", desc: "ใช้ได้โดยไม่มีเงื่อนไขใดๆ ทั้งสิ้น" },
-        { id: "c2", title: "คูปองห้ามงอน 1 วันเต็ม 😇", desc: "เมื่อกดใช้ เค้ายอมให้เธองอนชนะทุกเรื่อง" },
-        { id: "c3", title: "คูปองนวดหลัง/นวดไหล่ 30 นาที 💆‍♀️", desc: "พร้อมบริการนวดระดับ VIP" }
+        { id: "c1", title: "คูปองพาไปกินชาบู/ปิ้งย่าง 1 มื้อ 🥩", desc: "ใช้ได้ทันทีไม่มีเงื่อนไข" },
+        { id: "c2", title: "คูปองห้ามงอน 1 วันเต็ม 😇", desc: "ชนะทุกการถกเถียงตลอดวัน" },
+        { id: "c3", title: "คูปองนวด VIP 30 นาที 💆‍♀️", desc: "พร้อมบริการระดับพรีเมียม" }
       ]
     };
 
-    const myFirebaseConfig = {
-      apiKey: "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
-      authDomain: "my-anniversary-app.firebaseapp.com",
-      databaseURL: "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "my-anniversary-app",
-      storageBucket: "my-anniversary-app.firebasestorage.app",
-      messagingSenderId: "487064640701",
-      appId: "1:487064640701:web:0206b2da8138b7594f2bd4",
-      measurementId: "G-KVLWESYNZQ"
-    };
-
-    let fbApp = null;
-    let fbDb = null;
-    let currentStepIndex = 0;
-    let currentQuestionIdx = 0;
-    let wrongClickCount = 0;
     let ytPlayer = null;
-    let isYtReady = false; 
     let isAudioPlaying = false;
 
     window.addEventListener('DOMContentLoaded', () => {
-      loadSavedConfig();
-      initBackgroundCanvas();
-      initLoveLockInputs();
-      initLoveTimer();
-      initScratchCard();
+      buildPinInputs();
+      initTimer();
       renderGallery();
-      tryInitFirebase();
 
-      // ตรวจสอบว่าเคยเข้าชมจนถึงหน้าสุดท้ายแล้วหรือยัง?
-      if (localStorage.getItem('app_has_unlocked_complete') === 'true') {
-        showFinalPageDirectly();
+      // หากเคยเข้าชมจบแล้ว จะเข้าสู่หน้าโชว์การ์ดทันที!
+      if (localStorage.getItem('app_unlocked') === 'true') {
+        showSection('step-final');
+        startTypewriter();
+        renderCoupons();
       }
     });
 
-    function loadSavedConfig() {
-      const localCfg = localStorage.getItem('anniversary_config');
-      if (localCfg) {
-        try {
-          appConfig = { ...appConfig, ...JSON.parse(localCfg) };
-        } catch(e) {}
-      }
-      document.getElementById('letter-content-text').innerText = appConfig.letterText;
-    }
-
-    function showFinalPageDirectly() {
-      switchStepView('step-final');
-      renderCoupons();
-      if (isYtReady && ytPlayer && !isAudioPlaying) toggleAudio();
-    }
-
-    function tryInitFirebase() {
-      try {
-        if (!firebase.apps.length) {
-          fbApp = firebase.initializeApp(myFirebaseConfig);
-        } else {
-          fbApp = firebase.app();
-        }
-        fbDb = firebase.database();
-        setupFirebaseRealtimeListeners();
-      } catch(e) { 
-        console.error("Firebase error:", e); 
-      }
-    }
-
-    function setupFirebaseRealtimeListeners() {
-      if (!fbDb) return;
-      fbDb.ref('remote_trigger').on('value', (snapshot) => {
-        const trigger = snapshot.val();
-        if (trigger && trigger.timestamp > Date.now() - 5000) {
-          if (trigger.action === 'fireworks') triggerFireworks();
-          if (trigger.action === 'hearts') triggerHeartStorm();
-          if (trigger.action === 'message') showRemoteToast(trigger.message);
-        }
-      });
-    }
-
-    function onYouTubeIframeAPIReady() {
-      ytPlayer = new YT.Player('yt-player', {
-        height: '0',
-        width: '0',
-        videoId: appConfig.youtubeId || 'kJQP7kiw5Fk',
-        playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1 },
-        events: {
-          'onReady': () => { isYtReady = true; },
-          'onStateChange': (event) => {
-             const btn = document.getElementById('music-toggle-btn');
-             if(event.data === YT.PlayerState.PLAYING) {
-                isAudioPlaying = true;
-                btn.innerHTML = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
-             } else {
-                isAudioPlaying = false;
-                btn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
-             }
-          }
-        }
-      });
-    }
-
-    function toggleAudio() {
-      if (!isYtReady || !ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
-      if (isAudioPlaying) {
-        ytPlayer.pauseVideo();
-      } else {
-        ytPlayer.playVideo();
-      }
-    }
-
-    function initLoveLockInputs() {
-      const container = document.getElementById('lock-inputs');
-      container.innerHTML = '';
-      const codeLen = appConfig.passcode.length || 4;
-      for (let i = 0; i < codeLen; i++) {
+    function buildPinInputs() {
+      const container = document.getElementById('pin-container');
+      for (let i = 0; i < config.passcode.length; i++) {
         const input = document.createElement('input');
         input.type = 'password';
         input.maxLength = 1;
-        input.className = 'lock-input';
+        input.className = 'pin-box';
         input.addEventListener('input', (e) => {
-          if (e.target.value && i < codeLen - 1) {
+          if (e.target.value && i < config.passcode.length - 1) {
             container.children[i + 1].focus();
           }
         });
@@ -953,220 +495,110 @@
       }
     }
 
-    function unlockLoveLock() {
-      const inputs = document.querySelectorAll('.lock-input');
-      let entered = '';
-      inputs.forEach(inp => entered += inp.value);
+    function checkPasscode() {
+      const inputs = document.querySelectorAll('.pin-box');
+      let val = '';
+      inputs.forEach(i => val += i.value);
 
-      if (entered === appConfig.passcode) {
-        triggerFireworks();
-        switchStepView('step-1');
-        if(isYtReady && ytPlayer && !isAudioPlaying) toggleAudio();
+      if (val === config.passcode) {
+        fireConfetti();
+        showSection('step-countdown');
+        toggleAudio();
       } else {
-        alert('รหัสผ่านไม่ถูกต้องนะคะ ลองใหม่อีกครั้งน้า ❤️');
+        showToast("รหัสผ่านไม่ถูกต้องลองใหม่อีกครั้งนะคะ ❤️");
       }
     }
 
-    function openEnvelope() {
-      const env = document.getElementById('envelope-elem');
-      env.style.transform = 'scale(0.8) rotateX(180deg)';
-      env.style.opacity = '0.3';
-      setTimeout(() => {
-        env.style.display = 'none';
-        document.getElementById('start-btn').style.display = 'block';
-        triggerFireworks();
-      }, 500);
+    function showSection(id) {
+      document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
     }
 
-    function switchStepView(stepId) {
-      document.querySelectorAll('.step-view').forEach(s => s.classList.remove('active'));
-      const activeStep = document.getElementById(stepId);
-      if (activeStep) activeStep.classList.add('active');
+    function goToFinalPage() {
+      localStorage.setItem('app_unlocked', 'true');
+      showSection('step-final');
+      startTypewriter();
+      renderCoupons();
+      fireConfetti();
     }
 
-    function nextStep() {
-      currentStepIndex++;
-      if (currentStepIndex === 1) {
-        startQuestionChain();
-      } else if (currentStepIndex === 2) {
-        switchStepView('step-scratch');
-      } else if (currentStepIndex === 3) {
-        // ทำการบันทึกสถานะว่าเคยเปิดจนจบแล้ว
-        localStorage.setItem('app_has_unlocked_complete', 'true');
-        showFinalPageDirectly();
+    function startTypewriter() {
+      const el = document.getElementById('typewriter-text');
+      el.innerHTML = '';
+      let i = 0;
+      function type() {
+        if (i < config.letter.length) {
+          el.innerHTML += config.letter.charAt(i);
+          i++;
+          setTimeout(type, 40);
+        }
       }
-    }
-
-    function startQuestionChain() {
-      currentQuestionIdx = 0;
-      renderQuestion(0);
-      switchStepView('step-question');
-    }
-
-    function renderQuestion(idx) {
-      wrongClickCount = 0;
-      const q = appConfig.questions[idx];
-      if (!q) { nextStep(); return; }
-
-      document.getElementById('q-counter').innerText = `QUESTION ${idx + 1} OF ${appConfig.questions.length}`;
-      document.getElementById('q-title').innerText = q.title;
-
-      const mediaBox = document.getElementById('q-media');
-      if (q.media) {
-        mediaBox.style.display = 'block';
-        mediaBox.innerHTML = `<img src="${q.media}" alt="Question Image">`;
-      } else {
-        mediaBox.style.display = 'none';
-      }
-
-      const body = document.getElementById('q-body');
-      body.innerHTML = '';
-
-      if (q.type === 'choice') {
-        body.innerHTML = `
-          <div class="btn-group">
-            <button class="btn-romantic" id="btn-correct" onclick="handleCorrectChoice(${idx})">${q.correct}</button>
-            <button class="btn-romantic btn-wrong" id="btn-wrong" onclick="handleWrongChoice()">${q.wrong}</button>
-          </div>
-        `;
-      } else if (q.type === 'slider') {
-        body.innerHTML = `
-          <div class="slider-container">
-            <input type="range" min="0" max="1000" value="100" class="romantic-slider" id="love-slider" oninput="document.getElementById('slider-val').innerText = this.value + '% 💕'">
-            <p style="margin-top: 15px; font-weight: bold; color: var(--gold-accent);" id="slider-val">100%</p>
-          </div>
-          <button class="btn-romantic" onclick="handleCorrectChoice(${idx})" style="width: 100%;">ยืนยันความรัก 💕</button>
-        `;
-      }
-    }
-
-    function handleWrongChoice() {
-      wrongClickCount++;
-      const wrongBtn = document.getElementById('btn-wrong');
-      const correctBtn = document.getElementById('btn-correct');
-      const shrinkFactor = Math.max(0.2, 1 - (wrongClickCount * 0.25));
-      const growFactor = 1 + (wrongClickCount * 0.15);
-
-      wrongBtn.style.transform = `scale(${shrinkFactor})`;
-      wrongBtn.style.opacity = `${shrinkFactor}`;
-      correctBtn.style.transform = `scale(${growFactor})`;
-
-      const teaseMsg = appConfig.teases[Math.min(wrongClickCount - 1, appConfig.teases.length - 1)];
-      showRemoteToast(teaseMsg);
-      if (wrongClickCount >= appConfig.teases.length) wrongBtn.style.display = 'none';
-    }
-
-    function handleCorrectChoice() {
-      triggerFireworks();
-      currentQuestionIdx++;
-      if (currentQuestionIdx < appConfig.questions.length) {
-        renderQuestion(currentQuestionIdx);
-      } else {
-        nextStep();
-      }
-    }
-
-    function initScratchCard() {
-      const canvas = document.getElementById('scratch-canvas');
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#c59b3f';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#1a0812';
-      ctx.font = '16px Prompt';
-      ctx.textAlign = 'center';
-      ctx.fillText('✨ ขูดตรงนี้เพื่อดูความลับ ✨', canvas.width / 2, canvas.height / 2);
-
-      let isDrawing = false;
-      function scratch(e) {
-        if (!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(x, y, 20, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      canvas.addEventListener('mousedown', () => isDrawing = true);
-      canvas.addEventListener('mouseup', () => isDrawing = false);
-      canvas.addEventListener('mousemove', scratch);
-      canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, { passive: false });
-      canvas.addEventListener('touchend', () => isDrawing = false);
-      canvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e); }, { passive: false });
+      type();
     }
 
     function renderGallery() {
-      const container = document.getElementById('gallery-container');
-      container.innerHTML = '';
-      appConfig.gallery.forEach(item => {
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
+      config.gallery.forEach(g => {
         const div = document.createElement('div');
-        div.className = 'gallery-item';
-        if(item.type === 'video') {
-          div.innerHTML = `<video src="${item.url}" autoplay loop muted playsinline></video><div class="gallery-caption">${item.caption}</div>`;
-        } else {
-          div.innerHTML = `<img src="${item.url}" alt="Memory"><div class="gallery-caption">${item.caption}</div>`;
-        }
-        container.appendChild(div);
+        div.className = 'polaroid-card';
+        div.style.setProperty('--r', g.rot);
+        div.onclick = () => openLightbox(g.url, g.type);
+        div.innerHTML = `
+          <img src="${g.url}" class="polaroid-img" alt="Memory">
+          <div class="polaroid-caption">${g.caption}</div>
+        `;
+        grid.appendChild(div);
       });
     }
 
     function renderCoupons() {
-      const container = document.getElementById('coupons-container');
-      container.innerHTML = '';
-      const usedCoupons = JSON.parse(localStorage.getItem('used_coupons') || '{}');
+      const list = document.getElementById('coupons-list');
+      list.innerHTML = '';
+      const used = JSON.parse(localStorage.getItem('redeemed_coupons') || '{}');
 
-      appConfig.coupons.forEach(coupon => {
-        const isUsed = usedCoupons[coupon.id] === true;
-        const card = document.createElement('div');
-        card.className = 'coupon-card';
-        card.innerHTML = `
-          <div>
-            <div class="coupon-title">${coupon.title}</div>
-            <div class="coupon-desc">${coupon.desc}</div>
+      config.coupons.forEach(cpn => {
+        const isRedeemed = used[cpn.id] === true;
+        const div = document.createElement('div');
+        div.className = 'coupon-card';
+        div.innerHTML = `
+          <div class="coupon-info">
+            <h4>${cpn.title}</h4>
+            <p>${cpn.desc}</p>
           </div>
-          <button class="btn-use-coupon ${isUsed ? 'used' : ''}" id="btn-cpn-${coupon.id}" onclick="useCoupon('${coupon.id}', '${coupon.title}')">
-            ${isUsed ? 'ใช้แล้ว ❤️' : 'กดใช้คูปอง'}
-          </button>
+          ${isRedeemed ? 
+            `<div class="stamp-overlay">REDEEMED</div>` : 
+            `<button class="btn-use-coupon" onclick="useCoupon('${cpn.id}', '${cpn.title}')">กดใช้คูปอง</button>`
+          }
         `;
-        container.appendChild(card);
+        list.appendChild(div);
       });
     }
 
     function useCoupon(id, title) {
-      const usedCoupons = JSON.parse(localStorage.getItem('used_coupons') || '{}');
-      if (usedCoupons[id]) return;
-
-      usedCoupons[id] = true;
-      localStorage.setItem('used_coupons', JSON.stringify(usedCoupons));
-
-      const btn = document.getElementById(`btn-cpn-${id}`);
-      btn.innerText = 'ใช้แล้ว ❤️';
-      btn.classList.add('used');
-
-      triggerFireworks();
-      if (fbDb) {
-        fbDb.ref(`redeemed_coupons/${id}`).set({ title: title, time: new Date().toLocaleString() });
-      }
-      showRemoteToast(`กดใช้คูปอง "${title}" เรียบร้อยแล้ว!`);
+      const used = JSON.parse(localStorage.getItem('redeemed_coupons') || '{}');
+      used[id] = true;
+      localStorage.setItem('redeemed_coupons', JSON.stringify(used));
+      
+      fireConfetti();
+      renderCoupons();
+      showToast(`กดใช้คูปอง "${title}" สำเร็จแล้ว!`);
     }
 
-    function resetUserVisitedState() {
-      localStorage.removeItem('app_has_unlocked_complete');
-      localStorage.removeItem('used_coupons');
-      alert('รีเซ็ตสถานะแล้ว! เมื่อโหลดหน้าเว็บใหม่ จะเริ่มเล่นตั้งแต่ล็อกสกรีนครับ');
-      location.reload();
+    function openLightbox(url, type) {
+      const lb = document.getElementById('lightbox');
+      const content = document.getElementById('lightbox-content');
+      content.innerHTML = type === 'video' ? `<video src="${url}" controls autoplay></video>` : `<img src="${url}">`;
+      lb.style.display = 'flex';
     }
 
-    function initLoveTimer() {
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+
+    function initTimer() {
       setInterval(() => {
-        const start = new Date(appConfig.startDate).getTime();
-        const now = new Date().getTime();
-        const diff = now - start;
-
+        const diff = new Date().getTime() - new Date(config.startDate).getTime();
         document.getElementById('cnt-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
         document.getElementById('cnt-hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         document.getElementById('cnt-mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -1174,103 +606,37 @@
       }, 1000);
     }
 
-    function initBackgroundCanvas() {
-      const canvas = document.getElementById('bg-canvas');
-      const ctx = canvas.getContext('2d');
-      let width = canvas.width = window.innerWidth;
-      let height = canvas.height = window.innerHeight;
+    function fireConfetti() {
+      confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+    }
 
-      const particles = Array.from({ length: 40 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 3 + 1,
-        speedY: Math.random() * 0.8 + 0.2,
-        opacity: Math.random() * 0.6 + 0.2
-      }));
+    function showToast(msg) {
+      const t = document.getElementById('toast-msg');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
 
-      function render() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach(p => {
-          p.y -= p.speedY;
-          if (p.y < 0) p.y = height;
-          ctx.fillStyle = `rgba(243, 207, 122, ${p.opacity})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-        });
-        requestAnimationFrame(render);
-      }
-      render();
-
-      window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('yt-player', {
+        height: '0', width: '0',
+        videoId: config.youtubeId,
+        playerVars: { 'autoplay': 0, 'loop': 1 }
       });
     }
 
-    function triggerFireworks() {
-      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
-    }
-
-    function triggerHeartStorm() {
-      confetti({ particleCount: 50, scalar: 2, shapes: ['circle'], colors: ['#ea9ab2', '#ff0055'] });
-    }
-
-    function showRemoteToast(msg) {
-      const toast = document.getElementById('remote-toast');
-      toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 4000);
-    }
-
-    function openAdminModal() {
-      const pwd = prompt('กรุณาใส่รหัสผ่านแอดมิน (เว้นว่างไว้แล้วกด OK):');
-      document.getElementById('cfg-passcode').value = appConfig.passcode;
-      document.getElementById('cfg-startdate').value = appConfig.startDate.split('T')[0];
-      document.getElementById('cfg-letter').value = appConfig.letterText;
-      document.getElementById('cfg-ytmusic').value = appConfig.youtubeId;
-
-      if (pwd === '1234' || pwd === '') {
-        document.getElementById('admin-modal').style.display = 'flex';
-      } else if (pwd !== null) {
-        alert('รหัสผ่านไม่ถูกต้อง');
+    function toggleAudio() {
+      const disc = document.getElementById('vinyl-disc');
+      if (!ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
+      if (isAudioPlaying) {
+        ytPlayer.pauseVideo();
+        disc.classList.remove('spin');
+        isAudioPlaying = false;
+      } else {
+        ytPlayer.playVideo();
+        disc.classList.add('spin');
+        isAudioPlaying = true;
       }
-    }
-
-    function closeAdminModal() {
-      document.getElementById('admin-modal').style.display = 'none';
-    }
-
-    function switchAdminTab(e, tabName) {
-      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-      if(e && e.target) e.target.classList.add('active');
-      document.getElementById('atab-remote').style.display = tabName === 'remote' ? 'block' : 'none';
-      document.getElementById('atab-content').style.display = tabName === 'content' ? 'block' : 'none';
-    }
-
-    function sendRemoteTrigger(action) {
-      if (!fbDb) return alert('Firebase ขัดข้อง');
-      fbDb.ref('remote_trigger').set({ action: action, timestamp: Date.now() });
-    }
-
-    function sendRemoteMessage() {
-      const msg = document.getElementById('remote-msg-input').value;
-      if (!msg || !fbDb) return;
-      fbDb.ref('remote_trigger').set({ action: 'message', message: msg, timestamp: Date.now() });
-      document.getElementById('remote-msg-input').value = '';
-    }
-
-    function saveAdminSettings() {
-      appConfig.passcode = document.getElementById('cfg-passcode').value;
-      appConfig.startDate = document.getElementById('cfg-startdate').value + "T00:00:00";
-      appConfig.letterText = document.getElementById('cfg-letter').value;
-      appConfig.youtubeId = document.getElementById('cfg-ytmusic').value;
-
-      localStorage.setItem('anniversary_config', JSON.stringify(appConfig));
-      document.getElementById('letter-content-text').innerText = appConfig.letterText;
-
-      alert('บันทึกการตั้งค่าเรียบร้อยแล้ว!');
-      closeAdminModal();
     }
   </script>
 </body>
