@@ -3,38 +3,537 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Special Moment ✨</title>
+    <title>Our Special Anniversary 💕</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Prompt -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Canvas Confetti -->
+    <!-- Canvas Confetti for Fireworks -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        * { font-family: 'Prompt', sans-serif; }
+        
+        /* Animated Gradient Background */
+        body {
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-card-dark {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Custom Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 16px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #f43f5e, #ec4899, #d946ef);
+            border-radius: 999px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 36px;
+            width: 36px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            border: 3px solid #f43f5e;
+            transition: transform 0.1s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        /* Bounce Animation */
+        @keyframes modalBounce {
+            0% { transform: scale(0.7); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        .animate-bounce-in {
+            animation: modalBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden">
+
+    <!-- Floating Background Emojis -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="bgHearts"></div>
+
+    <!-- MAIN USER CARD CONTAINER -->
+    <main class="w-full max-max-md max-w-lg glass-card rounded-3xl p-6 sm:p-8 relative z-10 transition-all duration-500 my-8">
+        
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-rose-100 text-rose-600 text-xs font-semibold tracking-wider uppercase mb-2">
+                <i class="fa-solid font-heart text-rose-500 mr-1"></i> Happy Anniversary
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800" id="cardTitle">รักเราหวานเจี๊ยบ 💕</h1>
+        </div>
+
+        <!-- STEP 1: Love Slider Question -->
+        <div id="stepSlider" class="space-y-6">
+            <div class="text-center">
+                <p class="text-gray-700 font-medium text-lg mb-2">คุณรักเค้ามากแค่ไหน? 💖</p>
+                <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-600 my-4" id="sliderValueDisplay">
+                    0%
+                </div>
+            </div>
+
+            <div class="px-2">
+                <input type="range" id="loveSlider" min="0" max="100" value="0" step="1">
+                <div class="flex justify-between text-xs text-gray-500 font-medium mt-2">
+                    <span>นิดเดียว 🤏</span>
+                    <span>ปานกลาง 😊</span>
+                    <span>รักที่สุดในโลก! 💖</span>
+                </div>
+            </div>
+
+            <button id="btnSubmitSlider" onclick="checkSliderValue()" class="w-full py-3.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-2xl shadow-lg shadow-rose-200 transition-all transform active:scale-95 flex items-center justify-center text-lg">
+                ยืนยันความรัก 💕
+            </button>
+        </div>
+
+        <!-- STEP 2: Text Answer Question -->
+        <div id="stepTextAnswer" class="hidden space-y-5">
+            <div class="text-center">
+                <p class="text-gray-700 font-medium text-lg mb-1">บอกความในใจหรือคำอวยพรหน่อยสิคะ 💌</p>
+                <p class="text-xs text-gray-500">พิมพ์ให้เขาประทับใจที่สุดนะ!</p>
+            </div>
+
+            <div class="relative">
+                <textarea id="userAnswerText" rows="4" oninput="updateCharCount()" placeholder="พิมพ์ความในใจตรงนี้ได้เลยจ้า..." class="w-full p-4 rounded-2xl border-2 border-rose-200 focus:border-rose-400 focus:ring-4 focus:ring-rose-100 text-gray-700 placeholder-gray-400 transition-all resize-none text-sm leading-relaxed"></textarea>
+                
+                <!-- Character Counter Badge -->
+                <div class="flex justify-between items-center text-xs mt-1.5 px-1">
+                    <span id="charHint" class="font-medium text-rose-500">ขาดอีก <span id="minCharRemaining">20</span> ตัวอักษร</span>
+                    <span class="bg-rose-50 text-rose-600 font-bold px-2.5 py-1 rounded-full border border-rose-100">
+                        <span id="currentCharCount">0</span> / <span id="targetMinChar">20</span>
+                    </span>
+                </div>
+            </div>
+
+            <button id="btnSubmitText" onclick="submitTextAnswer()" disabled class="w-full py-3.5 bg-gray-300 text-gray-500 font-semibold rounded-2xl shadow-md transition-all flex items-center justify-center text-lg cursor-not-allowed">
+                ส่งความในใจ ✨
+            </button>
+        </div>
+
+        <!-- STEP 3: Success / Final Celebration -->
+        <div id="stepSuccess" class="hidden text-center py-6 space-y-4">
+            <div class="text-6xl animate-bounce">🎉💖✨</div>
+            <h2 class="text-2xl font-bold text-gray-800">ขอบคุณสำหรับความรักนะ!</h2>
+            <p class="text-gray-600 text-sm leading-relaxed px-4">ความรักของคุณส่งตรงถึงหัวใจเรียบร้อยแล้ว ขอให้เรามีความสุขและรักกันแบบนี้ไปนานๆ นะคะ 💕</p>
+            <div class="pt-4">
+                <span class="inline-flex items-center text-xs text-rose-500 bg-rose-50 px-3 py-1.5 rounded-full border border-rose-200">
+                    <i class="fa-solid fa-music mr-1.5 animate-spin"></i> เล่นเพลงประกอบเรียบร้อยแล้ว
+                </span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- POUTING MODAL (เด้งเตือนเวลาดึงสไลเดอร์ไม่ถึงเกณฑ์) -->
+    <div id="poutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md hidden">
+        <div class="glass-card max-w-sm w-full rounded-3xl p-6 text-center animate-bounce-in border-2 border-rose-300 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-28 h-28 bg-rose-300 rounded-full blur-2xl opacity-50 pointer-events-none"></div>
+            
+            <div class="text-6xl mb-3">🥺</div>
+            <h3 class="text-xl font-bold text-rose-600 mb-2" id="poutTitle">ฮึ! งอนแล้วนะ!</h3>
+            <p class="text-gray-700 text-sm mb-6 leading-relaxed px-2" id="poutMessageText">
+                รักแค่นี้เองหรอคะ? 🥺 ดึงแถบเลื่อนไปให้สุดสิคะเค้าถึงจะยอม!
+            </p>
+
+            <button onclick="closePoutModal()" class="w-full py-3 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-rose-200 transition-all transform active:scale-95">
+                ยอมแล้วจ้า จะดึงให้สุดเลย! 💖
+            </button>
+        </div>
+    </div>
+
+    <!-- ADMIN TRIGGER BUTTON (รูปฟันเฟืองมุมซ้ายล่าง) -->
+    <button onclick="openAdminLogin()" class="fixed bottom-4 left-4 z-40 w-11 h-11 bg-white/80 hover:bg-white text-gray-600 rounded-full shadow-lg backdrop-blur-md flex items-center justify-center transition-all hover:rotate-90">
+        <i class="fa-solid fa-gear text-lg"></i>
+    </button>
+
+    <!-- ADMIN LOGIN MODAL (PIN Stepper) -->
+    <div id="adminLoginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden">
+        <div class="glass-card-dark max-w-sm w-full rounded-3xl p-6 text-center text-white border border-slate-700 shadow-2xl">
+            <div class="w-12 h-12 bg-rose-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3 text-rose-400 text-xl border border-rose-500/30">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3 class="text-lg font-bold mb-1">เข้าสู่ระบบแอดมิน</h3>
+            <p class="text-xs text-slate-400 mb-6">กดลูกศร เพื่อเลือก รหัสผ่าน 4 หลัก</p>
+
+            <!-- 4-Digit PIN Stepper Controls -->
+            <div class="flex justify-center items-center gap-2 mb-6">
+                <!-- Digit 1 -->
+                <div class="flex flex-col items-center">
+                    <button onclick="changeDigit(0, 1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-t-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-up"></i></button>
+                    <div id="pin-0" class="w-10 h-12 bg-slate-900 border border-slate-700 flex items-center justify-center font-mono text-xl font-bold text-rose-400">0</div>
+                    <button onclick="changeDigit(0, -1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-b-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <!-- Digit 2 -->
+                <div class="flex flex-col items-center">
+                    <button onclick="changeDigit(1, 1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-t-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-up"></i></button>
+                    <div id="pin-1" class="w-10 h-12 bg-slate-900 border border-slate-700 flex items-center justify-center font-mono text-xl font-bold text-rose-400">0</div>
+                    <button onclick="changeDigit(1, -1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-b-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <!-- Digit 3 -->
+                <div class="flex flex-col items-center">
+                    <button onclick="changeDigit(2, 1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-t-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-up"></i></button>
+                    <div id="pin-2" class="w-10 h-12 bg-slate-900 border border-slate-700 flex items-center justify-center font-mono text-xl font-bold text-rose-400">0</div>
+                    <button onclick="changeDigit(2, -1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-b-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <!-- Digit 4 -->
+                <div class="flex flex-col items-center">
+                    <button onclick="changeDigit(3, 1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-t-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-up"></i></button>
+                    <div id="pin-3" class="w-10 h-12 bg-slate-900 border border-slate-700 flex items-center justify-center font-mono text-xl font-bold text-rose-400">0</div>
+                    <button onclick="changeDigit(3, -1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-b-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="closeAdminLogin()" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-xl text-sm">ยกเลิก</button>
+                <button onclick="verifyAdminPin()" class="w-1/2 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-medium rounded-xl text-sm shadow-lg shadow-rose-900/50">ตกลง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD PANEL -->
+    <div id="adminDashboardModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg p-4 sm:p-6 overflow-y-auto hidden">
+        <div class="max-w-3xl mx-auto glass-card-dark rounded-3xl p-6 sm:p-8 text-white border border-slate-700 my-6">
+            
+            <!-- Dashboard Header -->
+            <div class="flex justify-between items-center pb-6 border-b border-slate-800 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-rose-400 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i> Admin Control Panel
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">ปรับแต่งตั้งค่าและควบคุมระบบทุกอย่างตามใจคุณ</p>
+                </div>
+                <button onclick="closeAdminDashboard()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Settings Form Grid -->
+            <div class="space-y-6">
+                
+                <!-- Section 1: Love Slider Settings -->
+                <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+                    <h3 class="text-sm font-semibold text-rose-300 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-heart-pulse"></i> ตั้งค่าแถบเลื่อน "รักแค่ไหน"
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">เปอร์เซ็นต์ขั้นต่ำที่ยอมรับ (%)</label>
+                            <input type="number" id="cfgSliderThreshold" min="0" max="100" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:border-rose-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">หัวข้อป๊อปอัพงอน</label>
+                            <input type="text" id="cfgPoutTitle" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:border-rose-500 focus:outline-none">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs text-slate-400 mb-1">ข้อความงอน (เมื่อสไลด์ไม่ถึงเกณฑ์)</label>
+                            <textarea id="cfgPoutMessage" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:border-rose-500 focus:outline-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Text Answer Settings -->
+                <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+                    <h3 class="text-sm font-semibold text-rose-300 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square"></i> ตั้งค่าส่วนตอบข้อความ
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">จำนวนตัวอักษรขั้นต่ำ (Min Characters)</label>
+                            <input type="number" id="cfgMinChars" min="1" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:border-rose-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">รหัสผ่านแอดมิน PIN (4 หลัก)</label>
+                            <input type="text" id="cfgAdminPin" maxlength="4" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm font-mono text-rose-400 focus:border-rose-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Firebase & Music Config -->
+                <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+                    <h3 class="text-sm font-semibold text-rose-300 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-database"></i> Firebase & เพลงประกอบ
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Firebase API Key</label>
+                            <input type="text" id="cfgApiKey" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-300 focus:border-rose-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Firebase Database URL</label>
+                            <input type="text" id="cfgDbUrl" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-300 focus:border-rose-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Firebase Project ID</label>
+                            <input type="text" id="cfgProjectId" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-300 focus:border-rose-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">ลิงก์ไฟล์เพลงประกอบ (.mp3)</label>
+                            <input type="text" id="cfgMusicUrl" placeholder="https://example.com/song.mp3" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-300 focus:border-rose-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Save Button -->
+            <div class="mt-8 pt-4 border-t border-slate-800 flex justify-end">
+                <button onclick="saveAdminSettings()" class="px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-medium rounded-xl shadow-lg shadow-rose-900/40 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> บันทึกการตั้งค่าทั้งหมด
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="bgAudio" loop></audio>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Prompt', 'sans-serif'] },
-                    colors: {
-                        rose: {
-                            50: '#fff1f2',
-                            100: '#ffe4e6',
-                            200: '#fecdd3',
-                            400: '#fb7185',
-                            500: '#f43f5e',
-                            600: '#e11d48',
-                        }
+        // Default System Settings
+        let appSettings = {
+            sliderThreshold: 80,
+            poutTitle: "ฮึ! งอนแล้วนะ! 🥺",
+            poutMessage: "รักแค่นี้เองหรอคะ? 🥺 ดึงแถบเลื่อนไปให้สุดสิคะเค้าถึงจะยอม!",
+            minChars: 20,
+            adminPin: "1234",
+            apiKey: "",
+            databaseURL: "",
+            projectId: "",
+            musicUrl: ""
+        };
+
+        // Pin Stepper Digits State
+        let currentPinDigits = [0, 0, 0, 0];
+
+        // Load Settings on Start
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('anniversary_settings');
+            if (saved) {
+                appSettings = { ...appSettings, ...JSON.parse(saved) };
+            }
+            initApp();
+            createFloatingHearts();
+        });
+
+        function initApp() {
+            document.getElementById('targetMinChar').innerText = appSettings.minChars;
+            document.getElementById('minCharRemaining').innerText = appSettings.minChars;
+            
+            // Slider Realtime Text Update
+            const slider = document.getElementById('loveSlider');
+            const display = document.getElementById('sliderValueDisplay');
+            slider.addEventListener('input', (e) => {
+                display.innerText = e.target.value + '%';
+            });
+        }
+
+        // --- SLIDER LOGIC & POUTING SNAPBACK ---
+        function checkSliderValue() {
+            const slider = document.getElementById('loveSlider');
+            const value = parseInt(slider.value);
+
+            if (value < appSettings.sliderThreshold) {
+                // Animate Slider Snap Back to 0%
+                let currentVal = value;
+                const interval = setInterval(() => {
+                    currentVal -= 4;
+                    if (currentVal <= 0) {
+                        currentVal = 0;
+                        clearInterval(interval);
                     }
+                    slider.value = currentVal;
+                    document.getElementById('sliderValueDisplay').innerText = currentVal + '%';
+                }, 15);
+
+                // Show Pouting Modal
+                showPoutModal();
+            } else {
+                // Passed! Go to Step 2
+                document.getElementById('stepSlider').classList.add('hidden');
+                document.getElementById('stepTextAnswer').classList.remove('hidden');
+                
+                // Play Music if configured
+                if (appSettings.musicUrl) {
+                    const audio = document.getElementById('bgAudio');
+                    audio.src = appSettings.musicUrl;
+                    audio.play().catch(e => console.log('Autoplay blocked'));
                 }
+            }
+        }
+
+        function showPoutModal() {
+            document.getElementById('poutTitle').innerText = appSettings.poutTitle;
+            document.getElementById('poutMessageText').innerText = appSettings.poutMessage;
+            document.getElementById('poutModal').classList.remove('hidden');
+        }
+
+        function closePoutModal() {
+            document.getElementById('poutModal').classList.add('hidden');
+        }
+
+        // --- TEXT ANSWER MIN-LENGTH CHECK ---
+        function updateCharCount() {
+            const text = document.getElementById('userAnswerText').value;
+            const len = text.length;
+            const min = appSettings.minChars;
+            
+            document.getElementById('currentCharCount').innerText = len;
+
+            const btn = document.getElementById('btnSubmitText');
+            const hint = document.getElementById('charHint');
+
+            if (len >= min) {
+                btn.disabled = false;
+                btn.className = "w-full py-3.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-2xl shadow-lg shadow-rose-200 transition-all transform active:scale-95 cursor-pointer text-lg";
+                hint.innerHTML = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> ครบถ้วนแล้วจ้า! 💕</span>`;
+            } else {
+                btn.disabled = true;
+                btn.className = "w-full py-3.5 bg-gray-300 text-gray-500 font-semibold rounded-2xl shadow-md transition-all flex items-center justify-center text-lg cursor-not-allowed";
+                hint.innerHTML = `ขาดอีก <span id="minCharRemaining" class="font-bold text-rose-500">${min - len}</span> ตัวอักษร`;
+            }
+        }
+
+        function submitTextAnswer() {
+            document.getElementById('stepTextAnswer').classList.add('hidden');
+            document.getElementById('stepSuccess').classList.remove('hidden');
+            
+            // Trigger Fireworks
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // --- ADMIN LOGIN & PIN STEPPER ---
+        function openAdminLogin() {
+            document.getElementById('adminLoginModal').classList.remove('hidden');
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+        }
+
+        function changeDigit(index, delta) {
+            currentPinDigits[index] = (currentPinDigits[index] + delta + 10) % 10;
+            document.getElementById(`pin-${index}`).innerText = currentPinDigits[index];
+        }
+
+        function verifyAdminPin() {
+            const entered = currentPinDigits.join('');
+            if (entered === appSettings.adminPin) {
+                closeAdminLogin();
+                openAdminDashboard();
+            } else {
+                alert('รหัสผ่านไม่ถูกต้องครับ!');
+            }
+        }
+
+        // --- ADMIN DASHBOARD CONTROLS ---
+        function openAdminDashboard() {
+            // Fill inputs with current settings
+            document.getElementById('cfgSliderThreshold').value = appSettings.sliderThreshold;
+            document.getElementById('cfgPoutTitle').value = appSettings.poutTitle;
+            document.getElementById('cfgPoutMessage').value = appSettings.poutMessage;
+            document.getElementById('cfgMinChars').value = appSettings.minChars;
+            document.getElementById('cfgAdminPin').value = appSettings.adminPin;
+            document.getElementById('cfgApiKey').value = appSettings.apiKey || '';
+            document.getElementById('cfgDbUrl').value = appSettings.databaseURL || '';
+            document.getElementById('cfgProjectId').value = appSettings.projectId || '';
+            document.getElementById('cfgMusicUrl').value = appSettings.musicUrl || '';
+
+            document.getElementById('adminDashboardModal').classList.remove('hidden');
+        }
+
+        function closeAdminDashboard() {
+            document.getElementById('adminDashboardModal').classList.add('hidden');
+        }
+
+        function saveAdminSettings() {
+            appSettings.sliderThreshold = parseInt(document.getElementById('cfgSliderThreshold').value) || 80;
+            appSettings.poutTitle = document.getElementById('cfgPoutTitle').value;
+            appSettings.poutMessage = document.getElementById('cfgPoutMessage').value;
+            appSettings.minChars = parseInt(document.getElementById('cfgMinChars').value) || 20;
+            appSettings.adminPin = document.getElementById('cfgAdminPin').value || "1234";
+            appSettings.apiKey = document.getElementById('cfgApiKey').value;
+            appSettings.databaseURL = document.getElementById('cfgDbUrl').value;
+            appSettings.projectId = document.getElementById('cfgProjectId').value;
+            appSettings.musicUrl = document.getElementById('cfgMusicUrl').value;
+
+            // Save to LocalStorage
+            localStorage.setItem('anniversary_settings', JSON.stringify(appSettings));
+            
+            initApp();
+            alert('บันทึกการตั้งค่าเรียบร้อยแล้วครับ! ✨');
+            closeAdminDashboard();
+        }
+
+        // --- BACKGROUND HEARTS ANIMATION ---
+        function createFloatingHearts() {
+            const container = document.getElementById('bgHearts');
+            const hearts = ['💖', '💕', '🌸', '✨', '💗'];
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.className = 'absolute text-xl opacity-40 select-none pointer-events-none';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                heart.style.animation = `float ${Math.random() * 6 + 6}s ease-in-out infinite alternate`;
+                container.appendChild(heart);
             }
         }
     </script>
     
     <style>
-        * { font-family: 'Prompt', sans-serif; }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-30px) rotate(15deg); }
+        }
+    </style>
+</body>
+</html>        * { font-family: 'Prompt', sans-serif; }
         
         body {
             background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
