@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Anniversary ❤️</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         * { font-family: 'Mitr', 'Sarabun', sans-serif; }
         
-        /* Glassmorphism Background & Components */
         body {
             background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 50%, #fbcfe8 100%);
             min-height: 100vh;
@@ -20,14 +23,13 @@
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.55);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.7);
             box-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.15);
         }
 
-        /* Floating Hearts Animation */
         .heart-particle {
             position: fixed;
             pointer-events: none;
@@ -40,11 +42,7 @@
             100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
         }
 
-        /* 3D Envelope Styles */
-        .envelope-wrapper {
-            perspective: 1000px;
-        }
-
+        .envelope-wrapper { perspective: 1000px; }
         .envelope {
             width: 300px;
             height: 200px;
@@ -69,7 +67,6 @@
             z-index: 1;
         }
 
-        /* Shake & Pulse Effects */
         .shake-effect { animation: shake 0.5s ease-in-out; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -77,32 +74,41 @@
             40%, 80% { transform: translateX(10px); }
         }
 
-        .pulse-aura {
-            animation: pulseAura 1.5s infinite;
-        }
+        .pulse-aura { animation: pulseAura 1.5s infinite; }
         @keyframes pulseAura {
             0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
             70% { box-shadow: 0 0 0 20px rgba(244, 63, 94, 0); }
             100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
         }
 
-        /* Scratch Card Canvas */
-        #scratchCanvas {
-            cursor: pointer;
-            touch-action: none;
-        }
+        #scratchCanvas { cursor: pointer; touch-action: none; }
     </style>
 </head>
 <body class="text-gray-800 relative min-h-screen flex flex-col justify-between">
 
+    <!-- Background Particle Container -->
     <div id="particleContainer" class="fixed inset-0 pointer-events-none z-0"></div>
 
-    <button onclick="openAdminAuth()" class="fixed top-4 right-4 z-50 p-2 bg-white/40 hover:bg-white/70 rounded-full backdrop-blur transition-all">
-        <i data-lucide="settings" class="w-5 h-5 text-pink-700"></i>
+    <!-- Hidden Youtube Player (Background Music) -->
+    <div class="hidden">
+        <iframe id="ytPlayer" width="100" height="100" src="https://www.youtube.com/embed/SDvYqwJ0Vy0?enablejsapi=1&autoplay=1&loop=1&playlist=SDvYqwJ0Vy0" allow="autoplay"></iframe>
+    </div>
+
+    <!-- 🎵 Floating Music Controls (มุมซ้ายบน) -->
+    <button id="musicBtn" onclick="toggleMusic()" class="fixed top-4 left-4 z-50 px-3 py-2 bg-white/70 hover:bg-white/90 rounded-full backdrop-blur shadow-md transition-all flex items-center gap-2 text-xs font-semibold text-rose-700 border border-rose-200">
+        <i data-lucide="disc" id="musicIcon" class="w-4 h-4 animate-spin"></i>
+        <span id="musicText">คู่กัน - Scrubb</span>
     </button>
 
-    <main id="app" class="relative z-10 flex-1 flex flex-col items-center justify-center p-4 max-w-lg mx-auto w-full">
+    <!-- ⚙️ Admin Settings Button (ย้ายมาไว้ "มุมขวาล่าง" ไม่บังและไม่โดนบังแน่นอน) -->
+    <button onclick="openAdminAuth()" title="เข้าสู่หน้าแอดมิน" class="fixed bottom-4 right-4 z-50 p-3 bg-white/80 hover:bg-white rounded-full backdrop-blur shadow-lg border border-rose-200 transition-all text-rose-700 hover:scale-110 active:scale-95">
+        <i data-lucide="settings" class="w-5 h-5"></i>
+    </button>
 
+    <!-- MAIN APP CONTAINER -->
+    <main id="app" class="relative z-10 flex-1 flex flex-col items-center justify-center p-4 max-w-lg mx-auto w-full my-6">
+
+        <!-- ================= PAGE 1: 3D ENVELOPE & INTRO ================= -->
         <section id="page1" class="w-full flex flex-col items-center space-y-6 text-center">
             <h1 class="text-3xl font-bold text-rose-700 tracking-wide drop-shadow">Happy Anniversary ❤️</h1>
             
@@ -116,7 +122,7 @@
                 </div>
             </div>
 
-            <div class="envelope-wrapper my-8 cursor-pointer" onclick="openEnvelope()">
+            <div class="envelope-wrapper my-6 cursor-pointer" onclick="openEnvelope()">
                 <div id="envelope" class="envelope bg-rose-300 rounded-b-lg shadow-xl flex items-center justify-center relative">
                     <div id="flap" class="envelope-flap"></div>
                     <div class="z-10 text-white font-bold bg-rose-500 px-4 py-2 rounded-full shadow-md flex items-center gap-1">
@@ -126,6 +132,7 @@
             </div>
         </section>
 
+        <!-- ================= PAGE 2: INTERACTIVE QUIZ ================= -->
         <section id="page2" class="w-full hidden flex-col items-center space-y-6">
             <div class="glass-panel w-full p-6 rounded-3xl text-center space-y-4">
                 <span id="quizProgress" class="text-xs font-semibold px-3 py-1 bg-rose-100 text-rose-600 rounded-full">คำถามที่ 1</span>
@@ -142,44 +149,117 @@
             </div>
         </section>
 
+        <!-- ================= PAGE 3: FINAL PAGE ================= -->
         <section id="page3" class="w-full hidden flex-col items-center space-y-6 text-center">
+            
+            <!-- Final Message & Polaroid -->
             <div class="glass-panel w-full p-6 rounded-3xl space-y-4">
                 <h2 class="text-2xl font-bold text-rose-600">ขอบคุณที่อยู่ข้างกันนะ 💕</h2>
                 <p id="finalMessage" class="text-sm text-gray-700 leading-relaxed">
                     ความรักของเราเดินทางมาไกลแค่ไหนแล้ว ขอบคุณทุกรอยยิ้มและความทรงจำดีๆ ที่มีให้กันเสมอนะครับ
                 </p>
 
+                <!-- Polaroid -->
                 <div class="bg-white p-3 pt-4 rounded-xl shadow-md border max-w-[240px] mx-auto transform -rotate-1">
                     <img id="polaroidImg" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500" class="w-full h-48 object-cover rounded-lg mb-2">
                     <p id="polaroidCaption" class="text-xs font-semibold text-gray-500">Our Special Moment ✨</p>
                 </div>
 
-                <div class="pt-4 space-y-2">
-                    <p class="text-xs font-bold text-rose-500">🎁 คูปองพิเศษสำหรับเธอ (ใช้นิ้วขูดการ์ด):</p>
-                    <div class="relative w-64 h-32 mx-auto rounded-xl overflow-hidden shadow-inner bg-rose-100 flex items-center justify-center">
-                        <div id="scratchReward" class="absolute inset-0 flex items-center justify-center font-bold text-rose-600 p-2 text-center">
-                            คูปองกินชาบูฟรี 1 มื้อ! 🍲
-                        </div>
-                        <canvas id="scratchCanvas" width="256" height="128" class="absolute inset-0 z-10"></canvas>
+                <!-- Voice Note Button -->
+                <div class="pt-2">
+                    <button onclick="playVoiceNote()" class="w-full py-3 bg-gradient-to-r from-rose-400 to-pink-500 text-white rounded-2xl font-semibold shadow-md hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="mic" class="w-5 h-5"></i> <span>กดเพื่อฟังเสียงบอกรัก 🎙️</span>
+                    </button>
+                    <audio id="voiceAudio" class="hidden"></audio>
+                </div>
+            </div>
+
+            <!-- Memory Lane Timeline -->
+            <div class="glass-panel w-full p-6 rounded-3xl space-y-4 text-left">
+                <h3 class="font-bold text-rose-600 text-center text-lg flex items-center justify-center gap-1">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i> Memory Lane เส้นทางรักของเรา
+                </h3>
+                <div class="space-y-4 relative border-l-2 border-rose-300 ml-4 pl-4 text-xs">
+                    <div>
+                        <div class="absolute -left-1.5 w-3 h-3 bg-rose-500 rounded-full border-2 border-white"></div>
+                        <span class="text-gray-400 font-medium">วันแรกที่พบกัน 💖</span>
+                        <p class="font-semibold text-gray-800 mt-0.5">ตื่นเต้นและประทับใจตั้งแต่ครั้งแรกที่ได้สบตา</p>
+                    </div>
+                    <div>
+                        <div class="absolute -left-1.5 w-3 h-3 bg-rose-500 rounded-full border-2 border-white"></div>
+                        <span class="text-gray-400 font-medium">เดทแรกของเรา 🍦</span>
+                        <p class="font-semibold text-gray-800 mt-0.5">ไปกินของอร่อยด้วยกัน ยิ้มไม่หุบทั้งวัน</p>
+                    </div>
+                    <div>
+                        <div class="absolute -left-1.5 w-3 h-3 bg-rose-500 rounded-full border-2 border-white"></div>
+                        <span class="text-gray-400 font-medium">ทริปแรกไปเที่ยวไกลๆ 🚗</span>
+                        <p class="font-semibold text-gray-800 mt-0.5">เก็บความทรงจำและรูปสวยๆ กลับมาเต็มเครื่อง</p>
                     </div>
                 </div>
+            </div>
 
-                <div class="pt-4 border-t border-rose-200/60 flex justify-center gap-3">
-                    <button onclick="sendReaction('❤️')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-xl">❤️</button>
-                    <button onclick="sendReaction('🥰')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-xl">🥰</button>
-                    <button onclick="sendReaction('😘')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-xl">😘</button>
+            <!-- Reasons Why I Love You Generator -->
+            <div class="glass-panel w-full p-6 rounded-3xl space-y-3 text-center">
+                <h3 class="font-bold text-rose-600">🎲 เหตุผลที่รักเธอ</h3>
+                <div id="reasonBox" class="p-4 bg-white/70 rounded-2xl min-h-[70px] flex items-center justify-center text-sm font-semibold text-rose-800 border border-rose-100">
+                    กดปุ่มด้านล่างเพื่อสุ่มความในใจ 💕
                 </div>
+                <button onclick="getRandomReason()" class="px-4 py-2 bg-rose-500 text-white rounded-xl text-xs font-semibold shadow hover:bg-rose-600">
+                    สุ่มเหตุผลน่ารักๆ ✨
+                </button>
+            </div>
+
+            <!-- Digital Coupon Book -->
+            <div class="glass-panel w-full p-6 rounded-3xl space-y-4">
+                <h3 class="font-bold text-rose-600 text-lg">🎟️ สมุดคูปองตามใจแฟน</h3>
+                <p class="text-xs text-gray-500">เลือกกดใช้คูปองได้เลยทันทีค่ะ!</p>
+                
+                <div class="grid grid-cols-1 gap-3">
+                    <div class="bg-white/80 p-3 rounded-2xl border border-rose-200 flex justify-between items-center">
+                        <div class="text-left">
+                            <p class="font-bold text-xs text-rose-700">💆‍♀️ คูปองนวดหลังฟรี 30 นาที</p>
+                            <p class="text-[10px] text-gray-400">ห้ามบ่น ห้ามเมื่อย นวดตั้งใจ 100%</p>
+                        </div>
+                        <button onclick="useCoupon('คูปองนวดหลังฟรี 30 นาที')" class="px-3 py-1.5 bg-rose-500 text-white text-xs rounded-xl font-semibold">ใช้เลย</button>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-2xl border border-rose-200 flex justify-between items-center">
+                        <div class="text-left">
+                            <p class="font-bold text-xs text-rose-700">🕊️ คูปองให้อภัยความผิด 1 ครั้ง</p>
+                            <p class="text-[10px] text-gray-400">ใช้เมื่อไหร่ ล้างความผิดทันที!</p>
+                        </div>
+                        <button onclick="useCoupon('คูปองให้อภัยความผิด 1 ครั้ง')" class="px-3 py-1.5 bg-rose-500 text-white text-xs rounded-xl font-semibold">ใช้เลย</button>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-2xl border border-rose-200 flex justify-between items-center">
+                        <div class="text-left">
+                            <p class="font-bold text-xs text-rose-700">🍲 คูปองพาไปกินชาบู/บุฟเฟต์</p>
+                            <p class="text-[10px] text-gray-400">เลี้ยงเต็มที่ ไม่มีอั้น</p>
+                        </div>
+                        <button onclick="useCoupon('คูปองพาไปกินชาบู/บุฟเฟต์')" class="px-3 py-1.5 bg-rose-500 text-white text-xs rounded-xl font-semibold">ใช้เลย</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scratch Card Mini-Game -->
+            <div class="glass-panel w-full p-6 rounded-3xl space-y-3">
+                <p class="text-xs font-bold text-rose-500">🎁 การ์ดขูดรางวัลพิเศษ (ใช้นิ้วขูด):</p>
+                <div class="relative w-64 h-32 mx-auto rounded-xl overflow-hidden shadow-inner bg-rose-100 flex items-center justify-center">
+                    <div id="scratchReward" class="absolute inset-0 flex items-center justify-center font-bold text-rose-600 p-2 text-center">
+                        คูปองกินชาบูฟรี 1 มื้อ! 🍲
+                    </div>
+                    <canvas id="scratchCanvas" width="256" height="128" class="absolute inset-0 z-10"></canvas>
+                </div>
+            </div>
+
+            <!-- Reaction Buttons -->
+            <div class="glass-panel w-full p-4 rounded-3xl flex justify-center gap-4">
+                <button onclick="sendReaction('❤️')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-2xl transition-all hover:scale-110">❤️</button>
+                <button onclick="sendReaction('🥰')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-2xl transition-all hover:scale-110">🥰</button>
+                <button onclick="sendReaction('😘')" class="p-3 bg-white/80 hover:bg-rose-100 rounded-full shadow text-2xl transition-all hover:scale-110">😘</button>
             </div>
         </section>
     </main>
 
-    <div id="audioControls" class="fixed bottom-4 left-4 z-40 hidden">
-        <button onclick="toggleAudio()" class="glass-panel p-3 rounded-full shadow-lg flex items-center gap-2 text-xs text-rose-600 font-semibold">
-            <i data-lucide="music" class="w-4 h-4"></i> <span id="audioStatus">เล่นเพลง</span>
-        </button>
-        <audio id="bgAudio" loop></audio>
-    </div>
-
+    <!-- Pout Alert Modal -->
     <div id="poutModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="glass-panel bg-white/90 max-w-xs w-full p-6 rounded-2xl text-center space-y-3 shake-effect">
             <div class="text-4xl">🥺</div>
@@ -188,6 +268,7 @@
         </div>
     </div>
 
+    <!-- Admin Dashboard Modal -->
     <div id="adminModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white max-w-2xl w-full max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
             <div class="bg-rose-500 p-4 text-white flex justify-between items-center">
@@ -198,16 +279,15 @@
             <div class="flex border-b text-xs font-semibold bg-gray-50 overflow-x-auto">
                 <button onclick="switchTab(1)" class="tab-btn px-4 py-3 border-b-2 border-rose-500 text-rose-600">Live Monitor</button>
                 <button onclick="switchTab(2)" class="tab-btn px-4 py-3 text-gray-500">Content Editor</button>
-                <button onclick="switchTab(3)" class="tab-btn px-4 py-3 text-gray-500">Media</button>
-                <button onclick="switchTab(4)" class="tab-btn px-4 py-3 text-gray-500">Audio</button>
-                <button onclick="switchTab(5)" class="tab-btn px-4 py-3 text-gray-500">Settings</button>
+                <button onclick="switchTab(3)" class="tab-btn px-4 py-3 text-gray-500">Media & Audio</button>
+                <button onclick="switchTab(4)" class="tab-btn px-4 py-3 text-gray-500">Settings</button>
             </div>
 
             <div class="p-4 overflow-y-auto flex-1 text-xs space-y-4">
                 <div id="tab1" class="tab-content space-y-3">
                     <div class="flex items-center gap-2">
                         <span class="font-semibold">Status:</span>
-                        <span id="liveStatus" class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold">Offline</span>
+                        <span id="liveStatus" class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold">Online 🟢</span>
                     </div>
                     <div class="border rounded-lg p-3 bg-gray-50 max-h-48 overflow-y-auto space-y-1" id="activityLogs">
                         <div class="text-gray-400">ยังไม่มี Activity Log...</div>
@@ -233,70 +313,75 @@
                     <label class="block font-medium mb-1">รูปโพลารอยด์ (Upload หรือ URL)</label>
                     <input type="file" accept="image/*" onchange="handleImageUpload(event)" class="w-full border p-1 rounded">
                     <input type="text" id="cfgPolaroidUrl" placeholder="หรือใส่ Image URL" class="w-full border p-2 rounded">
+
+                    <label class="block font-medium mb-1 pt-2">ไฟล์เสียงบอกรัก (Voice Note URL/MP3)</label>
+                    <input type="text" id="cfgVoiceUrl" placeholder="https://example.com/voice.mp3" class="w-full border p-2 rounded">
                 </div>
 
                 <div id="tab4" class="tab-content hidden space-y-3">
-                    <label class="block font-medium mb-1">ลิงก์เพลงประกอบ (MP3 Direct Link)</label>
-                    <input type="text" id="cfgAudioUrl" placeholder="https://example.com/music.mp3" class="w-full border p-2 rounded">
-                </div>
-
-                <div id="tab5" class="tab-content hidden space-y-3">
                     <label class="block font-medium mb-1">ตั้งค่า Firebase Config (JSON)</label>
-                    <textarea id="cfgFirebase" placeholder='{"apiKey": "...", ...}' class="w-full border p-2 rounded h-24 font-mono text-[10px]"></textarea>
+                    <textarea id="cfgFirebase" class="w-full border p-2 rounded h-24 font-mono text-[10px]"></textarea>
                     <button onclick="saveAdminSettings()" class="w-full bg-rose-500 text-white py-2 rounded font-bold">บันทึกการตั้งค่าทั้งหมด</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Firebase SDK (v10) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getDatabase, ref, set, push, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // CONFIG DEFAULT / FALLBACK STORAGE
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
+            authDomain: "my-anniversary-app.firebaseapp.com",
+            databaseURL: "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "my-anniversary-app",
+            storageBucket: "my-anniversary-app.firebasestorage.app",
+            messagingSenderId: "487064640701",
+            appId: "1:487064640701:web:0206b2da8138b7594f2bd4",
+            measurementId: "G-KVLWESYNZQ"
+        };
+
         window.defaultConfig = {
             startDate: "2023-01-01",
             finalMsg: "ความรักของเราเดินทางมาไกลแค่ไหนแล้ว ขอบคุณทุกรอยยิ้มและความทรงจำดีๆ ที่มีให้กันเสมอนะครับ 💕",
             reward: "คูปองกินชาบูฟรี 1 มื้อ! 🍲",
             polaroidUrl: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500",
-            audioUrl: "",
-            firebase: null
+            voiceUrl: "",
+            firebase: firebaseConfig
         };
 
         window.appConfig = JSON.parse(localStorage.getItem("anniv_config")) || window.defaultConfig;
         
-        // Initialize Firebase if configured
         let db = null;
-        if (window.appConfig.firebase) {
-            try {
-                const app = initializeApp(window.appConfig.firebase);
-                db = getDatabase(app);
-                window.fbDb = db;
-                
-                // Track online status
-                const statusRef = ref(db, 'status/online');
-                set(statusRef, true);
-                onDisconnect(statusRef).set(false);
+        try {
+            const app = initializeApp(window.appConfig.firebase || firebaseConfig);
+            try { getAnalytics(app); } catch(e) {}
+            db = getDatabase(app);
+            window.fbDb = db;
+            
+            const statusRef = ref(db, 'status/online');
+            set(statusRef, true);
+            onDisconnect(statusRef).set(false);
 
-                // Admin live monitor listener
-                onValue(ref(db, 'logs'), (snapshot) => {
-                    const data = snapshot.val();
-                    if(data && document.getElementById('activityLogs')) {
-                        const container = document.getElementById('activityLogs');
-                        container.innerHTML = Object.values(data).map(l => 
-                            `<div class="text-[11px]"><span class="text-gray-400">[${l.time}]</span> ${l.msg}</div>`
-                        ).join('');
-                    </div>
-                });
+            onValue(ref(db, 'logs'), (snapshot) => {
+                const data = snapshot.val();
+                if(data && document.getElementById('activityLogs')) {
+                    const container = document.getElementById('activityLogs');
+                    container.innerHTML = Object.values(data).map(l => 
+                        `<div class="text-[11px]"><span class="text-gray-400">[${l.time}]</span> ${l.msg}</div>`
+                    ).join('');
+                }
+            });
 
-                onValue(ref(db, 'status/online'), (snap) => {
-                    const statusEl = document.getElementById('liveStatus');
-                    if(statusEl) statusEl.innerText = snap.val() ? "Online 🟢" : "Offline 🔴";
-                });
-            } catch(e) { console.error("Firebase init error:", e); }
-        }
+            onValue(ref(db, 'status/online'), (snap) => {
+                const statusEl = document.getElementById('liveStatus');
+                if(statusEl) statusEl.innerText = snap.val() ? "Online 🟢" : "Offline 🔴";
+            });
+        } catch(e) { console.error("Firebase init error:", e); }
 
-        // Global Logger Function
         window.logActivity = function(message) {
             const time = new Date().toLocaleTimeString('th-TH');
             console.log(`[LOG ${time}]: ${message}`);
@@ -308,8 +393,8 @@
         window.logActivity("แฟนเปิดเข้ามาดูเว็บแล้ว 💌");
     </script>
 
+    <!-- Main Logic Script -->
     <script>
-        // Quiz Data & Pout Logic Array
         const quizData = [
             { q: "จำวันแรกที่เราเดทกันได้ไหม?", correct: "จำได้สิ! 🥰", wrong: "ลืมไปแล้วอะ 😜" },
             { q: "ใครเป็นคนบอกรักก่อน?", correct: "เธอไงงง 💕", wrong: "จำไม่ได้แล้ว 🙈" }
@@ -322,10 +407,18 @@
             "โกรธแล้วนะ! 😡💢"
         ];
 
+        const loveReasons = [
+            "ชอบเวลาเธอตั้งใจกินของอร่อยมากน่ารักสุดๆ 🍰",
+            "ขอบคุณที่คอยกอดคอยปลอบเวลาเราเหนื่อยนะ 🥰",
+            "ชอบรอยยิ้มของเธอที่ทำให้โลกสดใสขึ้นทันที ✨",
+            "ขอบคุณที่ใส่ใจและจำรายละเอียดเล็กๆ ของเราได้ 💕",
+            "รักทุกอย่างที่เป็นเธอเลยครับ ❤️"
+        ];
+
         let currentQuizIndex = 0;
         let wrongAttemptCount = 0;
+        let isMusicPlaying = true;
 
-        // Init App
         document.addEventListener("DOMContentLoaded", () => {
             lucide.createIcons();
             initParticles();
@@ -338,15 +431,30 @@
             document.getElementById('finalMessage').innerText = window.appConfig.finalMsg;
             document.getElementById('scratchReward').innerText = window.appConfig.reward;
             document.getElementById('polaroidImg').src = window.appConfig.polaroidUrl;
-            
-            if(window.appConfig.audioUrl) {
-                const audio = document.getElementById('bgAudio');
-                audio.src = window.appConfig.audioUrl;
-                document.getElementById('audioControls').classList.remove('hidden');
+            document.getElementById('cfgFirebase').value = JSON.stringify(window.appConfig.firebase, null, 2);
+            if(window.appConfig.voiceUrl) {
+                document.getElementById('voiceAudio').src = window.appConfig.voiceUrl;
             }
         }
 
-        // Floating Hearts Animation
+        function toggleMusic() {
+            const iframe = document.getElementById('ytPlayer');
+            const icon = document.getElementById('musicIcon');
+            const text = document.getElementById('musicText');
+            
+            if(isMusicPlaying) {
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                icon.classList.remove('animate-spin');
+                text.innerText = "กดเพื่อเปิดเพลง";
+                isMusicPlaying = false;
+            } else {
+                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                icon.classList.add('animate-spin');
+                text.innerText = "คู่กัน - Scrubb";
+                isMusicPlaying = true;
+            }
+        }
+
         function initParticles() {
             const container = document.getElementById('particleContainer');
             for(let i=0; i<15; i++) {
@@ -360,7 +468,6 @@
             }
         }
 
-        // Love Timer Logic
         function startTimer() {
             function update() {
                 const start = new Date(window.appConfig.startDate).getTime();
@@ -383,7 +490,6 @@
             setInterval(update, 1000);
         }
 
-        // Page Navigation
         function openEnvelope() {
             document.getElementById('envelope').classList.add('envelope-open');
             window.logActivity("แฟนเปิดอ่านซองจดหมายแล้ว 💌");
@@ -395,7 +501,6 @@
             }, 1000);
         }
 
-        // Quiz Logic
         function loadQuiz() {
             const q = quizData[currentQuizIndex];
             document.getElementById('quizProgress').innerText = `คำถามที่ ${currentQuizIndex + 1}/${quizData.length}`;
@@ -403,7 +508,6 @@
             document.getElementById('btnCorrect').innerText = q.correct;
             document.getElementById('btnWrong').innerText = q.wrong;
             
-            // Reset button styles
             wrongAttemptCount = 0;
             const btnWrong = document.getElementById('btnWrong');
             const btnCorrect = document.getElementById('btnCorrect');
@@ -421,28 +525,25 @@
                 if(currentQuizIndex < quizData.length) {
                     loadQuiz();
                 } else {
-                    // Show Final Page
                     document.getElementById('page2').classList.add('hidden');
                     document.getElementById('page3').classList.remove('hidden');
                     document.getElementById('page3').classList.add('flex');
                     confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
-                    window.logActivity("เข้าสู่หน้าสุดท้าย (Scratch Card & Final Message) ✨");
+                    window.logActivity("เข้าสู่หน้าสุดท้าย (Scratch Card, Voice & Coupons) ✨");
                 }
             } else {
                 wrongAttemptCount++;
                 window.logActivity(`กดตอบผิดครั้งที่ ${wrongAttemptCount} 🥺`);
                 
-                // Show Pout Modal
                 const poutIdx = Math.min(wrongAttemptCount - 1, poutMessages.length - 1);
                 document.getElementById('poutText').innerText = poutMessages[poutIdx];
                 document.getElementById('poutModal').classList.remove('hidden');
 
-                // Dynamic UI Changes
                 const btnWrong = document.getElementById('btnWrong');
                 const btnCorrect = document.getElementById('btnCorrect');
 
                 if(wrongAttemptCount >= poutMessages.length) {
-                    btnWrong.style.display = 'none'; // Disappear
+                    btnWrong.style.display = 'none';
                 } else {
                     btnWrong.style.transform = `scale(${1 - wrongAttemptCount * 0.15})`;
                 }
@@ -456,12 +557,33 @@
             document.getElementById('poutModal').classList.add('hidden');
         }
 
-        // Scratch Card Logic
+        function getRandomReason() {
+            const random = loveReasons[Math.floor(Math.random() * loveReasons.length)];
+            document.getElementById('reasonBox').innerText = random;
+            window.logActivity("แฟนสุ่มกดดูเหตุผลที่รักเธอ 🎲");
+        }
+
+        function useCoupon(couponName) {
+            confetti({ particleCount: 80, spread: 70 });
+            window.logActivity(`แฟนกดใช้: "${couponName}" 🎟️`);
+            alert(`ใช้ "${couponName}" สำเร็จ! ส่งการแจ้งเตือนไปบอกแฟนแล้วนะคะ 🥰`);
+        }
+
+        function playVoiceNote() {
+            const voice = document.getElementById('voiceAudio');
+            if(voice.src && voice.src !== "") {
+                voice.play();
+                window.logActivity("แฟนเปิดฟัง Voice Note บอกรัก 🎙️");
+            } else {
+                alert("สุขสันต์วันครบรอบนะครับที่รัก! รักเธอที่สุดในโลกเลยนะ 💕");
+                window.logActivity("แฟนกดฟังเสียงบอกรัก (เล่นข้อความแทน)");
+            }
+        }
+
         function initScratchCard() {
             const canvas = document.getElementById('scratchCanvas');
             const ctx = canvas.getContext('2d');
             
-            // Cover with silver/pink pattern
             ctx.fillStyle = '#f472b6';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#ffffff';
@@ -497,23 +619,9 @@
             alert(`ส่ง ${emoji} ให้แฟนเรียบร้อยแล้วค่ะ! ❤️`);
         }
 
-        // Audio Toggle
-        function toggleAudio() {
-            const audio = document.getElementById('bgAudio');
-            const status = document.getElementById('audioStatus');
-            if(audio.paused) {
-                audio.play();
-                status.innerText = "หยุดเพลง";
-            } else {
-                audio.pause();
-                status.innerText = "เล่นเพลง";
-            }
-        }
-
-        // Admin Dashboard Functions
         function openAdminAuth() {
             const pass = prompt("กรุณากรอกรหัสผ่าน Admin:");
-            if(pass === "1234") { // Default password
+            if(pass === "1234") {
                 document.getElementById('adminModal').classList.remove('hidden');
             } else if(pass !== null) {
                 alert("รหัสผ่านไม่ถูกต้อง!");
@@ -552,14 +660,14 @@
             const finalMsg = document.getElementById('cfgFinalMsg').value;
             const reward = document.getElementById('cfgReward').value;
             const polaroidUrl = document.getElementById('cfgPolaroidUrl').value;
-            const audioUrl = document.getElementById('cfgAudioUrl').value;
+            const voiceUrl = document.getElementById('cfgVoiceUrl').value;
             const fbConfig = document.getElementById('cfgFirebase').value;
 
             if(startDate) window.appConfig.startDate = startDate;
             if(finalMsg) window.appConfig.finalMsg = finalMsg;
             if(reward) window.appConfig.reward = reward;
             if(polaroidUrl) window.appConfig.polaroidUrl = polaroidUrl;
-            if(audioUrl) window.appConfig.audioUrl = audioUrl;
+            if(voiceUrl) window.appConfig.voiceUrl = voiceUrl;
 
             if(fbConfig) {
                 try {
@@ -571,7 +679,7 @@
             }
 
             localStorage.setItem("anniv_config", JSON.stringify(window.appConfig));
-            alert("บันทึกข้อมูลเรียบร้อยแล้ว! (รีโหลดหน้าเว็บเพื่อแสดงผลใหม่)");
+            alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
             location.reload();
         }
     </script>
