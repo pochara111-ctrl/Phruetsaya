@@ -3,824 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Special Anniversary 💕</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Happy Anniversary My Love 💕</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Canvas Confetti for Fireworks -->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
+
     <style>
-        * { font-family: 'Prompt', sans-serif; }
-        
-        /* Animated Gradient Background */
         body {
-            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(135deg, #ffe6e8 0%, #fff0f5 50%, #f3e8ff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .font-mali { font-family: 'Mali', cursive; }
+        
+        /* 3D Envelope Styling */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+        .envelope {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+        }
+        .envelope.open {
+            transform: rotateY(180deg);
+        }
+        .envelope-front, .envelope-back {
+            backface-visibility: hidden;
+        }
+        .envelope-back {
+            transform: rotateY(180deg);
         }
 
-        /* Glassmorphism Effect */
+        /* Glassmorphism */
         .glass-card {
             background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(255, 182, 193, 0.2);
         }
 
-        .glass-card-dark {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-        }
-
-        /* Custom Slider Styling */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]:focus { outline: none; }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 16px;
+        /* Canvas for Scratch Card */
+        #scratchCanvas {
+            touch-action: none;
             cursor: pointer;
-            background: linear-gradient(90deg, #f43f5e, #ec4899, #d946ef);
-            border-radius: 999px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
-        }
-        input[type=range]::-webkit-slider-thumb {
-            height: 36px;
-            width: 36px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-            border: 3px solid #f43f5e;
-            transition: transform 0.1s ease;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
         }
 
-        /* Bounce Animation */
-        @keyframes modalBounce {
-            0% { transform: scale(0.7); opacity: 0; }
-            80% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); }
+        /* Sky Lantern Animation */
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.6); opacity: 1; }
+            100% { transform: translateY(-120vh) scale(1.1); opacity: 0; }
         }
-        .animate-bounce-in {
-            animation: modalBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        .sky-lantern {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 12s linear infinite;
+            z-index: 40;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden">
+<body class="text-gray-800 pb-12">
 
-    <!-- Floating Background Emojis -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="bgHearts"></div>
-
-    <!-- MAIN USER CARD CONTAINER -->
-    <main class="w-full max-max-md max-w-lg glass-card rounded-3xl p-6 sm:p-8 relative z-10 transition-all duration-500 my-8">
-        
-        <!-- Header -->
-        <div class="text-center mb-6">
-            <span class="inline-block px-4 py-1.5 rounded-full bg-rose-100 text-rose-600 text-xs font-semibold tracking-wider uppercase mb-2">
-                <i class="fa-solid font-heart text-rose-500 mr-1"></i> Happy Anniversary
-            </span>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800" id="cardTitle">รักเราหวานเจี๊ยบ 💕</h1>
+    <!-- Nav Bar / Top Actions -->
+    <nav class="p-4 flex justify-between items-center max-w-2xl mx-auto">
+        <div class="flex items-center gap-2 font-mali text-xl text-rose-500 font-bold">
+            <i class="fa-solid fa-heart animate-bounce"></i> Anniversary Memory
         </div>
+        <button id="adminToggleBtn" class="bg-white/80 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm border border-rose-200 transition">
+            <i class="fa-solid fa-user-shield"></i> Admin Panel
+        </button>
+    </nav>
 
-        <!-- STEP 1: Love Slider Question -->
-        <div id="stepSlider" class="space-y-6">
-            <div class="text-center">
-                <p class="text-gray-700 font-medium text-lg mb-2">คุณรักเค้ามากแค่ไหน? 💖</p>
-                <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-600 my-4" id="sliderValueDisplay">
-                    0%
-                </div>
-            </div>
-
-            <div class="px-2">
-                <input type="range" id="loveSlider" min="0" max="100" value="0" step="1">
-                <div class="flex justify-between text-xs text-gray-500 font-medium mt-2">
-                    <span>นิดเดียว 🤏</span>
-                    <span>ปานกลาง 😊</span>
-                    <span>รักที่สุดในโลก! 💖</span>
-                </div>
-            </div>
-
-            <button id="btnSubmitSlider" onclick="checkSliderValue()" class="w-full py-3.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-2xl shadow-lg shadow-rose-200 transition-all transform active:scale-95 flex items-center justify-center text-lg">
-                ยืนยันความรัก 💕
-            </button>
-        </div>
-
-        <!-- STEP 2: Text Answer Question -->
-        <div id="stepTextAnswer" class="hidden space-y-5">
-            <div class="text-center">
-                <p class="text-gray-700 font-medium text-lg mb-1">บอกความในใจหรือคำอวยพรหน่อยสิคะ 💌</p>
-                <p class="text-xs text-gray-500">พิมพ์ให้เขาประทับใจที่สุดนะ!</p>
-            </div>
-
-            <div class="relative">
-                <textarea id="userAnswerText" rows="4" oninput="updateCharCount()" placeholder="พิมพ์ความในใจตรงนี้ได้เลยจ้า..." class="w-full p-4 rounded-2xl border-2 border-rose-200 focus:border-rose-400 focus:ring-4 focus:ring-rose-100 text-gray-700 placeholder-gray-400 transition-all resize-none text-sm leading-relaxed"></textarea>
-                
-                <!-- Character Counter Badge -->
-                <div class="flex justify-between items-center text-xs mt-1.5 px-1">
-                    <span id="charHint" class="font-medium text-rose-500">ขาดอีก <span id="minCharRemaining">20</span> ตัวอักษร</span>
-                    <span class="bg-rose-50 text-rose-600 font-bold px-2.5 py-1 rounded-full border border-rose-100">
-                        <span id="currentCharCount">0</span> / <span id="targetMinChar">20</span>
-                    </span>
-                </div>
-            </div>
-
-            <button id="btnSubmitText" onclick="submitTextAnswer()" disabled class="w-full py-3.5 bg-gray-300 text-gray-500 font-semibold rounded-2xl shadow-md transition-all flex items-center justify-center text-lg cursor-not-allowed">
-                ส่งความในใจ ✨
-            </button>
-        </div>
-
-        <!-- STEP 3: Success / Final Celebration -->
-        <div id="stepSuccess" class="hidden text-center py-6 space-y-4">
-            <div class="text-6xl animate-bounce">🎉💖✨</div>
-            <h2 class="text-2xl font-bold text-gray-800">ขอบคุณสำหรับความรักนะ!</h2>
-            <p class="text-gray-600 text-sm leading-relaxed px-4">ความรักของคุณส่งตรงถึงหัวใจเรียบร้อยแล้ว ขอให้เรามีความสุขและรักกันแบบนี้ไปนานๆ นะคะ 💕</p>
-            <div class="pt-4">
-                <span class="inline-flex items-center text-xs text-rose-500 bg-rose-50 px-3 py-1.5 rounded-full border border-rose-200">
-                    <i class="fa-solid fa-music mr-1.5 animate-spin"></i> เล่นเพลงประกอบเรียบร้อยแล้ว
-                </span>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- POUTING MODAL (เด้งเตือนเวลาดึงสไลเดอร์ไม่ถึงเกณฑ์) -->
-    <div id="poutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md hidden">
-        <div class="glass-card max-w-sm w-full rounded-3xl p-6 text-center animate-bounce-in border-2 border-rose-300 shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-28 h-28 bg-rose-300 rounded-full blur-2xl opacity-50 pointer-events-none"></div>
-            
-            <div class="text-6xl mb-3">🥺</div>
-            <h3 class="text-xl font-bold text-rose-600 mb-2" id="poutTitle">ฮึ! งอนแล้วนะ!</h3>
-            <p class="text-gray-700 text-sm mb-6 leading-relaxed px-2" id="poutMessageText">
-                รักแค่นี้เองหรอคะ? 🥺 ดึงแถบเลื่อนไปให้สุดสิคะเค้าถึงจะยอม!
-            </p>
-
-            <button onclick="closePoutModal()" class="w-full py-3 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-rose-200 transition-all transform active:scale-95">
-                ยอมแล้วจ้า จะดึงให้สุดเลย! 💖
-            </button>
-        </div>
-    </div>
-
-    <!-- ADMIN TRIGGER BUTTON (รูปฟันเฟืองมุมซ้ายล่าง) -->
-    <button onclick="openAdminLogin()" class="fixed bottom-4 left-4 z-40 w-11 h-11 bg-white/80 hover:bg-white text-gray-600 rounded-full shadow-lg backdrop-blur-md flex items-center justify-center transition-all hover:rotate-90">
-        <i class="fa-solid fa-gear text-lg"></i>
-    </button>
-
-    <!-- ADMIN LOGIN MODAL (PIN Stepper) -->
-    <div id="adminLoginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden">
-        <div class="glass-card-dark max-w-sm w-full rounded-3xl p-6 text-center text-white border border-slate-700 shadow-2xl">
-            <div class="w-12 h-12 bg-rose-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3 text-rose-400 text-xl border border-rose-500/30">
+    <!-- 1. Passcode Lock Screen -->
+    <div id="lockScreen" class="fixed inset-0 bg-rose-50/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card max-w-sm w-full p-8 rounded-3xl text-center shadow-xl border border-rose-200">
+            <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4 text-rose-500 text-2xl">
                 <i class="fa-solid fa-lock"></i>
             </div>
-            <h3 class="text-lg font-bold mb-1">เข้าสู่ระบบแอดมิน</h3>
-            <p class="text-xs text-slate-400 mb-6">กดลูกศร เพื่อเลือก รหัสผ่าน 4 หลัก</p>
-
-            <!-- 4-Digit PIN Stepper Controls -->
-            <div class="flex justify-center items-center gap-2 mb-6">
-                <!-- Digit 1 -->
-                <div class="flex flex-col items-center">
-                    <button onclick="changeDigit(0, 1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-t-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-up"></i></button>
-                    <div id="pin-0" class="w-10 h-12 bg-slate-900 border border-slate-700 flex items-center justify-center font-mono text-xl font-bold text-rose-400">0</div>
-                    <button onclick="changeDigit(0, -1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-b-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-down"></i></button>
-                </div>
-                <!-- Digit 2 -->
-                <div class="flex flex-col items-center">
-                    <button onclick="changeDigit(1, 1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-t-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-up"></i></button>
-                    <div id="pin-1" class="w-10 h-12 bg-slate-900 border border-slate-700 flex items-center justify-center font-mono text-xl font-bold text-rose-400">0</div>
-                    <button onclick="changeDigit(1, -1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-b-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-down"></i></button>
-                </div>
-                <!-- Digit 3 -->
-                <div class="flex flex-col items-center">
-                    <button onclick="changeDigit(2, 1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-t-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-up"></i></button>
-                    <div id="pin-2" class="w-10 h-12 bg-slate-900 border border-slate-700 flex items-center justify-center font-mono text-xl font-bold text-rose-400">0</div>
-                    <button onclick="changeDigit(2, -1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-b-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-down"></i></button>
-                </div>
-                <!-- Digit 4 -->
-                <div class="flex flex-col items-center">
-                    <button onclick="changeDigit(3, 1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-t-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-up"></i></button>
-                    <div id="pin-3" class="w-10 h-12 bg-slate-900 border border-slate-700 flex items-center justify-center font-mono text-xl font-bold text-rose-400">0</div>
-                    <button onclick="changeDigit(3, -1)" class="w-10 h-8 bg-slate-800 hover:bg-slate-700 rounded-b-lg text-xs text-rose-400"><i class="fa-solid fa-chevron-down"></i></button>
-                </div>
-            </div>
-
-            <div class="flex gap-2">
-                <button onclick="closeAdminLogin()" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-xl text-sm">ยกเลิก</button>
-                <button onclick="verifyAdminPin()" class="w-1/2 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-medium rounded-xl text-sm shadow-lg shadow-rose-900/50">ตกลง</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ADMIN DASHBOARD PANEL -->
-    <div id="adminDashboardModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg p-4 sm:p-6 overflow-y-auto hidden">
-        <div class="max-w-3xl mx-auto glass-card-dark rounded-3xl p-6 sm:p-8 text-white border border-slate-700 my-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2 font-mali">กุญแจคล้องใจ ❤️</h2>
+            <p class="text-sm text-gray-500 mb-6">กรอกรหัสผ่านเพื่อเข้าสู่ความทรงจำของเรา (รหัสเริ่มต้น: 1234)</p>
             
-            <!-- Dashboard Header -->
-            <div class="flex justify-between items-center pb-6 border-b border-slate-800 mb-6">
-                <div>
-                    <h2 class="text-xl font-bold text-rose-400 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders"></i> Admin Control Panel
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">ปรับแต่งตั้งค่าและควบคุมระบบทุกอย่างตามใจคุณ</p>
-                </div>
-                <button onclick="closeAdminDashboard()" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Settings Form Grid -->
-            <div class="space-y-6">
-                
-                <!-- Section 1: Love Slider Settings -->
-                <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
-                    <h3 class="text-sm font-semibold text-rose-300 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-heart-pulse"></i> ตั้งค่าแถบเลื่อน "รักแค่ไหน"
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">เปอร์เซ็นต์ขั้นต่ำที่ยอมรับ (%)</label>
-                            <input type="number" id="cfgSliderThreshold" min="0" max="100" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:border-rose-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">หัวข้อป๊อปอัพงอน</label>
-                            <input type="text" id="cfgPoutTitle" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:border-rose-500 focus:outline-none">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-xs text-slate-400 mb-1">ข้อความงอน (เมื่อสไลด์ไม่ถึงเกณฑ์)</label>
-                            <textarea id="cfgPoutMessage" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:border-rose-500 focus:outline-none"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 2: Text Answer Settings -->
-                <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
-                    <h3 class="text-sm font-semibold text-rose-300 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-pen-to-square"></i> ตั้งค่าส่วนตอบข้อความ
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">จำนวนตัวอักษรขั้นต่ำ (Min Characters)</label>
-                            <input type="number" id="cfgMinChars" min="1" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:border-rose-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">รหัสผ่านแอดมิน PIN (4 หลัก)</label>
-                            <input type="text" id="cfgAdminPin" maxlength="4" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm font-mono text-rose-400 focus:border-rose-500 focus:outline-none">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 3: Firebase & Music Config -->
-                <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
-                    <h3 class="text-sm font-semibold text-rose-300 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-database"></i> Firebase & เพลงประกอบ
-                    </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Firebase API Key</label>
-                            <input type="text" id="cfgApiKey" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-300 focus:border-rose-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Firebase Database URL</label>
-                            <input type="text" id="cfgDbUrl" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-300 focus:border-rose-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Firebase Project ID</label>
-                            <input type="text" id="cfgProjectId" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-300 focus:border-rose-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">ลิงก์ไฟล์เพลงประกอบ (.mp3)</label>
-                            <input type="text" id="cfgMusicUrl" placeholder="https://example.com/song.mp3" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-300 focus:border-rose-500 focus:outline-none">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Save Button -->
-            <div class="mt-8 pt-4 border-t border-slate-800 flex justify-end">
-                <button onclick="saveAdminSettings()" class="px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-medium rounded-xl shadow-lg shadow-rose-900/40 transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-floppy-disk"></i> บันทึกการตั้งค่าทั้งหมด
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Audio Element -->
-    <audio id="bgAudio" loop></audio>
-
-    <!-- MAIN JAVASCRIPT LOGIC -->
-    <script>
-        // Default System Settings
-        let appSettings = {
-            sliderThreshold: 80,
-            poutTitle: "ฮึ! งอนแล้วนะ! 🥺",
-            poutMessage: "รักแค่นี้เองหรอคะ? 🥺 ดึงแถบเลื่อนไปให้สุดสิคะเค้าถึงจะยอม!",
-            minChars: 20,
-            adminPin: "1234",
-            apiKey: "",
-            databaseURL: "",
-            projectId: "",
-            musicUrl: ""
-        };
-
-        // Pin Stepper Digits State
-        let currentPinDigits = [0, 0, 0, 0];
-
-        // Load Settings on Start
-        window.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('anniversary_settings');
-            if (saved) {
-                appSettings = { ...appSettings, ...JSON.parse(saved) };
-            }
-            initApp();
-            createFloatingHearts();
-        });
-
-        function initApp() {
-            document.getElementById('targetMinChar').innerText = appSettings.minChars;
-            document.getElementById('minCharRemaining').innerText = appSettings.minChars;
+            <input type="password" id="passcodeInput" maxlength="4" placeholder="••••" class="w-full text-center text-3xl tracking-widest py-3 border-2 border-rose-200 rounded-2xl mb-4 focus:outline-none focus:border-rose-400 font-bold bg-white/90">
             
-            // Slider Realtime Text Update
-            const slider = document.getElementById('loveSlider');
-            const display = document.getElementById('sliderValueDisplay');
-            slider.addEventListener('input', (e) => {
-                display.innerText = e.target.value + '%';
-            });
-        }
-
-        // --- SLIDER LOGIC & POUTING SNAPBACK ---
-        function checkSliderValue() {
-            const slider = document.getElementById('loveSlider');
-            const value = parseInt(slider.value);
-
-            if (value < appSettings.sliderThreshold) {
-                // Animate Slider Snap Back to 0%
-                let currentVal = value;
-                const interval = setInterval(() => {
-                    currentVal -= 4;
-                    if (currentVal <= 0) {
-                        currentVal = 0;
-                        clearInterval(interval);
-                    }
-                    slider.value = currentVal;
-                    document.getElementById('sliderValueDisplay').innerText = currentVal + '%';
-                }, 15);
-
-                // Show Pouting Modal
-                showPoutModal();
-            } else {
-                // Passed! Go to Step 2
-                document.getElementById('stepSlider').classList.add('hidden');
-                document.getElementById('stepTextAnswer').classList.remove('hidden');
-                
-                // Play Music if configured
-                if (appSettings.musicUrl) {
-                    const audio = document.getElementById('bgAudio');
-                    audio.src = appSettings.musicUrl;
-                    audio.play().catch(e => console.log('Autoplay blocked'));
-                }
-            }
-        }
-
-        function showPoutModal() {
-            document.getElementById('poutTitle').innerText = appSettings.poutTitle;
-            document.getElementById('poutMessageText').innerText = appSettings.poutMessage;
-            document.getElementById('poutModal').classList.remove('hidden');
-        }
-
-        function closePoutModal() {
-            document.getElementById('poutModal').classList.add('hidden');
-        }
-
-        // --- TEXT ANSWER MIN-LENGTH CHECK ---
-        function updateCharCount() {
-            const text = document.getElementById('userAnswerText').value;
-            const len = text.length;
-            const min = appSettings.minChars;
-            
-            document.getElementById('currentCharCount').innerText = len;
-
-            const btn = document.getElementById('btnSubmitText');
-            const hint = document.getElementById('charHint');
-
-            if (len >= min) {
-                btn.disabled = false;
-                btn.className = "w-full py-3.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-2xl shadow-lg shadow-rose-200 transition-all transform active:scale-95 cursor-pointer text-lg";
-                hint.innerHTML = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> ครบถ้วนแล้วจ้า! 💕</span>`;
-            } else {
-                btn.disabled = true;
-                btn.className = "w-full py-3.5 bg-gray-300 text-gray-500 font-semibold rounded-2xl shadow-md transition-all flex items-center justify-center text-lg cursor-not-allowed";
-                hint.innerHTML = `ขาดอีก <span id="minCharRemaining" class="font-bold text-rose-500">${min - len}</span> ตัวอักษร`;
-            }
-        }
-
-        function submitTextAnswer() {
-            document.getElementById('stepTextAnswer').classList.add('hidden');
-            document.getElementById('stepSuccess').classList.remove('hidden');
-            
-            // Trigger Fireworks
-            confetti({
-                particleCount: 120,
-                spread: 80,
-                origin: { y: 0.6 }
-            });
-        }
-
-        // --- ADMIN LOGIN & PIN STEPPER ---
-        function openAdminLogin() {
-            document.getElementById('adminLoginModal').classList.remove('hidden');
-        }
-
-        function closeAdminLogin() {
-            document.getElementById('adminLoginModal').classList.add('hidden');
-        }
-
-        function changeDigit(index, delta) {
-            currentPinDigits[index] = (currentPinDigits[index] + delta + 10) % 10;
-            document.getElementById(`pin-${index}`).innerText = currentPinDigits[index];
-        }
-
-        function verifyAdminPin() {
-            const entered = currentPinDigits.join('');
-            if (entered === appSettings.adminPin) {
-                closeAdminLogin();
-                openAdminDashboard();
-            } else {
-                alert('รหัสผ่านไม่ถูกต้องครับ!');
-            }
-        }
-
-        // --- ADMIN DASHBOARD CONTROLS ---
-        function openAdminDashboard() {
-            // Fill inputs with current settings
-            document.getElementById('cfgSliderThreshold').value = appSettings.sliderThreshold;
-            document.getElementById('cfgPoutTitle').value = appSettings.poutTitle;
-            document.getElementById('cfgPoutMessage').value = appSettings.poutMessage;
-            document.getElementById('cfgMinChars').value = appSettings.minChars;
-            document.getElementById('cfgAdminPin').value = appSettings.adminPin;
-            document.getElementById('cfgApiKey').value = appSettings.apiKey || '';
-            document.getElementById('cfgDbUrl').value = appSettings.databaseURL || '';
-            document.getElementById('cfgProjectId').value = appSettings.projectId || '';
-            document.getElementById('cfgMusicUrl').value = appSettings.musicUrl || '';
-
-            document.getElementById('adminDashboardModal').classList.remove('hidden');
-        }
-
-        function closeAdminDashboard() {
-            document.getElementById('adminDashboardModal').classList.add('hidden');
-        }
-
-        function saveAdminSettings() {
-            appSettings.sliderThreshold = parseInt(document.getElementById('cfgSliderThreshold').value) || 80;
-            appSettings.poutTitle = document.getElementById('cfgPoutTitle').value;
-            appSettings.poutMessage = document.getElementById('cfgPoutMessage').value;
-            appSettings.minChars = parseInt(document.getElementById('cfgMinChars').value) || 20;
-            appSettings.adminPin = document.getElementById('cfgAdminPin').value || "1234";
-            appSettings.apiKey = document.getElementById('cfgApiKey').value;
-            appSettings.databaseURL = document.getElementById('cfgDbUrl').value;
-            appSettings.projectId = document.getElementById('cfgProjectId').value;
-            appSettings.musicUrl = document.getElementById('cfgMusicUrl').value;
-
-            // Save to LocalStorage
-            localStorage.setItem('anniversary_settings', JSON.stringify(appSettings));
-            
-            initApp();
-            alert('บันทึกการตั้งค่าเรียบร้อยแล้วครับ! ✨');
-            closeAdminDashboard();
-        }
-
-        // --- BACKGROUND HEARTS ANIMATION ---
-        function createFloatingHearts() {
-            const container = document.getElementById('bgHearts');
-            const hearts = ['💖', '💕', '🌸', '✨', '💗'];
-            for (let i = 0; i < 15; i++) {
-                const heart = document.createElement('div');
-                heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
-                heart.className = 'absolute text-xl opacity-40 select-none pointer-events-none';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.top = Math.random() * 100 + 'vh';
-                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
-                heart.style.animation = `float ${Math.random() * 6 + 6}s ease-in-out infinite alternate`;
-                container.appendChild(heart);
-            }
-        }
-    </script>
-    
-    <style>
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-30px) rotate(15deg); }
-        }
-    </style>
-</body>
-</html>        * { font-family: 'Prompt', sans-serif; }
-        
-        body {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            min-height: 100vh;
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
-        }
-
-        .glass-dark {
-            background: rgba(24, 24, 27, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-        }
-
-        /* Minimal Range Slider */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]:focus { outline: none; }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 10px;
-            cursor: pointer;
-            background: #ffe4e6;
-            border-radius: 999px;
-            transition: all 0.3s ease;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            height: 28px;
-            width: 28px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -9px;
-            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
-            border: 3px solid #f43f5e;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
-        }
-
-        @keyframes toastSlide {
-            0% { transform: translateY(-100%) scale(0.9); opacity: 0; }
-            100% { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        .animate-toast { animation: toastSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-        @keyframes modalFadeIn {
-            0% { transform: scale(0.92); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-modal { animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    </style>
-</head>
-<body class="flex items-center justify-center p-4 relative overflow-x-hidden selection:bg-rose-100 selection:text-rose-600">
-
-    <!-- TOAST NOTIFICATION CONTAINER -->
-    <div id="toastContainer" class="fixed top-5 z-50 flex flex-col items-center gap-2 pointer-events-none px-4 w-full max-w-sm"></div>
-
-    <!-- MAIN CARD CONTAINER -->
-    <main class="w-full max-w-md glass-panel rounded-3xl p-7 sm:p-9 relative z-10 transition-all duration-500 my-8">
-        
-        <div class="text-center mb-8">
-            <span class="inline-flex items-center px-3.5 py-1 rounded-full bg-rose-50 text-rose-500 text-xs font-medium tracking-wide border border-rose-100/80 mb-3">
-                <i class="fa-solid fa-sparkles text-rose-400 mr-1.5 text-[10px]"></i> Special Anniversary
-            </span>
-            <h1 class="text-2xl font-semibold text-zinc-800 tracking-tight" id="cardTitle">รักเราหวานเจี๊ยบ 💕</h1>
-        </div>
-
-        <!-- STEP 1: Love Slider -->
-        <div id="stepSlider" class="space-y-8">
-            <div class="text-center">
-                <p class="text-zinc-600 text-sm font-medium mb-1">คุณรักเค้ามากแค่ไหน?</p>
-                <div class="text-5xl font-bold text-rose-500 my-3 tracking-tight transition-all duration-150" id="sliderValueDisplay">
-                    0%
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <input type="range" id="loveSlider" min="0" max="100" value="0" step="1">
-                <div class="flex justify-between text-[11px] text-zinc-400 font-medium px-1">
-                    <span>นิดเดียว 🤏</span>
-                    <span>ปานกลาง 😊</span>
-                    <span>รักที่สุด! 💖</span>
-                </div>
-            </div>
-
-            <button id="btnSubmitSlider" onclick="checkSliderValue()" class="w-full py-3.5 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white font-medium rounded-2xl shadow-sm shadow-rose-200 transition-all flex items-center justify-center gap-2 text-sm">
-                ยืนยันความรัก <i class="fa-solid fa-arrow-right text-xs"></i>
+            <button id="unlockBtn" class="w-full bg-gradient-to-r from-rose-400 to-pink-500 text-white py-3 rounded-2xl font-semibold shadow-lg hover:opacity-90 transition">
+                ปลดล็อกหัวใจ 💖
             </button>
-        </div>
-
-        <!-- STEP 2: Text Answer -->
-        <div id="stepTextAnswer" class="hidden space-y-6">
-            <div class="text-center">
-                <p class="text-zinc-700 font-medium text-base mb-1">บอกความในใจหน่อยสิคะ 💌</p>
-                <p class="text-xs text-zinc-400">พิมพ์ข้อความให้เขาประทับใจที่สุดนะ</p>
-            </div>
-
-            <div class="space-y-2">
-                <div class="relative">
-                    <textarea id="userAnswerText" rows="4" oninput="updateCharCount()" placeholder="พิมพ์ความในใจตรงนี้..." class="w-full p-4 rounded-2xl bg-zinc-50/50 border border-zinc-200/80 focus:border-rose-400 focus:bg-white focus:ring-4 focus:ring-rose-50/50 text-zinc-800 placeholder-zinc-400 text-sm transition-all resize-none leading-relaxed outline-none"></textarea>
-                </div>
-
-                <!-- Progress Gauge & Char Counter -->
-                <div class="space-y-1.5 px-0.5">
-                    <div class="w-full bg-zinc-100 h-1.5 rounded-full overflow-hidden">
-                        <div id="charProgressBar" class="bg-rose-500 h-full w-0 transition-all duration-300"></div>
-                    </div>
-                    <div class="flex justify-between items-center text-[11px] text-zinc-400">
-                        <span id="charHint">ขาดอีก <span id="minCharRemaining" class="text-rose-500 font-medium">20</span> ตัวอักษร</span>
-                        <span class="font-mono text-zinc-500"><span id="currentCharCount">0</span>/<span id="targetMinChar">20</span></span>
-                    </div>
-                </div>
-            </div>
-
-            <button id="btnSubmitText" onclick="submitTextAnswer()" disabled class="w-full py-3.5 bg-zinc-200 text-zinc-400 font-medium rounded-2xl transition-all flex items-center justify-center text-sm cursor-not-allowed">
-                ส่งความในใจ ✨
-            </button>
-        </div>
-
-        <!-- STEP 3: Success Screen -->
-        <div id="stepSuccess" class="hidden text-center py-6 space-y-4">
-            <div class="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto text-rose-500 text-2xl mb-2 border border-rose-100">
-                <i class="fa-solid fa-heart animate-pulse"></i>
-            </div>
-            <h2 class="text-xl font-semibold text-zinc-800">ขอบคุณสำหรับความรักนะ 💕</h2>
-            <p class="text-zinc-500 text-xs leading-relaxed px-2">ความรู้สึกของคุณถูกบันทึกเรียบร้อยแล้ว ขอให้มีความสุขในทุกๆ วันนะ!</p>
-        </div>
-
-    </main>
-
-    <!-- POUT MODAL (หน้าต่างเตือนเวลางอน) -->
-    <div id="poutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/30 backdrop-blur-sm hidden">
-        <div class="glass-panel max-w-xs w-full rounded-3xl p-6 text-center animate-modal shadow-2xl relative">
-            <div class="text-5xl mb-3">🥺</div>
-            <h3 class="text-lg font-semibold text-zinc-800 mb-1.5" id="poutTitle">ฮึ! งอนแล้วนะ!</h3>
-            <p class="text-zinc-500 text-xs mb-6 leading-relaxed" id="poutMessageText">
-                รักแค่นี้เองหรอคะ? 🥺 ดึงแถบเลื่อนไปให้สุดสิคะเค้าถึงจะยอม!
-            </p>
-
-            <button onclick="closePoutModal()" class="w-full py-3 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white text-xs font-medium rounded-xl shadow-sm transition-all">
-                ยอมแล้วจ้า จะดึงให้สุดเลย! 💖
-            </button>
+            <p id="lockError" class="text-xs text-red-500 mt-3 hidden">รหัสผ่านไม่ถูกต้อง ลองอีกครั้งนะ!</p>
         </div>
     </div>
 
-    <!-- ADMIN TRIGGER BUTTON -->
-    <button onclick="openAdminLogin()" class="fixed bottom-5 left-5 z-40 w-10 h-10 bg-white/90 hover:bg-white text-zinc-400 hover:text-zinc-700 rounded-full shadow-sm border border-zinc-200/60 backdrop-blur-md flex items-center justify-center transition-all hover:rotate-90">
-        <i class="fa-solid fa-gear text-sm"></i>
-    </button>
+    <!-- Main Container -->
+    <div id="mainApp" class="max-w-xl mx-auto px-4 space-y-6 hidden">
 
-    <!-- ADMIN LOGIN MODAL -->
-    <div id="adminLoginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-md hidden">
-        <div class="glass-dark max-w-xs w-full rounded-3xl p-6 text-center text-white animate-modal">
-            <div class="w-10 h-10 bg-zinc-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-zinc-300 text-sm border border-zinc-700/50">
-                <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <h3 class="text-base font-semibold mb-0.5">Admin Access</h3>
-            <p class="text-[11px] text-zinc-400 mb-6">กดลูกศร เพื่อเลือก PIN 4 หลัก</p>
-
-            <div class="flex justify-center items-center gap-2 mb-6">
-                <script>
-                    for(let i=0; i<4; i++) {
-                        document.write(`
-                            <div class="flex flex-col items-center">
-                                <button onclick="changeDigit(${i}, 1)" class="w-9 h-7 bg-zinc-800/80 hover:bg-zinc-700 rounded-t-lg text-[10px] text-zinc-300 transition-colors"><i class="fa-solid fa-chevron-up"></i></button>
-                                <div id="pin-${i}" class="w-9 h-11 bg-zinc-900 border-y border-zinc-700/80 flex items-center justify-center font-mono text-lg font-semibold text-rose-400">0</div>
-                                <button onclick="changeDigit(${i}, -1)" class="w-9 h-7 bg-zinc-800/80 hover:bg-zinc-700 rounded-b-lg text-[10px] text-zinc-300 transition-colors"><i class="fa-solid fa-chevron-down"></i></button>
-                            </div>
-                        `);
-                    }
-                </script>
-            </div>
-
-            <div class="flex gap-2">
-                <button onclick="closeAdminLogin()" class="w-1/2 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium rounded-xl transition-all">ยกเลิก</button>
-                <button onclick="verifyAdminPin()" class="w-1/2 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-medium rounded-xl shadow-sm transition-all">ยืนยัน</button>
+        <!-- Header / Banner -->
+        <div class="glass-card p-6 rounded-3xl text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-28 h-28 bg-rose-200/50 rounded-full blur-xl"></div>
+            <h1 class="text-3xl font-bold font-mali text-rose-600 mb-2">Happy Anniversary! ✨</h1>
+            <p class="text-gray-600 text-sm">ขอบคุณที่เดินทางและผ่านเรื่องราวต่างๆ มาด้วยกันนะ</p>
+            <div id="liveStatusBadge" class="mt-4 inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> เชื่อมต่อ Realtime แล้ว
             </div>
         </div>
-    </div>
 
-    <!-- ADMIN DASHBOARD PANEL -->
-    <div id="adminDashboardModal" class="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-xl p-4 sm:p-6 overflow-y-auto hidden">
-        <div class="max-w-2xl mx-auto glass-dark rounded-3xl p-6 sm:p-8 text-white my-6 border border-zinc-800">
+        <!-- 2. 3D Envelope Section -->
+        <div class="glass-card p-6 rounded-3xl">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-envelope-open-text text-rose-500"></i> ซองจดหมายถึงเธอ 💌
+            </h3>
+            <div class="envelope-wrapper flex justify-center my-4">
+                <div id="envelopeCard" class="envelope w-full max-w-sm h-64 cursor-pointer">
+                    <!-- Envelope Front -->
+                    <div class="envelope-front absolute inset-0 bg-gradient-to-br from-rose-300 to-pink-400 rounded-2xl p-6 flex flex-col justify-center items-center text-white shadow-md">
+                        <i class="fa-solid fa-heart text-5xl mb-3 text-white/90"></i>
+                        <p class="font-mali text-lg font-semibold">แตะเพื่อเปิดอ่านจดหมาย</p>
+                        <p class="text-xs text-rose-100 mt-1">มีข้อความพิเศษซ่อนอยู่ข้างใน...</p>
+                    </div>
+                    <!-- Envelope Back -->
+                    <div class="envelope-back absolute inset-0 bg-white rounded-2xl p-6 flex flex-col justify-between border-2 border-rose-200 shadow-lg text-left overflow-y-auto">
+                        <div>
+                            <p class="text-xs text-rose-500 font-bold mb-1">ถึง คนพิเศษของฉัน 💕</p>
+                            <p class="text-sm text-gray-700 leading-relaxed font-mali" id="letterTextContent">
+                                ขอบคุณที่เข้ามาเป็นรอยยิ้มและความสุขในทุกๆ วันนะ ไม่ว่าจะเจอเรื่องอะไร ขอบคุณที่คอยอยู่เคียงข้างกันเสมอ รักเธอนะ! 🥰
+                            </p>
+                        </div>
+                        <p class="text-right text-xs text-rose-400 font-semibold font-mali mt-2">— จากคนที่รักเธอที่สุด</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Love Slider (Interactive Spring Back Slider) -->
+        <div class="glass-card p-6 rounded-3xl">
+            <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-rose-500"></i> เธอรักเค้ามากแค่ไหน?
+            </h3>
+            <p class="text-xs text-gray-500 mb-4">ลองเลื่อนระดับความรักดูสิ (ระดับจะซิงค์ไปหน้า Admin แบบ Real-time)</p>
             
-            <div class="flex justify-between items-center pb-5 border-b border-zinc-800 mb-6">
-                <div>
-                    <h2 class="text-base font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-rose-400"></i> Settings & Received Messages
-                    </h2>
-                    <p class="text-[11px] text-zinc-400 mt-0.5">จัดการเงื่อนไขและดูข้อความที่บันทึกใน Firebase</p>
-                </div>
-                <button onclick="closeAdminDashboard()" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 rounded-full flex items-center justify-center text-zinc-400 hover:text-white transition-all text-xs">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+            <div class="text-center my-3">
+                <span id="sliderValueText" class="text-3xl font-bold font-mali text-rose-500">100%</span>
+                <span id="sliderReaction" class="text-2xl ml-2">💖</span>
             </div>
 
-            <!-- Firebase Received Answers Section -->
-            <div class="mb-6 bg-zinc-900/80 p-4 rounded-2xl border border-rose-500/30 space-y-3">
-                <div class="flex justify-between items-center">
-                    <span class="font-medium text-rose-400 text-xs flex items-center gap-1.5">
-                        <i class="fa-solid fa-inbox"></i> ข้อความที่ส่งเข้ามาล่าสุด (Firebase)
-                    </span>
-                    <button onclick="loadSavedAnswers()" class="text-[10px] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-2.5 py-1 rounded-lg transition-all">
-                        <i class="fa-solid fa-rotate-right mr-1"></i> โหลดใหม่
+            <input type="range" id="loveSlider" min="0" max="1000" value="100" class="w-full accent-rose-500 h-3 bg-rose-100 rounded-lg appearance-none cursor-pointer">
+            <div class="flex justify-between text-xs text-gray-400 mt-2 font-semibold">
+                <span>0%</span>
+                <span>100%</span>
+                <span>1000% 🔥</span>
+            </div>
+        </div>
+
+        <!-- 4. Secret Scratch Card -->
+        <div class="glass-card p-6 rounded-3xl text-center">
+            <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-ticket text-rose-500"></i> การ์ดขูดความลับ ✨
+            </h3>
+            <p class="text-xs text-gray-500 mb-4">ใช้นิ้วหรือเมาส์ขูดเพื่อเฉลยความลับที่ซ่อนอยู่</p>
+            
+            <div class="relative w-64 h-36 mx-auto rounded-2xl overflow-hidden shadow-md flex items-center justify-center bg-gradient-to-r from-purple-200 via-pink-200 to-rose-200 border-2 border-rose-300">
+                <!-- Secret Content under scratch -->
+                <div class="p-4 text-center">
+                    <p class="text-xs text-rose-500 font-bold mb-1">🎁 รางวัลสุดพิเศษ</p>
+                    <p class="text-lg font-bold font-mali text-rose-700" id="scratchSecretText">"พาไปทานบุฟเฟต์ตามใจ 1 มื้อ!"</p>
+                </div>
+                <!-- Scratch Canvas Overlay -->
+                <canvas id="scratchCanvas" width="256" height="144" class="absolute inset-0 w-full h-full"></canvas>
+            </div>
+        </div>
+
+        <!-- 5. Special Coupons -->
+        <div class="glass-card p-6 rounded-3xl">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-tags text-rose-500"></i> คูปองสิทธิพิเศษสำหรับเธอ 🎟️
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="couponsContainer">
+                <!-- Coupon Item 1 -->
+                <div class="bg-white/90 p-4 rounded-2xl border border-rose-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">SPECIAL</span>
+                        <h4 class="font-bold text-gray-800 text-sm mt-1">กอดฟรี 10 นาที 🫂</h4>
+                        <p class="text-xs text-gray-500 mt-0.5">ใช้นวดหรือกอดอุ่นๆ ตอนเหนื่อย</p>
+                    </div>
+                    <button class="claim-coupon-btn mt-3 w-full bg-rose-500 hover:bg-rose-600 text-white py-1.5 rounded-xl text-xs font-semibold transition" data-id="coupon_1" data-name="กอดฟรี 10 นาที">
+                        กดใช้คูปองนี้
                     </button>
                 </div>
-                <div id="savedAnswersList" class="space-y-2 max-h-48 overflow-y-auto pr-1 text-xs">
-                    <div class="text-zinc-500 text-center py-4">กำลังโหลดข้อมูล...</div>
+                <!-- Coupon Item 2 -->
+                <div class="bg-white/90 p-4 rounded-2xl border border-rose-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="bg-purple-100 text-purple-600 text-[10px] font-bold px-2 py-0.5 rounded-full">LIMITED</span>
+                        <h4 class="font-bold text-gray-800 text-sm mt-1">ห้ามงอน 1 วันเต็ม 🥺</h4>
+                        <p class="text-xs text-gray-500 mt-0.5">ใช้สิทธิ์ยกเว้นโทษได้ 1 ครั้ง</p>
+                    </div>
+                    <button class="claim-coupon-btn mt-3 w-full bg-rose-500 hover:bg-rose-600 text-white py-1.5 rounded-xl text-xs font-semibold transition" data-id="coupon_2" data-name="ห้ามงอน 1 วันเต็ม">
+                        กดใช้คูปองนี้
+                    </button>
                 </div>
             </div>
+        </div>
 
-            <!-- Dashboard Settings Form -->
-            <div class="space-y-5 text-xs">
-                <div class="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800/80 space-y-3">
-                    <div class="font-medium text-rose-300 flex items-center gap-1.5">
-                        <i class="fa-solid fa-heart text-[10px]"></i> ตั้งค่าแถบเลื่อน "รักแค่ไหน"
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-zinc-400 mb-1">เปอร์เซ็นต์ขั้นต่ำ (%)</label>
-                            <input type="number" id="cfgSliderThreshold" min="0" max="100" class="w-full bg-zinc-800/80 border border-zinc-700/80 rounded-xl p-2.5 text-zinc-200 outline-none focus:border-rose-500">
-                        </div>
-                        <div>
-                            <label class="block text-zinc-400 mb-1">หัวข้อป๊อปอัพงอน</label>
-                            <input type="text" id="cfgPoutTitle" class="w-full bg-zinc-800/80 border border-zinc-700/80 rounded-xl p-2.5 text-zinc-200 outline-none focus:border-rose-500">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-zinc-400 mb-1">ข้อความงอน</label>
-                            <textarea id="cfgPoutMessage" rows="2" class="w-full bg-zinc-800/80 border border-zinc-700/80 rounded-xl p-2.5 text-zinc-200 outline-none focus:border-rose-500"></textarea>
-                        </div>
-                    </div>
-                </div>
+        <!-- 6. Sky Lantern & Wishes -->
+        <div class="glass-card p-6 rounded-3xl">
+            <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-rose-500"></i> จุดโคมอธิษฐาน & พลุ 🎆
+            </h3>
+            <p class="text-xs text-gray-500 mb-4">พิมพ์คำอธิษฐานแล้วปล่อยโคมลอยขึ้นฟ้าพร้อมจุดพลุฉลอง</p>
 
-                <div class="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800/80 space-y-3">
-                    <div class="font-medium text-rose-300 flex items-center gap-1.5">
-                        <i class="fa-solid fa-pen-to-square text-[10px]"></i> ตั้งค่าส่วนตอบข้อความ & เพลง
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-zinc-400 mb-1">จำนวนตัวอักษรขั้นต่ำ</label>
-                            <input type="number" id="cfgMinChars" min="1" class="w-full bg-zinc-800/80 border border-zinc-700/80 rounded-xl p-2.5 text-zinc-200 outline-none focus:border-rose-500">
-                        </div>
-                        <div>
-                            <label class="block text-zinc-400 mb-1">PIN แอดมิน (4 หลัก)</label>
-                            <input type="text" id="cfgAdminPin" maxlength="4" class="w-full bg-zinc-800/80 border border-zinc-700/80 rounded-xl p-2.5 font-mono text-rose-400 outline-none focus:border-rose-500">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-zinc-400 mb-1">ลิงก์เพลงประกอบ (.mp3)</label>
-                            <input type="text" id="cfgMusicUrl" placeholder="https://domain.com/song.mp3" class="w-full bg-zinc-800/80 border border-zinc-700/80 rounded-xl p-2.5 font-mono text-zinc-300 outline-none focus:border-rose-500">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6 pt-4 border-t border-zinc-800 flex justify-end">
-                <button onclick="saveAdminSettings()" class="px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-medium rounded-xl shadow-sm transition-all flex items-center gap-2 text-xs">
-                    <i class="fa-solid fa-floppy-disk"></i> บันทึกการตั้งค่า
+            <div class="space-y-3">
+                <input type="text" id="wishInput" placeholder="พิมพ์คำอธิษฐานของเราตรงนี้..." class="w-full px-4 py-2.5 border border-rose-200 rounded-2xl text-sm focus:outline-none focus:border-rose-400 bg-white/90">
+                <button id="sendWishBtn" class="w-full bg-gradient-to-r from-amber-400 to-rose-400 text-white py-2.5 rounded-2xl font-semibold text-sm shadow-md hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> ปล่อยโคมอธิษฐาน ✨
                 </button>
             </div>
 
+            <!-- Wishes List Sync -->
+            <div class="mt-4 pt-4 border-t border-rose-100">
+                <p class="text-xs font-bold text-gray-500 mb-2">รายการคำอธิษฐานที่ผ่านมา:</p>
+                <div id="wishesList" class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                    <p class="text-xs text-gray-400 italic">ยังไม่มีคำอธิษฐาน...</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 7. ADMIN PANEL / LIVE MONITOR MODAL -->
+    <div id="adminModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white max-w-2xl w-full max-h-[90vh] rounded-3xl p-6 overflow-y-auto shadow-2xl relative border border-rose-100">
+            <button id="closeAdminBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h2 class="text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-gauge-high text-rose-500"></i> Admin Live Monitor
+            </h2>
+            <p class="text-xs text-gray-500 mb-6">ควบคุมระยะไกลและติดตามสถานะแฟนแบบ Real-Time</p>
+
+            <!-- Status Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100">
+                    <span class="text-[10px] text-gray-500 font-bold uppercase">สถานะผู้ใช้</span>
+                    <p id="adminUserStatus" class="text-sm font-bold text-gray-700 mt-1">ออฟไลน์</p>
+                </div>
+                <div class="bg-pink-50 p-4 rounded-2xl border border-pink-100">
+                    <span class="text-[10px] text-gray-500 font-bold uppercase">ระดับความรักล่าสุด</span>
+                    <p id="adminLoveScore" class="text-sm font-bold text-rose-600 mt-1">100%</p>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100">
+                    <span class="text-[10px] text-gray-500 font-bold uppercase">การ์ดขูดความลับ</span>
+                    <p id="adminScratchStatus" class="text-sm font-bold text-purple-600 mt-1">ยังไม่ขูด</p>
+                </div>
+            </div>
+
+            <!-- Remote Controls -->
+            <div class="border-t border-gray-100 pt-4 mb-6">
+                <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-gamepad text-rose-500"></i> สั่งการระยะไกล (Remote Control)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button id="cmdFireworksBtn" class="bg-gradient-to-r from-rose-500 to-pink-500 text-white p-3 rounded-2xl text-xs font-semibold shadow hover:opacity-90 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-fireworks"></i> สั่งจุดพลุหน้าจอแฟน
+                    </button>
+                    <button id="cmdAlertBtn" class="bg-slate-800 text-white p-3 rounded-2xl text-xs font-semibold shadow hover:bg-slate-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-comment-dots"></i> ส่งข้อความป๊อปอัปเซอร์ไพรส์
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logged Wishes & Coupon Claims -->
+            <div class="border-t border-gray-100 pt-4">
+                <h3 class="text-sm font-bold text-gray-800 mb-2">ประวัติคูปองที่ถูกใช้แล้ว</h3>
+                <div id="adminCouponLogs" class="space-y-1.5 max-h-32 overflow-y-auto text-xs text-gray-600">
+                    <p class="italic text-gray-400">ยังไม่มีการกดใช้คูปอง...</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Audio Element -->
-    <audio id="bgAudio" loop></audio>
 
-    <!-- FIREBASE MODULE & APPLICATION LOGIC -->
+    <!-- FIREBASE SDK & APPLICATION LOGIC -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getDatabase, ref, push, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
+        import { getDatabase, ref, set, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // Your Web App Firebase Configuration
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
             authDomain: "my-anniversary-app.firebaseapp.com",
@@ -837,253 +309,224 @@
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
 
-        // Settings State
-        let appSettings = {
-            sliderThreshold: 80,
-            poutTitle: "ฮึ! งอนแล้วนะ! 🥺",
-            poutMessage: "รักแค่นี้เองหรอคะ? 🥺 ดึงแถบเลื่อนไปให้สุดสิคะเค้าถึงจะยอม!",
-            minChars: 20,
-            adminPin: "1234",
-            musicUrl: ""
-        };
+        // UI Elements
+        const lockScreen = document.getElementById('lockScreen');
+        const passcodeInput = document.getElementById('passcodeInput');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const lockError = document.getElementById('lockError');
+        const mainApp = document.getElementById('mainApp');
 
-        let currentPinDigits = [0, 0, 0, 0];
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('anniversary_settings');
-            if (saved) {
-                appSettings = { ...appSettings, ...JSON.parse(saved) };
+        // Passcode Unlock Logic
+        const CORRECT_PIN = "1234";
+        unlockBtn.addEventListener('click', () => {
+            if (passcodeInput.value === CORRECT_PIN) {
+                lockScreen.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                initUserPresence();
+            } else {
+                lockError.classList.remove('hidden');
             }
-            initApp();
         });
 
-        function initApp() {
-            document.getElementById('targetMinChar').innerText = appSettings.minChars;
-            document.getElementById('minCharRemaining').innerText = appSettings.minChars;
-            
-            const slider = document.getElementById('loveSlider');
-            const display = document.getElementById('sliderValueDisplay');
-            slider.addEventListener('input', (e) => {
-                display.innerText = e.target.value + '%';
+        // 1. User Presence & Activity Tracking
+        function initUserPresence() {
+            const userRef = ref(db, 'presence/partner');
+            set(userRef, {
+                status: 'online',
+                lastSeen: new Date().toISOString()
+            });
+
+            // Update when user closes
+            window.addEventListener('beforeunload', () => {
+                set(userRef, {
+                    status: 'offline',
+                    lastSeen: new Date().toISOString()
+                });
             });
         }
 
-        // Custom Toast Notification System
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            
-            const isSuccess = type === 'success';
-            const isError = type === 'error';
+        // 2. 3D Envelope Interactive
+        const envelopeCard = document.getElementById('envelopeCard');
+        envelopeCard.addEventListener('click', () => {
+            envelopeCard.classList.toggle('open');
+            // Log action to Firebase
+            update(ref(db, 'user_actions'), { openedLetter: true, time: new Date().toLocaleTimeString() });
+        });
 
-            toast.className = `animate-toast flex items-center gap-2.5 px-4 py-2.5 rounded-2xl shadow-lg border text-xs font-medium backdrop-blur-lg pointer-events-auto transition-all ${
-                isSuccess ? 'bg-zinc-900/90 text-emerald-400 border-emerald-500/30' :
-                isError ? 'bg-zinc-900/90 text-rose-400 border-rose-500/30' :
-                'bg-zinc-900/90 text-zinc-200 border-zinc-700/50'
-            }`;
+        // 3. Love Slider Logic
+        const loveSlider = document.getElementById('loveSlider');
+        const sliderValueText = document.getElementById('sliderValueText');
+        const sliderReaction = document.getElementById('sliderReaction');
 
-            const icon = isSuccess ? 'fa-circle-check' : isError ? 'fa-circle-xmark' : 'fa-circle-info';
-            toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i> <span>${message}</span>`;
+        loveSlider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            sliderValueText.innerText = val + '%';
 
-            container.appendChild(toast);
+            if (val > 500) sliderReaction.innerText = '🤯🔥💖';
+            else if (val > 100) sliderReaction.innerText = '🥰✨';
+            else sliderReaction.innerText = '💖';
 
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-20px)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            // Sync score to Firebase
+            update(ref(db, 'user_actions'), { loveScore: val + '%' });
+        });
+
+        // 4. Scratch Card Canvas Logic
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        let isScratching = false;
+
+        function initScratchCard() {
+            ctx.fillStyle = '#cbd5e1'; // Silver coat
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#64748b';
+            ctx.font = '14px Kanit';
+            ctx.textAlign = 'center';
+            ctx.fillText('ขูดตรงนี้เพื่อดูความลับ ✨', canvas.width / 2, canvas.height / 2 + 5);
+        }
+        initScratchCard();
+
+        function scratch(e) {
+            if (!isScratching) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 16, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Update scratch status in DB once
+            update(ref(db, 'user_actions'), { scratchRevealed: true });
         }
 
-        // Slider Logic & Snapback
-        window.checkSliderValue = function() {
-            const slider = document.getElementById('loveSlider');
-            const value = parseInt(slider.value);
+        canvas.addEventListener('mousedown', () => isScratching = true);
+        canvas.addEventListener('mouseup', () => isScratching = false);
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchstart', () => isScratching = true);
+        canvas.addEventListener('touchend', () => isScratching = false);
+        canvas.addEventListener('touchmove', scratch);
 
-            if (value < appSettings.sliderThreshold) {
-                let currentVal = value;
-                const interval = setInterval(() => {
-                    currentVal -= 5;
-                    if (currentVal <= 0) {
-                        currentVal = 0;
-                        clearInterval(interval);
-                    }
-                    slider.value = currentVal;
-                    document.getElementById('sliderValueDisplay').innerText = currentVal + '%';
-                }, 15);
+        // 5. Coupon Claim Logic
+        document.querySelectorAll('.claim-coupon-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const couponId = e.target.getAttribute('data-id');
+                const couponName = e.target.getAttribute('data-name');
 
-                showPoutModal();
-            } else {
-                document.getElementById('stepSlider').classList.add('hidden');
-                document.getElementById('stepTextAnswer').classList.remove('hidden');
+                push(ref(db, 'coupon_claims'), {
+                    couponId: couponId,
+                    couponName: couponName,
+                    claimedAt: new Date().toLocaleString('th-TH')
+                });
+
+                e.target.disabled = true;
+                e.target.innerText = 'ใช้สิทธิ์แล้ว ✅';
+                e.target.classList.replace('bg-rose-500', 'bg-gray-400');
                 
-                if (appSettings.musicUrl) {
-                    const audio = document.getElementById('bgAudio');
-                    audio.src = appSettings.musicUrl;
-                    audio.play().catch(() => {});
-                }
-            }
-        };
+                confetti({ particleCount: 50, spread: 60 });
+            });
+        });
 
-        function showPoutModal() {
-            document.getElementById('poutTitle').innerText = appSettings.poutTitle;
-            document.getElementById('poutMessageText').innerText = appSettings.poutMessage;
-            document.getElementById('poutModal').classList.remove('hidden');
+        // 6. Sky Lantern & Wishes
+        const wishInput = document.getElementById('wishInput');
+        const sendWishBtn = document.getElementById('sendWishBtn');
+        const wishesList = document.getElementById('wishesList');
+
+        sendWishBtn.addEventListener('click', () => {
+            const text = wishInput.value.trim();
+            if (!text) return;
+
+            push(ref(db, 'wishes'), {
+                text: text,
+                timestamp: new Date().toLocaleTimeString('th-TH')
+            });
+
+            wishInput.value = '';
+            triggerLanternAnimation();
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        });
+
+        function triggerLanternAnimation() {
+            const lantern = document.createElement('div');
+            lantern.className = 'sky-lantern text-4xl';
+            lantern.innerHTML = '🏮';
+            lantern.style.left = Math.random() * 80 + 10 + 'vw';
+            document.body.appendChild(lantern);
+            setTimeout(() => lantern.remove(), 12000);
         }
 
-        window.closePoutModal = function() {
-            document.getElementById('poutModal').classList.add('hidden');
-        };
-
-        // Text Counter & Progress
-        window.updateCharCount = function() {
-            const text = document.getElementById('userAnswerText').value;
-            const len = text.length;
-            const min = appSettings.minChars;
-            
-            document.getElementById('currentCharCount').innerText = len;
-
-            const percent = Math.min(100, Math.round((len / min) * 100));
-            document.getElementById('charProgressBar').style.width = percent + '%';
-
-            const btn = document.getElementById('btnSubmitText');
-            const hint = document.getElementById('charHint');
-
-            if (len >= min) {
-                btn.disabled = false;
-                btn.className = "w-full py-3.5 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white font-medium rounded-2xl shadow-sm shadow-rose-200 transition-all flex items-center justify-center text-sm cursor-pointer";
-                hint.innerHTML = `<span class="text-emerald-600 font-medium"><i class="fa-solid fa-circle-check"></i> ครบถ้วนแล้วจ้า 💕</span>`;
-            } else {
-                btn.disabled = true;
-                btn.className = "w-full py-3.5 bg-zinc-200 text-zinc-400 font-medium rounded-2xl transition-all flex items-center justify-center text-sm cursor-not-allowed";
-                hint.innerHTML = `ขาดอีก <span class="text-rose-500 font-medium">${min - len}</span> ตัวอักษร`;
-            }
-        };
-
-        // SAVE DATA TO FIREBASE REALTIME DATABASE
-        window.submitTextAnswer = async function() {
-            const sliderValue = document.getElementById('loveSlider').value;
-            const textMessage = document.getElementById('userAnswerText').value;
-
-            const submitBtn = document.getElementById('btnSubmitText');
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'กำลังบันทึก...';
-
-            try {
-                // Save payload to Firebase
-                const answersRef = ref(db, 'answers');
-                await push(answersRef, {
-                    lovePercentage: parseInt(sliderValue),
-                    message: textMessage,
-                    timestamp: new Date().toLocaleString('th-TH')
+        // Listen for Wishes updates
+        onValue(ref(db, 'wishes'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                wishesList.innerHTML = '';
+                Object.values(data).forEach(w => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-rose-50 p-2 rounded-xl text-xs text-rose-700 flex justify-between';
+                    item.innerHTML = `<span>✨ ${w.text}</span><span class="text-[10px] text-gray-400">${w.timestamp}</span>`;
+                    wishesList.appendChild(item);
                 });
+            }
+        });
 
-                document.getElementById('stepTextAnswer').classList.add('hidden');
-                document.getElementById('stepSuccess').classList.remove('hidden');
-                
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
+        // 7. Remote Control Receiver (Listener for Commands from Admin)
+        onValue(ref(db, 'remote_commands'), (snapshot) => {
+            const cmd = snapshot.val();
+            if (!cmd) return;
+
+            if (cmd.type === 'fireworks') {
+                confetti({ particleCount: 150, spread: 100, origin: { y: 0.4 } });
+            } else if (cmd.type === 'alert') {
+                alert(`💌 ข้อความจากเค้า: ${cmd.message}`);
+            }
+        });
+
+        // --- 8. ADMIN PANEL LOGIC ---
+        const adminModal = document.getElementById('adminModal');
+        const adminToggleBtn = document.getElementById('adminToggleBtn');
+        const closeAdminBtn = document.getElementById('closeAdminBtn');
+
+        adminToggleBtn.addEventListener('click', () => adminModal.classList.remove('hidden'));
+        closeAdminBtn.addEventListener('click', () => adminModal.classList.add('hidden'));
+
+        // Admin Monitors
+        onValue(ref(db, 'presence/partner'), (snap) => {
+            const val = snap.val();
+            document.getElementById('adminUserStatus').innerText = val?.status === 'online' ? '🟢 ออนไลน์อยู่' : '⚪ ออฟไลน์';
+        });
+
+        onValue(ref(db, 'user_actions'), (snap) => {
+            const val = snap.val();
+            if (val?.loveScore) document.getElementById('adminLoveScore').innerText = val.loveScore;
+            if (val?.scratchRevealed) document.getElementById('adminScratchStatus').innerText = 'ขูดแล้ว ✨';
+        });
+
+        onValue(ref(db, 'coupon_claims'), (snap) => {
+            const data = snap.val();
+            const container = document.getElementById('adminCouponLogs');
+            if (data) {
+                container.innerHTML = '';
+                Object.values(data).forEach(c => {
+                    const el = document.createElement('div');
+                    el.className = 'bg-gray-50 p-2 rounded-lg border border-gray-100 flex justify-between';
+                    el.innerHTML = `<span>🎟️ <b>${c.couponName}</b></span><span class="text-gray-400 text-[10px]">${c.claimedAt}</span>`;
+                    container.appendChild(el);
                 });
-
-                showToast('ส่งความในใจและบันทึกข้อมูลเรียบร้อยแล้ว ✨', 'success');
-            } catch (error) {
-                console.error("Firebase Error:", error);
-                showToast('เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'ส่งความในใจ ✨';
             }
-        };
+        });
 
-        // Admin Pin System
-        window.openAdminLogin = function() {
-            document.getElementById('adminLoginModal').classList.remove('hidden');
-        };
+        // Admin Remote Trigger Buttons
+        document.getElementById('cmdFireworksBtn').addEventListener('click', () => {
+            set(ref(db, 'remote_commands'), { type: 'fireworks', time: Date.now() });
+            alert('ส่งคำสั่งจุดพลุแล้ว!');
+        });
 
-        window.closeAdminLogin = function() {
-            document.getElementById('adminLoginModal').classList.add('hidden');
-        };
-
-        window.changeDigit = function(index, delta) {
-            currentPinDigits[index] = (currentPinDigits[index] + delta + 10) % 10;
-            document.getElementById(`pin-${index}`).innerText = currentPinDigits[index];
-        };
-
-        window.verifyAdminPin = function() {
-            const entered = currentPinDigits.join('');
-            if (entered === appSettings.adminPin) {
-                closeAdminLogin();
-                openAdminDashboard();
-                showToast('เข้าสู่ระบบแอดมินสำเร็จ', 'success');
-            } else {
-                showToast('รหัสผ่าน PIN ไม่ถูกต้อง', 'error');
+        document.getElementById('cmdAlertBtn').addEventListener('click', () => {
+            const msg = prompt('ใส่ข้อความป๊อปอัปที่ต้องการส่งให้แฟน:');
+            if (msg) {
+                set(ref(db, 'remote_commands'), { type: 'alert', message: msg, time: Date.now() });
             }
-        };
-
-        // Admin Dashboard & Firebase Data Loader
-        window.openAdminDashboard = function() {
-            document.getElementById('cfgSliderThreshold').value = appSettings.sliderThreshold;
-            document.getElementById('cfgPoutTitle').value = appSettings.poutTitle;
-            document.getElementById('cfgPoutMessage').value = appSettings.poutMessage;
-            document.getElementById('cfgMinChars').value = appSettings.minChars;
-            document.getElementById('cfgAdminPin').value = appSettings.adminPin;
-            document.getElementById('cfgMusicUrl').value = appSettings.musicUrl || '';
-
-            document.getElementById('adminDashboardModal').classList.remove('hidden');
-            window.loadSavedAnswers();
-        };
-
-        window.closeAdminDashboard = function() {
-            document.getElementById('adminDashboardModal').classList.add('hidden');
-        };
-
-        window.loadSavedAnswers = async function() {
-            const answersList = document.getElementById('savedAnswersList');
-            answersList.innerHTML = `<div class="text-zinc-500 text-center py-4">กำลังโหลดข้อมูลจาก Firebase...</div>`;
-
-            try {
-                const dbRef = ref(db);
-                const snapshot = await get(child(dbRef, 'answers'));
-                
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    answersList.innerHTML = '';
-                    
-                    Object.values(data).reverse().forEach(item => {
-                        const card = document.createElement('div');
-                        card.className = "bg-zinc-800/60 p-3 rounded-xl border border-zinc-700/50 space-y-1";
-                        card.innerHTML = `
-                            <div class="flex justify-between items-center text-[11px]">
-                                <span class="text-rose-400 font-medium">❤️ รักระดับ: ${item.lovePercentage}%</span>
-                                <span class="text-zinc-500 font-mono">${item.timestamp}</span>
-                            </div>
-                            <p class="text-zinc-200 text-xs leading-relaxed mt-1">${item.message}</p>
-                        `;
-                        answersList.appendChild(card);
-                    });
-                } else {
-                    answersList.innerHTML = `<div class="text-zinc-500 text-center py-4">ยังไม่มีข้อความส่งเข้ามา</div>`;
-                }
-            } catch (err) {
-                console.error("Load Answers Error:", err);
-                answersList.innerHTML = `<div class="text-rose-400 text-center py-4">ไม่สามารถดึงข้อมูลได้ (ตรวจสอบกติกา/Rule ของ Firebase)</div>`;
-            }
-        };
-
-        window.saveAdminSettings = function() {
-            appSettings.sliderThreshold = parseInt(document.getElementById('cfgSliderThreshold').value) || 80;
-            appSettings.poutTitle = document.getElementById('cfgPoutTitle').value;
-            appSettings.poutMessage = document.getElementById('cfgPoutMessage').value;
-            appSettings.minChars = parseInt(document.getElementById('cfgMinChars').value) || 20;
-            appSettings.adminPin = document.getElementById('cfgAdminPin').value || "1234";
-            appSettings.musicUrl = document.getElementById('cfgMusicUrl').value;
-
-            localStorage.setItem('anniversary_settings', JSON.stringify(appSettings));
-            
-            initApp();
-            showToast('บันทึกการตั้งค่าเรียบร้อยแล้ว ✨', 'success');
-            closeAdminDashboard();
-        };
+        });
     </script>
 </body>
 </html>
