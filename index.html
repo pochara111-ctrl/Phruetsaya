@@ -1,1404 +1,1367 @@
 <!DOCTYPE html>
-<html lang="th" class="h-full">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Our Endless Love - Happy Anniversary</title>
+  <title>Our Special Anniversary ✨</title>
   
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Google Fonts: Thai & Elegant Serif/Script -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            rosegold: {
-              100: '#FFF0F2',
-              300: '#F7C5CC',
-              400: '#E8A2A8',
-              500: '#B76E79',
-              600: '#A15863',
-              800: '#692C37'
-            },
-            burgundy: {
-              800: '#3D0C18',
-              900: '#2A0812',
-              950: '#150208'
-            },
-            champagne: {
-              300: '#FFE5B4',
-              400: '#F3E0AA',
-              500: '#D4AF37',
-              600: '#AA771C'
-            }
-          },
-          fontFamily: {
-            thai: ['Noto Sans Thai', 'sans-serif'],
-            cinzel: ['Cinzel', 'serif'],
-            script: ['Alex Brush', 'cursive'],
-            pinyon: ['Pinyon Script', 'cursive']
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;700&family=Mitr:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- Firebase SDKs (Compat version for reliable single-file execution) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  
+  <!-- YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
 
   <style>
+    :root {
+      --bg-deep: #1a0812;
+      --primary-rose: #ea9ab2;
+      --gold-accent: #f3cf7a;
+      --gold-dark: #c59b3f;
+      --glass-bg: rgba(255, 240, 245, 0.12);
+      --glass-border: rgba(255, 215, 225, 0.25);
+      --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(234, 154, 178, 0.2);
+      --text-light: #fff5f8;
+      --text-muted: #e6c8d2;
+    }
+
     * {
-      touch-action: manipulation;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
+
     body {
-      font-family: 'Noto Sans Thai', sans-serif;
-      background: #150208;
-      color: #FFF0F2;
+      font-family: 'Prompt', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-light);
+      min-height: 100vh;
       overflow-x: hidden;
-    }
-    
-    .glass-card {
-      background: rgba(42, 8, 18, 0.55);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(247, 197, 204, 0.25);
-      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 229, 180, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
     }
 
-    .glass-modal {
-      background: rgba(21, 2, 8, 0.92);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(212, 175, 55, 0.4);
-    }
-
-    .text-gradient-rosegold {
-      background: linear-gradient(135deg, #FFF0F2 0%, #F7C5CC 40%, #B76E79 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .text-gradient-gold {
-      background: linear-gradient(135deg, #FFE5B4 0%, #D4AF37 60%, #AA771C 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .btn-gold {
-      background: linear-gradient(135deg, #F3E0AA 0%, #D4AF37 50%, #AA771C 100%);
-      color: #150208;
-      font-weight: 600;
-      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .btn-gold:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 6px 25px rgba(212, 175, 55, 0.6);
-    }
-    .btn-gold:active {
-      transform: translateY(1px) scale(0.98);
-    }
-
-    .envelope-wrapper {
-      perspective: 1000px;
-    }
-    .envelope-flap {
-      transform-origin: top;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .envelope-open .envelope-flap {
-      transform: rotateX(180deg);
-    }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(21, 2, 8, 0.8);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(183, 110, 121, 0.5);
-      border-radius: 4px;
-    }
-
-    @keyframes heartbeat {
-      0% { transform: scale(1); }
-      14% { transform: scale(1.25); }
-      28% { transform: scale(1); }
-      42% { transform: scale(1.2); }
-      70% { transform: scale(1); }
-    }
-    .animate-heartbeat {
-      animation: heartbeat 1.5s infinite ease-in-out;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0.6) rotate(-3deg); opacity: 0; }
-      20% { opacity: 0.9; }
-      100% { transform: translateY(-120vh) scale(1.1) rotate(5deg); opacity: 0; }
-    }
-    .sky-lantern {
-      position: absolute;
-      animation: floatUp 12s linear infinite;
+    /* Ambient Canvas Background */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
       pointer-events: none;
     }
 
-    .glow-gold {
-      filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.6));
+    /* YouTube Hidden Player Frame */
+    #yt-player-container {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Audio Floating Widget */
+    .audio-widget {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(30, 10, 20, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 8px 16px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .music-btn {
+      background: none;
+      border: none;
+      color: var(--gold-accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .music-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Main Container */
+    .app-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 460px;
+      min-height: 90vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Glass Cards Base */
+    .glass-card {
+      width: 100%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 28px 22px;
+      box-shadow: var(--card-shadow);
+      text-align: center;
+      position: relative;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Step Views (Hidden by default) */
+    .step-view {
+      display: none;
+      width: 100%;
+    }
+
+    .step-view.active {
+      display: block;
+    }
+
+    /* Titles & Typography */
+    .title-romantic {
+      font-family: 'Alex Brush', cursive;
+      font-size: 2.8rem;
+      color: var(--gold-accent);
+      text-shadow: 0 0 10px rgba(243, 207, 122, 0.4);
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+
+    /* Step 0: Love Lock Screen */
+    .lock-dial-container {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 25px 0;
+    }
+
+    .lock-input {
+      width: 45px;
+      height: 55px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid var(--primary-rose);
+      border-radius: 12px;
+      color: var(--gold-accent);
+      font-size: 1.5rem;
+      font-family: 'Cinzel', serif;
+      text-align: center;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .lock-input:focus {
+      border-color: var(--gold-accent);
+      box-shadow: 0 0 15px rgba(243, 207, 122, 0.5);
+    }
+
+    /* Step 1: 3D Wax Seal Envelope */
+    .envelope-wrapper {
+      perspective: 1000px;
+      margin: 20px 0;
+      cursor: pointer;
+    }
+
+    .envelope {
+      width: 100%;
+      height: 220px;
+      background: #3b1424;
+      border-radius: 15px;
+      position: relative;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: transform 0.5s ease;
+    }
+
+    .envelope:hover {
+      transform: scale(1.02);
+    }
+
+    .wax-seal {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #c59b3f, #f3cf7a);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #1a0812;
+      font-size: 1.8rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      z-index: 5;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* Live Counter Widget */
+    .timer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .timer-box {
+      background: rgba(0,0,0,0.3);
+      padding: 10px 5px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .timer-val {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      color: var(--gold-accent);
+      font-weight: bold;
+    }
+
+    .timer-lbl {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    /* Media Display Area (Images / Videos) */
+    .media-box {
+      width: 100%;
+      max-height: 220px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 15px 0;
+      border: 1px solid var(--glass-border);
+    }
+
+    .media-box img, .media-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Interactive Question Chain Physics */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+      position: relative;
+    }
+
+    .btn-romantic {
+      background: linear-gradient(135deg, var(--primary-rose), #c86b85);
+      color: #fff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(234, 154, 178, 0.4);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      outline: none;
+    }
+
+    .btn-romantic:active {
+      transform: scale(0.95);
+    }
+
+    .btn-wrong {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Text Input Question */
+    .romantic-input {
+      width: 100%;
+      padding: 14px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 15px;
+      color: #fff;
+      font-family: 'Prompt', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    .romantic-input:focus {
+      border-color: var(--gold-accent);
+    }
+
+    /* Interactive Love Slider */
+    .slider-container {
+      margin: 25px 0;
+    }
+
+    .romantic-slider {
+      width: 100%;
+      accent-color: var(--primary-rose);
+      height: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Scratch Card Overlay Canvas */
+    .scratch-wrapper {
+      position: relative;
+      width: 280px;
+      height: 180px;
+      margin: 15px auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+
+    .scratch-reveal {
+      width: 100%;
+      height: 100%;
+      background: #2a0e1a;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
+
+    #scratch-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    /* Coupon Cards Grid */
+    .coupons-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 15px 0;
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .coupon-card {
+      background: rgba(0,0,0,0.3);
+      border: 1px dashed var(--gold-accent);
+      padding: 12px 16px;
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+    }
+
+    .coupon-title {
+      font-weight: 500;
+      color: var(--gold-accent);
+      font-size: 0.9rem;
+    }
+
+    .coupon-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .btn-use-coupon {
+      background: var(--gold-accent);
+      color: #1a0812;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-use-coupon.used {
+      background: rgba(255,255,255,0.2);
+      color: var(--text-muted);
+      cursor: default;
+    }
+
+    /* Admin Floating Gear Icon */
+    .admin-gear {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: rgba(20, 5, 12, 0.7);
+      border: 1px solid var(--glass-border);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Admin Modal Overlay */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(15px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .admin-content {
+      width: 100%;
+      max-width: 650px;
+      max-height: 85vh;
+      background: #1a0a14;
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 25px;
+      overflow-y: auto;
+      color: var(--text-light);
+      text-align: left;
+    }
+
+    .admin-nav {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .admin-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .admin-tab.active {
+      background: var(--primary-rose);
+      color: #fff;
+    }
+
+    .admin-form-group {
+      margin-bottom: 15px;
+    }
+
+    .admin-label {
+      font-size: 0.85rem;
+      color: var(--gold-accent);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .admin-input, .admin-textarea {
+      width: 100%;
+      padding: 10px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.85rem;
+    }
+
+    /* Live Monitor Status Badge */
+    .monitor-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      background: rgba(0,255,100,0.1);
+      color: #00ff88;
+      border: 1px solid rgba(0,255,100,0.3);
+    }
+
+    /* Remote Command Toast */
+    .remote-toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, var(--gold-accent), var(--gold-dark));
+      color: #1a0812;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 3000;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    .remote-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
   </style>
 </head>
+<body>
 
-<body class="h-full w-full flex flex-col justify-between relative bg-burgundy-950 text-rosegold-100 selection:bg-rosegold-500 selection:text-white">
+  <!-- Ambient Stars & Hearts Canvas -->
+  <canvas id="bg-canvas"></canvas>
 
-  <!-- Background Canvas Layers -->
-  <canvas id="bgCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
-  <canvas id="fireworksCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-40"></canvas>
+  <!-- YouTube Hidden Player Container -->
+  <div id="yt-player-container"><div id="yt-player"></div></div>
 
-  <div id="mediaBgContainer" class="fixed inset-0 w-full h-full z-[-1] opacity-20 transition-opacity duration-1000 overflow-hidden"></div>
+  <!-- Audio Floating Controller -->
+  <div class="audio-widget">
+    <button class="music-btn" id="music-toggle-btn" onclick="toggleAudio()">
+      <i class="fa-solid fa-compact-disc fa-spin"></i>
+    </button>
+    <div class="music-title" id="music-title-text">Playing Love Theme</div>
+  </div>
 
-  <!-- HEADER -->
-  <header class="fixed top-0 left-0 right-0 z-30 p-3 sm:p-4 px-4 sm:px-8 flex justify-between items-center glass-card border-b border-rosegold-300/20 rounded-b-2xl mx-2 sm:mx-6 mt-2">
-    <div class="flex items-center space-x-2 sm:space-x-3">
-      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-rosegold-500/20 border border-rosegold-400/40 flex items-center justify-center glow-gold">
-        <i class="fa-solid fa-heart text-rosegold-400 text-sm sm:text-lg animate-heartbeat"></i>
-      </div>
-      <div>
-        <div class="text-[10px] sm:text-xs text-champagne-300 tracking-wider uppercase font-cinzel font-semibold">เวลาที่เรารักกัน</div>
-        <div id="loveTimer" class="text-xs sm:text-sm md:text-base font-bold text-gradient-rosegold tracking-tight">
-          0 ปี 0 วัน 00:00:00
+  <!-- Remote Surprise Toast Notification -->
+  <div class="remote-toast" id="remote-toast">❤️ Surprise Message!</div>
+
+  <!-- Main Application Container -->
+  <div class="app-container">
+
+    <!-- STEP 0: Love Lock Screen -->
+    <div class="step-view active" id="step-0">
+      <div class="glass-card">
+        <i class="fa-solid fa-lock-keyhole" style="font-size: 2.5rem; color: var(--gold-accent); margin-bottom: 15px;"></i>
+        <h1 class="title-romantic">Love Passcode</h1>
+        <p class="subtitle" id="lock-hint">ใส่รหัสผ่านวันครบรอบของเราเพื่อปลดล็อก ❤️</p>
+        
+        <div class="lock-dial-container" id="lock-inputs">
+          <!-- JS generates inputs -->
         </div>
+
+        <button class="btn-romantic" onclick="unlockLoveLock()" style="width: 100%;">
+          <i class="fa-solid fa-key"></i> ปลดล็อกหัวใจ
+        </button>
       </div>
     </div>
 
-    <div class="flex items-center space-x-2 sm:space-x-3">
-      <button id="bgMusicBtn" onclick="toggleBgMusic()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-card hover:bg-rosegold-500/30 flex items-center justify-center transition-all text-rosegold-300 border border-rosegold-300/30" title="เปิด/ปิดเพลง">
-        <i id="musicIcon" class="fa-solid fa-music-slash"></i>
-      </button>
+    <!-- STEP 1: 3D Wax Seal Envelope & Introduction -->
+    <div class="step-view" id="step-1">
+      <div class="glass-card">
+        <h1 class="title-romantic">Happy Anniversary</h1>
+        <p class="subtitle">มีจดหมายฉบับพิเศษส่งถึงเธอ... กดเปิดสิคะ</p>
 
-      <button onclick="openAdminModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-card hover:bg-champagne-500/30 flex items-center justify-center transition-all text-champagne-400 border border-champagne-400/30" title="การตั้งค่าแอดมิน">
-        <i class="fa-solid fa-gear"></i>
-      </button>
-    </div>
-  </header>
-
-  <audio id="bgAudio" loop></audio>
-
-  <!-- MAIN APP CONTAINER -->
-  <main class="relative z-10 flex-grow flex items-center justify-center p-4 pt-24 pb-12 w-full max-w-4xl mx-auto min-h-screen">
-
-    <!-- STEP 1: LOCK SCREEN -->
-    <section id="step1" class="w-full max-w-md glass-card rounded-3xl p-6 sm:p-8 text-center border border-champagne-500/30 shadow-2xl relative overflow-hidden transition-all duration-700">
-      <div class="mb-6">
-        <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-champagne-500/10 border border-champagne-400/40 flex items-center justify-center glow-gold mb-3">
-          <i class="fa-solid fa-lock text-3xl sm:text-4xl text-champagne-400"></i>
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-cinzel font-bold text-gradient-gold">แม่กุญแจคล้องใจ</h2>
-        <p class="text-xs sm:text-sm text-rosegold-300 mt-1 font-thai">หมุนรหัสวันครบรอบของเราเพื่อปลดล็อกหัวใจ ❤️</p>
-      </div>
-
-      <div class="flex justify-center items-center space-x-2 sm:space-x-3 my-8">
-        <div class="flex flex-col items-center">
-          <button onclick="rotateDial(0, 1)" class="text-champagne-400 hover:text-white p-1"><i class="fa-solid fa-chevron-up"></i></button>
-          <div id="dial0" class="w-12 h-14 sm:w-14 sm:h-16 glass-card rounded-xl border-2 border-champagne-500/50 flex items-center justify-center text-2xl sm:text-3xl font-bold font-cinzel text-champagne-300 shadow-inner">0</div>
-          <button onclick="rotateDial(0, -1)" class="text-champagne-400 hover:text-white p-1"><i class="fa-solid fa-chevron-down"></i></button>
-        </div>
-        <div class="flex flex-col items-center">
-          <button onclick="rotateDial(1, 1)" class="text-champagne-400 hover:text-white p-1"><i class="fa-solid fa-chevron-up"></i></button>
-          <div id="dial1" class="w-12 h-14 sm:w-14 sm:h-16 glass-card rounded-xl border-2 border-champagne-500/50 flex items-center justify-center text-2xl sm:text-3xl font-bold font-cinzel text-champagne-300 shadow-inner">0</div>
-          <button onclick="rotateDial(1, -1)" class="text-champagne-400 hover:text-white p-1"><i class="fa-solid fa-chevron-down"></i></button>
-        </div>
-        <span class="text-2xl text-champagne-400 font-bold">-</span>
-        <div class="flex flex-col items-center">
-          <button onclick="rotateDial(2, 1)" class="text-champagne-400 hover:text-white p-1"><i class="fa-solid fa-chevron-up"></i></button>
-          <div id="dial2" class="w-12 h-14 sm:w-14 sm:h-16 glass-card rounded-xl border-2 border-champagne-500/50 flex items-center justify-center text-2xl sm:text-3xl font-bold font-cinzel text-champagne-300 shadow-inner">0</div>
-          <button onclick="rotateDial(2, -1)" class="text-champagne-400 hover:text-white p-1"><i class="fa-solid fa-chevron-down"></i></button>
-        </div>
-        <div class="flex flex-col items-center">
-          <button onclick="rotateDial(3, 1)" class="text-champagne-400 hover:text-white p-1"><i class="fa-solid fa-chevron-up"></i></button>
-          <div id="dial3" class="w-12 h-14 sm:w-14 sm:h-16 glass-card rounded-xl border-2 border-champagne-500/50 flex items-center justify-center text-2xl sm:text-3xl font-bold font-cinzel text-champagne-300 shadow-inner">0</div>
-          <button onclick="rotateDial(3, -1)" class="text-champagne-400 hover:text-white p-1"><i class="fa-solid fa-chevron-down"></i></button>
-        </div>
-      </div>
-
-      <p id="lockFeedback" class="text-xs text-rosegold-400 h-5 mb-4 font-medium transition-all"></p>
-
-      <button onclick="attemptUnlock()" class="w-full py-3 sm:py-4 rounded-xl btn-gold text-base sm:text-lg flex items-center justify-center space-x-2">
-        <i class="fa-solid fa-key"></i>
-        <span>ไขรหัสปลดล็อกความรัก</span>
-      </button>
-    </section>
-
-    <!-- STEP 2: ENVELOPE & LETTER -->
-    <section id="step2" class="w-full max-w-xl hidden transition-all duration-700">
-      <div id="envelopeView" class="w-full glass-card rounded-3xl p-6 sm:p-10 text-center border border-champagne-500/40 relative overflow-hidden envelope-wrapper">
-        <div class="mb-6">
-          <h2 class="text-2xl sm:text-3xl font-cinzel font-bold text-gradient-gold">มีจดหมายฉบับพิเศษถึงคุณ</h2>
-          <p class="text-xs sm:text-sm text-rosegold-300 mt-1">กดประทับตราครั่ง (Wax Seal) เพื่อเปิดซองจดหมาย</p>
-        </div>
-
-        <div onclick="openWaxEnvelope()" class="relative w-full h-56 sm:h-64 bg-burgundy-900 border-2 border-rosegold-400/40 rounded-2xl cursor-pointer shadow-2xl flex items-center justify-center my-6 group overflow-hidden hover:border-champagne-400 transition-all">
-          <div class="absolute inset-0 bg-gradient-to-br from-rosegold-500/10 to-transparent"></div>
-          <div class="absolute top-0 inset-x-0 h-1/2 border-b border-rosegold-400/20 bg-burgundy-800/80 rounded-t-xl envelope-flap"></div>
-          
-          <div id="waxSealBtn" class="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-red-800 via-red-600 to-rosegold-500 border-4 border-champagne-400 shadow-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300">
-            <i class="fa-solid fa-stamp text-2xl sm:text-3xl text-champagne-300"></i>
+        <div class="envelope-wrapper" onclick="openEnvelope()">
+          <div class="envelope" id="envelope-elem">
+            <div class="wax-seal">
+              <i class="fa-solid fa-heart"></i>
+            </div>
           </div>
-          <span class="absolute bottom-4 text-xs text-champagne-300/80 tracking-widest font-cinzel uppercase">Click to Unseal</span>
+        </div>
+
+        <!-- Realtime Love Counter -->
+        <div class="timer-grid">
+          <div class="timer-box"><div class="timer-val" id="cnt-days">0</div><div class="timer-lbl">DAYS</div></div>
+          <div class="timer-box"><div class="timer-val" id="cnt-hours">0</div><div class="timer-lbl">HOURS</div></div>
+          <div class="timer-box"><div class="timer-val" id="cnt-mins">0</div><div class="timer-lbl">MINS</div></div>
+          <div class="timer-box"><div class="timer-val" id="cnt-secs">0</div><div class="timer-lbl">SECS</div></div>
+        </div>
+
+        <button class="btn-romantic" id="start-btn" onclick="nextStep()" style="width: 100%; display: none;">
+          เปิดอ่านจดหมาย ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Interactive Question Chain -->
+    <div class="step-view" id="step-question">
+      <div class="glass-card">
+        <div id="q-counter" style="font-size: 0.8rem; color: var(--gold-accent); margin-bottom: 8px;">QUESTION 1</div>
+        <h2 id="q-title" style="font-size: 1.3rem; margin-bottom: 12px;">ข้อใดคือสถานที่ที่เราเจอกันครั้งแรก?</h2>
+        
+        <!-- Optional Media Attachment -->
+        <div class="media-box" id="q-media" style="display: none;"></div>
+
+        <!-- Dynamic Answer Container -->
+        <div id="q-body">
+          <!-- Standard Choices OR Text Input OR Love Slider -->
         </div>
       </div>
+    </div>
 
-      <div id="letterView" class="w-full glass-card rounded-3xl p-6 sm:p-10 border border-rosegold-300/30 hidden relative">
-        <div class="flex justify-between items-center border-b border-rosegold-300/20 pb-4 mb-6">
-          <span id="letterDate" class="text-xs font-cinzel text-champagne-400">Happy Anniversary</span>
-          <i class="fa-solid fa-heart text-rosegold-400 animate-pulse"></i>
+    <!-- STEP 3: Scratch Card Reveal -->
+    <div class="step-view" id="step-scratch">
+      <div class="glass-card">
+        <h1 class="title-romantic">Secret Scratch Card</h1>
+        <p class="subtitle">ใช้นิ้วหรือเมาส์ขูดการ์ดเพื่อดูความลับที่ซ่อนอยู่ ❤️</p>
+
+        <div class="scratch-wrapper">
+          <div class="scratch-reveal">
+            <i class="fa-solid fa-crown" style="font-size: 2rem; color: var(--gold-accent); margin-bottom: 10px;"></i>
+            <h3 style="font-size: 1.1rem; color: #fff;" id="scratch-text">เธอคือของขวัญที่ดีที่สุดในชีวิตเค้าเลยนะ!</h3>
+          </div>
+          <canvas id="scratch-canvas" width="280" height="180"></canvas>
         </div>
 
-        <div id="typewriterLetter" class="text-sm sm:text-base leading-relaxed text-rosegold-100 min-h-[160px] font-thai whitespace-pre-line"></div>
+        <button class="btn-romantic" onclick="nextStep()" style="width: 100%; margin-top: 15px;">
+          รับของขวัญถัดไป 🎁
+        </button>
+      </div>
+    </div>
 
-        <div class="mt-8 pt-4 border-t border-rosegold-300/20 flex justify-end">
-          <button onclick="goToStep(3)" class="py-3 px-6 rounded-xl btn-gold text-sm sm:text-base flex items-center space-x-2">
-            <span>ไปยังคำถามทบทวนความหลัง</span>
-            <i class="fa-solid fa-arrow-right"></i>
+    <!-- STEP 4: Interactive Coupons -->
+    <div class="step-view" id="step-coupons">
+      <div class="glass-card">
+        <h1 class="title-romantic">Love Vouchers</h1>
+        <p class="subtitle">คูปองสิทธิพิเศษสำหรับเธอคนเดียวเท่านั้น (กดใช้ได้จริงนะ!)</p>
+
+        <div class="coupons-grid" id="coupons-container">
+          <!-- Coupons populated by JS -->
+        </div>
+
+        <button class="btn-romantic" onclick="nextStep()" style="width: 100%; margin-top: 15px;">
+          ไปหน้าสุดท้าย ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 5: Grand Finale Wish Sky Lantern & Fireworks -->
+    <div class="step-view" id="step-final">
+      <div class="glass-card">
+        <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 2.5rem; color: var(--gold-accent); margin-bottom: 10px;"></i>
+        <h1 class="title-romantic">Forever & Always</h1>
+        <p class="subtitle" id="final-message">ขอบคุณสำหรับความรักและความหวังดีที่มีให้กันเสมอมานะรักคุณที่สุดในโลกเลย ❤️</p>
+
+        <div class="admin-form-group" style="margin-top: 20px;">
+          <input type="text" id="wish-input" class="romantic-input" placeholder="พิมพ์คำอธิษฐานของเราลงในโคมลอย..." style="text-align: center;">
+          <button class="btn-romantic" onclick="releaseLantern()" style="width: 100%;">
+            <i class="fa-solid fa-paper-plane"></i> ปล่อยโคมลอย & จุดพลุฉลอง 🎉
           </button>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- STEP 3: QUESTIONS -->
-    <section id="step3" class="w-full max-w-lg glass-card rounded-3xl p-6 sm:p-8 hidden transition-all duration-700 relative">
-      <div class="flex justify-between items-center mb-4">
-        <span id="questionProgress" class="text-xs font-cinzel text-champagne-400">Question 1 of 3</span>
-        <div class="w-1/3 bg-burgundy-950 rounded-full h-2 overflow-hidden border border-rosegold-500/30">
-          <div id="progressBar" class="bg-gradient-to-r from-rosegold-400 to-champagne-500 h-full w-1/3 transition-all duration-500"></div>
+  </div>
+
+  <!-- Admin Gear Floating Button -->
+  <div class="admin-gear" onclick="openAdminModal()">
+    <i class="fa-solid fa-gear"></i>
+  </div>
+
+  <!-- ADMIN CONTROL PANEL MODAL -->
+  <div class="admin-modal" id="admin-modal">
+    <div class="admin-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="color: var(--gold-accent);"><i class="fa-solid fa-user-shield"></i> Admin Realtime Control</h3>
+        <i class="fa-solid fa-xmark" onclick="closeAdminModal()" style="cursor: pointer; font-size: 1.3rem;"></i>
+      </div>
+
+      <!-- Admin Tabs -->
+      <div class="admin-nav">
+        <button class="admin-tab active" onclick="switchAdminTab('monitor')">Live Monitor</button>
+        <button class="admin-tab" onclick="switchAdminTab('remote')">Remote Ctrl</button>
+        <button class="admin-tab" onclick="switchAdminTab('content')">คำถาม & สื่อ</button>
+        <button class="admin-tab" onclick="switchAdminTab('firebase')">Firebase Config</button>
+      </div>
+
+      <!-- Tab 1: Live Monitor -->
+      <div id="atab-monitor">
+        <div style="margin-bottom: 15px;">
+          <span class="monitor-badge" id="live-online-status"><i class="fa-solid fa-circle"></i> Tracking Disabled</span>
+        </div>
+        <p class="admin-label">หน้าปัจจุบันที่แฟนกำลังดูอยู่:</p>
+        <div id="live-current-step" style="font-size: 1.1rem; color: #fff; font-weight: bold; margin-bottom: 15px;">-</div>
+
+        <p class="admin-label">คำตอบล่าสุด / ข้อความที่แฟนพิมพ์ตอบ:</p>
+        <div id="live-answers-box" style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 12px; font-size: 0.85rem; max-height: 150px; overflow-y: auto;">
+          ไม่มีข้อมูลตอบกลับในขณะนี้
         </div>
       </div>
 
-      <div id="questionContainer" class="my-6"></div>
-    </section>
-
-    <!-- STEP 4: SCRATCH CARD -->
-    <section id="step4" class="w-full max-w-md glass-card rounded-3xl p-6 sm:p-8 text-center hidden transition-all duration-700">
-      <div class="mb-4">
-        <h2 class="text-xl sm:text-2xl font-cinzel font-bold text-gradient-gold">การ์ดขูดความลับ (Secret Reveal)</h2>
-        <p class="text-xs sm:text-sm text-rosegold-300 mt-1">ใช้เมาส์หรือนิ้วขูดผืนทรายทองเพื่อเผยรูปภาพ/ข้อความลับ ✨</p>
-      </div>
-
-      <div class="relative w-full aspect-square sm:w-80 sm:h-80 mx-auto rounded-2xl overflow-hidden border-2 border-champagne-500/40 shadow-2xl my-4">
-        <div id="scratchUnderlayer" class="absolute inset-0 bg-burgundy-900 flex flex-col items-center justify-center p-4 text-center">
-          <img id="scratchImage" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover rounded-xl" alt="Secret Photo" onerror="this.src='https://placehold.co/400x400/2A0812/F7C5CC?text=Our+Love+Story';">
-          <div id="scratchSecretText" class="absolute bottom-2 left-2 right-2 p-2 bg-burgundy-950/80 backdrop-blur rounded-lg text-xs text-champagne-300 font-medium">
-            ความทรงจำอันแสนหวานของเรา ❤️
-          </div>
+      <!-- Tab 2: Live Remote Control -->
+      <div id="atab-remote" style="display: none;">
+        <p class="admin-label">สั่งการแบบ Realtime ไปยังหน้าจอของแฟน:</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+          <button class="btn-romantic" onclick="sendRemoteTrigger('fireworks')" style="font-size: 0.8rem;">💥 จุดพลุฉลอง</button>
+          <button class="btn-romantic" onclick="sendRemoteTrigger('hearts')" style="font-size: 0.8rem;">❤️ พายุหัวใจ</button>
         </div>
-
-        <canvas id="scratchCanvas" class="absolute inset-0 w-full h-full cursor-pointer z-10"></canvas>
-      </div>
-
-      <p id="scratchPercentText" class="text-xs text-champagne-400 font-cinzel mb-4">ขูดแล้ว: 0%</p>
-
-      <button id="afterScratchBtn" onclick="goToStep(5)" class="w-full py-3 rounded-xl btn-gold text-sm sm:text-base hidden">
-        <span>ไปต่อยังคูปองความรักสุดเอ็กซ์คลูซีฟ</span>
-        <i class="fa-solid fa-gift ml-2"></i>
-      </button>
-    </section>
-
-    <!-- STEP 5: VOUCHERS -->
-    <section id="step5" class="w-full max-w-2xl glass-card rounded-3xl p-6 sm:p-8 hidden transition-all duration-700">
-      <div class="text-center mb-6">
-        <h2 class="text-2xl sm:text-3xl font-cinzel font-bold text-gradient-gold">คูปองความรักสุดเอ็กซ์คลูซีฟ</h2>
-        <p class="text-xs sm:text-sm text-rosegold-300 mt-1">กดแลกใช้งานคูปองได้ตามใจชอบ (ใช้ได้จริงตลอดไป!)</p>
-      </div>
-
-      <div id="vouchersGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6 max-h-[60vh] overflow-y-auto p-1"></div>
-
-      <div class="pt-4 border-t border-rosegold-300/20 flex justify-end">
-        <button onclick="goToStep(6)" class="py-3 px-6 rounded-xl btn-gold text-sm sm:text-base flex items-center space-x-2">
-          <span>พิธีปล่อยโคมลอย & จุดพลุฉลอง</span>
-          <i class="fa-solid fa-wand-magic-sparkles"></i>
-        </button>
-      </div>
-    </section>
-
-    <!-- STEP 6: LANTERNS & FIREWORKS -->
-    <section id="step6" class="w-full max-w-lg glass-card rounded-3xl p-6 sm:p-8 text-center hidden transition-all duration-700 relative">
-      <div class="mb-6">
-        <div class="w-16 h-16 mx-auto rounded-full bg-champagne-500/10 border border-champagne-400/40 flex items-center justify-center glow-gold mb-3">
-          <i class="fa-solid fa-fire-flame-curved text-3xl text-champagne-400"></i>
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-cinzel font-bold text-gradient-gold">อธิษฐานปล่อยโคมลอย</h2>
-        <p class="text-xs sm:text-sm text-rosegold-300 mt-1">พิมพ์คำอธิษฐานแล้วปล่อยโคมลอยขึ้นสู่ท้องฟ้าพร้อมจุดพลุฉลอง ❤️</p>
-      </div>
-
-      <div class="space-y-4 my-6">
-        <textarea id="wishInput" rows="3" class="w-full p-4 rounded-2xl glass-card border border-rosegold-300/30 text-sm text-rosegold-100 placeholder-rosegold-400/50 focus:outline-none focus:border-champagne-400" placeholder="พิมพ์คำอธิษฐานของเธอที่นี่..."></textarea>
-        
-        <button onclick="releaseWishLantern()" class="w-full py-4 rounded-xl btn-gold text-base sm:text-lg flex items-center justify-center space-x-2">
-          <i class="fa-solid fa-paper-plane"></i>
-          <span>ปล่อยโคมลอย & จุดพลุดอกไม้ไฟ</span>
-        </button>
-      </div>
-
-      <div id="wishSentMessage" class="hidden p-4 rounded-xl bg-rosegold-500/20 border border-rosegold-400/40 text-sm text-champagne-300">
-        ✨ คำอธิษฐานของคุณถูกส่งลอยขึ้นสู่ท้องฟ้าแล้ว ขอให้เราเสน่หาและรักกันตลอดไป! ✨
-      </div>
-    </section>
-
-  </main>
-
-  <div id="lanternsContainer" class="fixed inset-0 pointer-events-none z-20 overflow-hidden"></div>
-
-  <!-- ADMIN MODAL -->
-  <div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
-    <div class="w-full max-w-3xl glass-modal rounded-3xl p-6 sm:p-8 max-h-[90vh] flex flex-col shadow-2xl border border-champagne-500/50">
-      
-      <div class="flex justify-between items-center pb-4 border-b border-champagne-500/30">
-        <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-user-gear text-champagne-400 text-xl"></i>
-          <h3 class="text-xl font-cinzel font-bold text-gradient-gold">Admin Control Panel</h3>
-        </div>
-        <button onclick="closeAdminModal()" class="text-rosegold-300 hover:text-white p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-
-      <div id="adminAuthView" class="py-8 text-center space-y-4">
-        <i class="fa-solid fa-shield-halved text-4xl text-champagne-400"></i>
-        <p class="text-sm text-rosegold-300">กรุณาใส่รหัสผ่านแอดมินเพื่อจัดการระบบ</p>
-        <div class="max-w-xs mx-auto space-y-3">
-          <input type="password" id="adminPassInput" class="w-full px-4 py-3 rounded-xl glass-card border border-rosegold-300/40 text-center font-mono text-lg focus:outline-none focus:border-champagne-400" placeholder="••••">
-          <button onclick="verifyAdminPass()" class="w-full py-3 rounded-xl btn-gold text-sm font-bold">เข้าสู่ระบบแอดมิน</button>
+        <div class="admin-form-group">
+          <label class="admin-label">ส่งข้อความป๊อปอัปเด้งด่วนสดๆ:</label>
+          <input type="text" id="remote-msg-input" class="admin-input" placeholder="ข้อความจะเด้งบนจอทันที...">
+          <button class="btn-romantic" onclick="sendRemoteMessage()" style="width: 100%; margin-top: 8px; font-size: 0.85rem;">ส่งข้อความด่วน</button>
         </div>
       </div>
 
-      <div id="adminContentView" class="hidden flex-grow flex flex-col overflow-hidden pt-4">
-        
-        <div class="flex space-x-2 overflow-x-auto pb-2 border-b border-rosegold-300/20 text-xs sm:text-sm font-medium">
-          <button onclick="switchAdminTab('general')" class="admin-tab-btn px-4 py-2 rounded-xl bg-rosegold-500/30 text-champagne-300 font-bold" data-tab="general">ทั่วไป & เพลง</button>
-          <button onclick="switchAdminTab('questions')" class="admin-tab-btn px-4 py-2 rounded-xl hover:bg-rosegold-500/20 text-rosegold-300" data-tab="questions">จัดการคำถาม</button>
-          <button onclick="switchAdminTab('vouchers')" class="admin-tab-btn px-4 py-2 rounded-xl hover:bg-rosegold-500/20 text-rosegold-300" data-tab="vouchers">คูปอง & ความลับ</button>
-          <button onclick="switchAdminTab('remote')" class="admin-tab-btn px-4 py-2 rounded-xl hover:bg-rosegold-500/20 text-rosegold-300" data-tab="remote">Remote สั่งงานสด</button>
-          <button onclick="switchAdminTab('json')" class="admin-tab-btn px-4 py-2 rounded-xl hover:bg-rosegold-500/20 text-rosegold-300" data-tab="json">JSON Config</button>
+      <!-- Tab 3: Content Editor -->
+      <div id="atab-content" style="display: none;">
+        <div class="admin-form-group">
+          <label class="admin-label">รหัสผ่าน Love Lock (ตัวเลข 4 หลัก):</label>
+          <input type="text" id="cfg-passcode" class="admin-input" value="1402">
         </div>
-
-        <div id="tab-general" class="admin-tab-content flex-grow overflow-y-auto py-4 space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-champagne-300 mb-1">วันแรกที่คบกัน (YYYY-MM-DDTHH:mm)</label>
-              <input type="datetime-local" id="cfgAnniversaryDate" class="w-full p-2.5 rounded-xl glass-card border border-rosegold-300/30 text-xs">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-champagne-300 mb-1">รหัสปลดล็อกกุญแจ (4 หลัก)</label>
-              <input type="text" id="cfgLockCode" maxlength="4" class="w-full p-2.5 rounded-xl glass-card border border-rosegold-300/30 text-xs font-mono">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-champagne-300 mb-1">รหัสผ่าน Admin</label>
-              <input type="text" id="cfgAdminPass" class="w-full p-2.5 rounded-xl glass-card border border-rosegold-300/30 text-xs font-mono">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-champagne-300 mb-1">URL เพลงพื้นหลัง (MP3 URL)</label>
-              <input type="text" id="cfgBgMusicUrl" class="w-full p-2.5 rounded-xl glass-card border border-rosegold-300/30 text-xs">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-champagne-300 mb-1">URL วิดีโอ/ภาพพื้นหลัง (เว้นว่างได้)</label>
-            <input type="text" id="cfgBgMediaUrl" class="w-full p-2.5 rounded-xl glass-card border border-rosegold-300/30 text-xs" placeholder="https://...mp4 หรือ .jpg">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความในจดหมายอวยพร</label>
-            <textarea id="cfgLetterText" rows="5" class="w-full p-2.5 rounded-xl glass-card border border-rosegold-300/30 text-xs"></textarea>
-          </div>
+        <div class="admin-form-group">
+          <label class="admin-label">วันเริ่มคบกัน (YYYY-MM-DD):</label>
+          <input type="text" id="cfg-startdate" class="admin-input" value="2022-02-14">
         </div>
-
-        <div id="tab-questions" class="admin-tab-content flex-grow overflow-y-auto py-4 space-y-4 hidden">
-          <div class="flex justify-between items-center">
-            <h4 class="text-xs font-bold text-champagne-300 uppercase">รายการคำถามทั้งหมด</h4>
-            <button onclick="addNewQuestionPrompt()" class="px-3 py-1.5 rounded-lg btn-gold text-xs"><i class="fa-solid fa-plus mr-1"></i> เพิ่มคำถาม</button>
-          </div>
-          <div id="adminQuestionsList" class="space-y-4"></div>
+        <div class="admin-form-group">
+          <label class="admin-label">YouTube Music ID / Link (เพลงประกอบ):</label>
+          <input type="text" id="cfg-ytmusic" class="admin-input" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
         </div>
-
-        <div id="tab-vouchers" class="admin-tab-content flex-grow overflow-y-auto py-4 space-y-4 hidden">
-          <div>
-            <h4 class="text-xs font-bold text-champagne-300 uppercase mb-2">ตั้งค่าการ์ดขูดความลับ (Scratch Card)</h4>
-            <div class="space-y-2 glass-card p-3 rounded-xl border border-rosegold-300/20">
-              <input type="text" id="cfgScratchImg" class="w-full p-2 rounded-lg bg-burgundy-950 text-xs" placeholder="URL รูปภาพลับ">
-              <input type="text" id="cfgScratchText" class="w-full p-2 rounded-lg bg-burgundy-950 text-xs" placeholder="ข้อความลับใต้การ์ด">
-            </div>
-          </div>
-
-          <div class="pt-2">
-            <div class="flex justify-between items-center mb-2">
-              <h4 class="text-xs font-bold text-champagne-300 uppercase">รายการคูปองความรัก</h4>
-              <button onclick="addNewVoucherPrompt()" class="px-3 py-1.5 rounded-lg btn-gold text-xs"><i class="fa-solid fa-plus mr-1"></i> เพิ่มคูปอง</button>
-            </div>
-            <div id="adminVouchersList" class="space-y-2"></div>
-          </div>
-        </div>
-
-        <div id="tab-remote" class="admin-tab-content flex-grow overflow-y-auto py-4 space-y-4 hidden">
-          <div class="p-4 rounded-xl bg-rosegold-500/10 border border-rosegold-400/30 text-center space-y-3">
-            <h4 class="text-sm font-bold text-champagne-300">⚡ Remote Command Center</h4>
-            <p class="text-xs text-rosegold-300">สั่งงานเด้งคำสั่งสดๆ ไปยังหน้าจอผู้เล่นขณะกำลังเปิดดูเว็บอยู่</p>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              <button onclick="remoteTrigger('fireworks')" class="p-3 rounded-xl bg-champagne-500/20 border border-champagne-400/40 hover:bg-champagne-500/40 text-xs font-bold text-champagne-300">
-                💥 จุดพลุบนจอทันที
-              </button>
-              <button onclick="remoteTrigger('music')" class="p-3 rounded-xl bg-champagne-500/20 border border-champagne-400/40 hover:bg-champagne-500/40 text-xs font-bold text-champagne-300">
-                🎵 สั่งสลับเปิด/ปิดเพลง
-              </button>
-              <button onclick="remoteTriggerPromptPopup()" class="p-3 rounded-xl bg-champagne-500/20 border border-champagne-400/40 hover:bg-champagne-500/40 text-xs font-bold text-champagne-300">
-                💌 ส่งป๊อปอัปเซอร์ไพรส์
-              </button>
-            </div>
-          </div>
-
-          <div class="glass-card p-4 rounded-xl border border-rosegold-300/20">
-            <h5 class="text-xs font-bold text-champagne-300 mb-2"><i class="fa-solid fa-eye mr-1"></i> Live Session Status</h5>
-            <div id="remoteStatusBox" class="text-xs font-mono text-rosegold-300 space-y-1">
-              กำลังเชื่อมต่อระบบ Realtime...
-            </div>
-          </div>
-        </div>
-
-        <div id="tab-json" class="admin-tab-content flex-grow overflow-y-auto py-4 space-y-3 hidden">
-          <p class="text-xs text-rosegold-300">คุณสามารถคัดลอก JSON Config ไปใช้สำรองหรือนำเข้าการตั้งค่าเดิมได้ที่นี่:</p>
-          <textarea id="jsonConfigTextarea" rows="8" class="w-full p-2.5 rounded-xl glass-card border border-rosegold-300/30 text-xs font-mono"></textarea>
-          <div class="flex space-x-2">
-            <button onclick="copyJsonConfig()" class="flex-1 py-2 rounded-xl bg-rosegold-500/30 text-xs font-bold">คัดลอก JSON</button>
-            <button onclick="importJsonConfig()" class="flex-1 py-2 rounded-xl btn-gold text-xs font-bold">นำเข้า JSON นี้</button>
-          </div>
-        </div>
-
-        <div class="pt-4 border-t border-champagne-500/30 flex justify-end space-x-3">
-          <button onclick="closeAdminModal()" class="px-4 py-2 rounded-xl glass-card text-xs">ยกเลิก</button>
-          <button onclick="saveAdminSettings()" class="px-6 py-2 rounded-xl btn-gold text-xs font-bold">บันทึกการเปลี่ยนแปลงทั้งหมด</button>
-        </div>
-
+        <button class="btn-romantic" onclick="saveAdminSettings()" style="width: 100%; font-size: 0.85rem;">บันทึกการเปลี่ยนแปลงทั้งหมด</button>
       </div>
+
+      <!-- Tab 4: Firebase Configuration -->
+      <div id="atab-firebase" style="display: none;">
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+          นำค่า Firebase Config จาก console.firebase.google.com มาวางเพื่อเปิดใช้งานระบบ Cloud Realtime
+        </p>
+        <div class="admin-form-group"><label class="admin-label">API Key:</label><input type="text" id="fb-apiKey" class="admin-input"></div>
+        <div class="admin-form-group"><label class="admin-label">Database URL:</label><input type="text" id="fb-databaseURL" class="admin-input"></div>
+        <div class="admin-form-group"><label class="admin-label">Project ID:</label><input type="text" id="fb-projectId" class="admin-input"></div>
+        <button class="btn-romantic" onclick="saveFirebaseConfig()" style="width: 100%; font-size: 0.85rem;">เชื่อมต่อ Firebase Cloud</button>
+      </div>
+
     </div>
   </div>
 
-
-  <!-- UNIFIED SCRIPT ENGINE (FIREBASE + APPLICATION LOGIC) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // 1. INITIALIZE GLOBAL DATA STRUCTURE FIRST
-    window.appData = {
-      anniversaryDate: "2022-02-14T00:00",
-      lockCode: "1402",
-      adminPass: "1234",
-      bgMusicUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
-      bgMediaUrl: "",
-      letterText: "สุขสันต์วันครบรอบนะคะคนเก่ง...\nขอบคุณสำหรับทุกๆ รอยยิ้ม ความสุข และความรักที่มอบให้กันเสมอมา\nไม่ว่าจะผ่านไปนานเท่าไหร่ เค้าก็ยังรักเธอมากขึ้นทุกๆ วัน\nขอบคุณที่เป็นโลกทั้งใบให้กันนะคะ ❤️",
-      scratchImg: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80",
-      scratchText: "ความทรงจำสุดพิเศษของเราสองคน ❤️",
-      teasingQuotes: [
-        "แน่ใจเหรอคะ? 🥺",
-        "คิดใหม่อีกทีน้าาา 💕",
-        "กดอันนี้สิมนุษย์แฟน! 💖",
-        "ปุ่มนี้ห้ามกดน้าาา 🙈"
-      ],
+  <script>
+    /* ==========================================================================
+       APP CONFIGURATION & DEFAULT STATE
+       ========================================================================== */
+    let appConfig = {
+      passcode: "1402",
+      startDate: "2022-02-14T00:00:00",
+      youtubeId: "kJQP7kiw5Fk", // Default romantic theme
       questions: [
         {
-          id: 1,
           type: "choice",
-          title: "เรารู้จักกันครั้งแรกที่ไหน?",
-          options: ["ในหัวใจเธอ", "ร้านกาแฟ", "ที่โรงเรียน", "โลกออนไลน์"],
-          correctIndex: 0
+          title: "ข้อใดคือสถานที่ที่เราเจอกันครั้งแรก?",
+          correct: "คาเฟ่แมวสุดน่ารัก 🐱",
+          wrong: "ร้านหมูกระทะหน้ามหาลัย 🥓",
+          media: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80"
         },
         {
-          id: 2,
+          type: "choice",
+          title: "ใครเป็นคนเอ่ยปากจีบก่อนน้า?",
+          correct: "เธอแน่นอน ยอมรับมาซะดีๆ! 😜",
+          wrong: "เค้าเองมั้ง... หางานให้ตัวเองแล้ว",
+          media: ""
+        },
+        {
           type: "slider",
-          title: "เธอรักเค้ามากแค่ไหน? (เลื่อนแถบ)",
-          minLabel: "น้อยนิด",
-          maxLabel: "ล้นหัวใจ"
+          title: "เธอรักเค้ามากขนาดไหนลองเลื่อนสิ?",
+          media: ""
         },
         {
-          id: 3,
           type: "text",
-          title: "อยากบอกอะไรเค้าที่สุดในวันนี้?",
-          placeholder: "พิมพ์ข้อความในใจ..."
+          title: "อยากบอกอะไรเค้าเนื่องในวันครบรอบปีนี้ไหมคะ?",
+          placeholder: "พิมพ์ความในใจตรงนี้ได้เลยน้า...",
+          media: ""
         }
       ],
-      vouchers: [
-        { id: 1, title: "คูปองพาไปกินชาบู 1 มื้อ 🍲", code: "SHABU-LOVE", used: false },
-        { id: 2, title: "คูปองห้ามงอน 1 วันเต็ม 🥺", code: "NO-SULK-24H", used: false },
-        { id: 3, title: "คูปองนวดหลัง 30 นาที 💆‍♂️", code: "MASSAGE-30M", used: false },
-        { id: 4, title: "คูปองตามใจ 1 ข้อ 💖", code: "WISH-GRANTED", used: false }
+      teases: [
+        "ไม่ใช่ข้อนี้สักหน่อย เลือกใหม่เร็ว!",
+        "แน่ะ ยังจะกดข้อนี้อีก งอนแล้วนะ!",
+        "กดผิดบ่อยขนาดนี้ อยากโดนหยิกใช่ไหมคะ!",
+        "โกรธแล้วนะ! 😡💢 จะจางหายไปละนะ!"
+      ],
+      coupons: [
+        { id: "c1", title: "คูปองพาไปกินชาบู/ปิ้งย่าง 1 มื้อ 🥩", desc: "ใช้ได้โดยไม่มีเงื่อนไขใดๆ ทั้งสิ้น" },
+        { id: "c2", title: "คูปองห้ามงอน 1 วันเต็ม 😇", desc: "เมื่อกดใช้ เค้ายอมให้เธองอนชนะทุกเรื่อง" },
+        { id: "c3", title: "คูปองนวดหลัง/นวดไหล่ 30 นาที 💆‍♀️", desc: "พร้อมบริการนวดระดับ VIP" }
       ]
     };
 
-    // Load LocalStorage Backup Configuration
-    const saved = localStorage.getItem('anniversary_cfg');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        window.appData = { ...window.appData, ...parsed };
-      } catch(e){}
+    let fbApp = null;
+    let fbDb = null;
+    let currentStepIndex = 0;
+    let currentQuestionIdx = 0;
+    let wrongClickCount = 0;
+    let ytPlayer = null;
+    let isAudioPlaying = false;
+
+    /* ==========================================================================
+       INITIALIZATION & FIREBASE SETUP
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedConfig();
+      initBackgroundCanvas();
+      initLoveLockInputs();
+      initLoveTimer();
+      initScratchCard();
+      renderCoupons();
+      tryInitFirebase();
+    });
+
+    function loadSavedConfig() {
+      const localCfg = localStorage.getItem('anniversary_config');
+      if (localCfg) {
+        try {
+          appConfig = { ...appConfig, ...JSON.parse(localCfg) };
+        } catch(e) {}
+      }
     }
 
-    // 2. WEB AUDIO SYNTHESIZER SOUND ENGINE
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-
-    function initAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new AudioCtx();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+    function tryInitFirebase() {
+      const fbCfgStr = localStorage.getItem('firebase_config');
+      if (fbCfgStr) {
+        try {
+          const fbConfig = JSON.parse(fbCfgStr);
+          if (fbConfig.apiKey && fbConfig.databaseURL) {
+            fbApp = firebase.initializeApp(fbConfig);
+            fbDb = firebase.database();
+            setupFirebaseRealtimeListeners();
+            updatePresence('online');
+          }
+        } catch(e) { console.error("Firebase init error", e); }
       }
     }
 
-    function playSynthSound(type) {
-      initAudioContext();
-      if (!audioCtx) return;
+    function setupFirebaseRealtimeListeners() {
+      if (!fbDb) return;
 
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      if (type === 'dial') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(400, now);
-        osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-        osc.start(now);
-        osc.stop(now + 0.05);
-      } else if (type === 'unlock') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.1);
-        osc.frequency.setValueAtTime(783.99, now + 0.2);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-        osc.start(now);
-        osc.stop(now + 0.4);
-      } else if (type === 'wax_break') {
-        const bufferSize = audioCtx.sampleRate * 0.1;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
+      // Listen for Live Tracking Updates (For Admin Monitor)
+      fbDb.ref('live_session').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          if (data.currentStep) {
+            document.getElementById('live-current-step').innerText = data.currentStep;
+          }
+          if (data.answers) {
+            let html = '';
+            for (let k in data.answers) {
+              html += `<div style="margin-bottom:6px;"><b>${k}:</b> ${data.answers[k]}</div>`;
+            }
+            document.getElementById('live-answers-box').innerHTML = html;
+          }
         }
-        const noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.value = 1000;
-        noise.connect(filter);
-        filter.connect(gain);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-        noise.start(now);
-      } else if (type === 'pop') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(300, now);
-        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        osc.start(now);
-        osc.stop(now + 0.08);
-      } else if (type === 'firework') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, now);
-        osc.frequency.exponentialRampToValueAtTime(40, now + 0.3);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc.start(now);
-        osc.stop(now + 0.3);
-      }
-    }
+      });
 
-    // 3. UI STATE & APP FUNCTIONS
-    let currentDials = [0, 0, 0, 0];
-    let currentStep = 1;
-    let currentQIndex = 0;
-    let isMusicPlaying = false;
-
-    function startLoveTimer() {
-      function updateTimer() {
-        const startDate = new Date(window.appData.anniversaryDate);
-        const now = new Date();
-        const diffMs = Math.max(0, now - startDate);
-
-        const totalSeconds = Math.floor(diffMs / 1000);
-        const days = Math.floor(totalSeconds / (3600 * 24));
-        const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        const years = Math.floor(days / 365);
-        const remDays = days % 365;
-
-        const timerStr = `${years > 0 ? years + ' ปี ' : ''}${remDays} วัน ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        const el = document.getElementById('loveTimer');
-        if (el) el.innerText = timerStr;
-      }
-      updateTimer();
-      setInterval(updateTimer, 1000);
-    }
-
-    function rotateDial(index, dir) {
-      playSynthSound('dial');
-      currentDials[index] = (currentDials[index] + dir + 10) % 10;
-      const dialEl = document.getElementById(`dial${index}`);
-      if (dialEl) dialEl.innerText = currentDials[index];
-    }
-
-    function attemptUnlock() {
-      const enteredCode = currentDials.join('');
-      const targetCode = window.appData.lockCode;
-      const feedback = document.getElementById('lockFeedback');
-
-      if (enteredCode === targetCode) {
-        playSynthSound('unlock');
-        if (feedback) {
-          feedback.className = "text-xs text-champagne-400 font-bold h-5 mb-4 animate-bounce";
-          feedback.innerText = "✨ รหัสถูกต้อง! กำลังเข้าสู่หัวใจ... ✨";
+      // Listen for Remote Control Triggers (On User Screen)
+      fbDb.ref('remote_trigger').on('value', (snapshot) => {
+        const trigger = snapshot.val();
+        if (trigger && trigger.timestamp > Date.now() - 5000) {
+          if (trigger.action === 'fireworks') triggerFireworks();
+          if (trigger.action === 'hearts') triggerHeartStorm();
+          if (trigger.action === 'message') showRemoteToast(trigger.message);
         }
-        setTimeout(() => { goToStep(2); }, 1000);
+      });
+
+      // Listen for Music URL changes Realtime
+      fbDb.ref('app_config/youtubeId').on('value', (snapshot) => {
+        const newYtId = snapshot.val();
+        if (newYtId && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+          ytPlayer.loadVideoById(newYtId);
+        }
+      });
+    }
+
+    function updatePresence(status) {
+      if (!fbDb) return;
+      fbDb.ref('live_session/status').set({
+        online: status === 'online',
+        lastSeen: Date.now()
+      });
+    }
+
+    function syncCurrentStepToCloud(stepName) {
+      if (!fbDb) return;
+      fbDb.ref('live_session/currentStep').set(stepName);
+    }
+
+    function syncAnswerToCloud(key, value) {
+      if (!fbDb) return;
+      fbDb.ref(`live_session/answers/${key}`).set(value);
+    }
+
+    /* ==========================================================================
+       YOUTUBE AUDIO ENGINE
+       ========================================================================== */
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('yt-player', {
+        height: '0',
+        width: '0',
+        videoId: appConfig.youtubeId || 'kJQP7kiw5Fk',
+        playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1 },
+        events: {
+          'onReady': () => console.log("YouTube Player Ready")
+        }
+      });
+    }
+
+    function toggleAudio() {
+      if (!ytPlayer) return;
+      const btn = document.getElementById('music-toggle-btn');
+      if (isAudioPlaying) {
+        ytPlayer.pauseVideo();
+        btn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
+        isAudioPlaying = false;
       } else {
-        playSynthSound('pop');
-        if (feedback) {
-          feedback.className = "text-xs text-red-400 font-bold h-5 mb-4 animate-pulse";
-          feedback.innerText = "❌ รหัสผ่านไม่ถูกต้อง ลองใหม่อีกครั้งน้า!";
-        }
+        ytPlayer.playVideo();
+        btn.innerHTML = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
+        isAudioPlaying = true;
       }
     }
 
-    function openWaxEnvelope() {
-      playSynthSound('wax_break');
-      const sealBtn = document.getElementById('waxSealBtn');
-      if (sealBtn) sealBtn.classList.add('scale-150', 'opacity-0');
-      
-      triggerFireworksEffect();
+    /* ==========================================================================
+       LOVE LOCK & NAVIGATION FLOW
+       ========================================================================== */
+    function initLoveLockInputs() {
+      const container = document.getElementById('lock-inputs');
+      container.innerHTML = '';
+      const codeLen = appConfig.passcode.length || 4;
+      for (let i = 0; i < codeLen; i++) {
+        const input = document.createElement('input');
+        input.type = 'password';
+        input.maxLength = 1;
+        input.className = 'lock-input';
+        input.dataset.idx = i;
+        input.addEventListener('input', (e) => {
+          if (e.target.value && i < codeLen - 1) {
+            container.children[i + 1].focus();
+          }
+        });
+        container.appendChild(input);
+      }
+    }
 
+    function unlockLoveLock() {
+      const inputs = document.querySelectorAll('.lock-input');
+      let entered = '';
+      inputs.forEach(inp => entered += inp.value);
+
+      if (entered === appConfig.passcode) {
+        triggerFireworks();
+        switchStepView('step-1');
+        syncCurrentStepToCloud('Step 1: Opened Envelope Screen');
+      } else {
+        alert('รหัสผ่านไม่ถูกต้องนะคะ ลองใหม่อีกครั้งน้า ❤️');
+      }
+    }
+
+    function openEnvelope() {
+      const env = document.getElementById('envelope-elem');
+      env.style.transform = 'scale(0.8) rotateX(180deg)';
+      env.style.opacity = '0.3';
       setTimeout(() => {
-        document.getElementById('envelopeView')?.classList.add('hidden');
-        document.getElementById('letterView')?.classList.remove('hidden');
-        startTypewriterLetter();
-      }, 600);
+        env.style.display = 'none';
+        document.getElementById('start-btn').style.display = 'block';
+        triggerFireworks();
+      }, 500);
     }
 
-    function startTypewriterLetter() {
-      const text = window.appData.letterText;
-      const container = document.getElementById('typewriterLetter');
-      if (!container) return;
-      container.innerText = "";
-      let idx = 0;
-
-      function typeChar() {
-        if (idx < text.length) {
-          container.innerText += text.charAt(idx);
-          idx++;
-          setTimeout(typeChar, 40);
-        }
-      }
-      typeChar();
+    function switchStepView(stepId) {
+      document.querySelectorAll('.step-view').forEach(s => s.classList.remove('active'));
+      const activeStep = document.getElementById(stepId);
+      if (activeStep) activeStep.classList.add('active');
     }
 
-    function goToStep(stepNum) {
-      playSynthSound('pop');
-      currentStep = stepNum;
-
-      for (let i = 1; i <= 6; i++) {
-        const sec = document.getElementById(`step${i}`);
-        if (sec) sec.classList.add('hidden');
-      }
-
-      const activeSec = document.getElementById(`step${stepNum}`);
-      if (activeSec) activeSec.classList.remove('hidden');
-
-      if (stepNum === 4) {
-        setTimeout(initScratchCardCanvas, 100);
-      }
-
-      if (window.syncToRemote) {
-        window.syncToRemote({ currentStep: stepNum });
+    function nextStep() {
+      currentStepIndex++;
+      if (currentStepIndex === 1) {
+        startQuestionChain();
+      } else if (currentStepIndex === 2) {
+        switchStepView('step-scratch');
+        syncCurrentStepToCloud('Step 3: Scratch Card');
+      } else if (currentStepIndex === 3) {
+        switchStepView('step-coupons');
+        syncCurrentStepToCloud('Step 4: Love Coupons');
+      } else if (currentStepIndex === 4) {
+        switchStepView('step-final');
+        syncCurrentStepToCloud('Step 5: Final Wish');
       }
     }
 
-    function renderCurrentQuestion() {
-      const questions = window.appData.questions;
-      if (!questions || questions.length === 0) return;
+    /* ==========================================================================
+       QUESTION CHAIN LOGIC (Physics & Dynamic Shrink)
+       ========================================================================== */
+    function startQuestionChain() {
+      currentQuestionIdx = 0;
+      renderQuestion(0);
+      switchStepView('step-question');
+    }
 
-      const q = questions[currentQIndex];
-      const container = document.getElementById('questionContainer');
-      if (!container) return;
+    function renderQuestion(idx) {
+      wrongClickCount = 0;
+      const q = appConfig.questions[idx];
+      if (!q) {
+        nextStep();
+        return;
+      }
 
-      document.getElementById('questionProgress').innerText = `Question ${currentQIndex + 1} of ${questions.length}`;
-      document.getElementById('progressBar').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+      syncCurrentStepToCloud(`Question ${idx + 1}: ${q.title}`);
+      document.getElementById('q-counter').innerText = `QUESTION ${idx + 1} OF ${appConfig.questions.length}`;
+      document.getElementById('q-title').innerText = q.title;
+
+      // Media attachment
+      const mediaBox = document.getElementById('q-media');
+      if (q.media) {
+        mediaBox.style.display = 'block';
+        mediaBox.innerHTML = `<img src="${q.media}" alt="Question Image">`;
+      } else {
+        mediaBox.style.display = 'none';
+      }
+
+      const body = document.getElementById('q-body');
+      body.innerHTML = '';
 
       if (q.type === 'choice') {
-        container.innerHTML = `
-          <h3 class="text-lg sm:text-xl font-bold text-gradient-gold mb-6 text-center">${q.title}</h3>
-          <div class="space-y-3 relative min-h-[180px]" id="choiceBtnArea">
-            ${(q.options || []).map((opt, i) => `
-              <button onclick="handleChoiceClick(${i}, ${q.correctIndex})" id="optBtn_${i}" class="w-full py-3.5 px-4 rounded-xl glass-card border border-rosegold-300/30 text-sm font-medium hover:border-champagne-400 transition-all">
-                ${opt}
-              </button>
-            `).join('')}
+        body.innerHTML = `
+          <div class="btn-group">
+            <button class="btn-romantic" id="btn-correct" onclick="handleCorrectChoice(${idx})">${q.correct}</button>
+            <button class="btn-romantic btn-wrong" id="btn-wrong" onclick="handleWrongChoice()">${q.wrong}</button>
           </div>
-          <p id="teasingTooltip" class="text-xs text-rosegold-300 text-center mt-4 h-5"></p>
-        `;
-      } else if (q.type === 'slider') {
-        container.innerHTML = `
-          <h3 class="text-lg sm:text-xl font-bold text-gradient-gold mb-6 text-center">${q.title}</h3>
-          <div class="space-y-6 my-8">
-            <input type="range" id="loveSlider" min="0" max="100" value="50" onchange="handleSliderChange(this)" class="w-full h-3 bg-burgundy-950 rounded-lg appearance-none cursor-pointer accent-champagne-400">
-            <div class="flex justify-between text-xs text-champagne-300">
-              <span>${q.minLabel || '0%'}</span>
-              <span id="sliderValText" class="text-base font-bold text-gradient-rosegold">50%</span>
-              <span>${q.maxLabel || '100%'}</span>
-            </div>
-          </div>
-          <button onclick="nextQuestion()" class="w-full py-3 rounded-xl btn-gold text-sm">ถัดไป <i class="fa-solid fa-arrow-right ml-1"></i></button>
         `;
       } else if (q.type === 'text') {
-        container.innerHTML = `
-          <h3 class="text-lg sm:text-xl font-bold text-gradient-gold mb-6 text-center">${q.title}</h3>
-          <textarea id="textAnsInput" rows="3" class="w-full p-4 rounded-2xl glass-card border border-rosegold-300/30 text-sm text-rosegold-100 placeholder-rosegold-400/50 mb-4 focus:outline-none focus:border-champagne-400" placeholder="${q.placeholder || ''}"></textarea>
-          <button onclick="handleTextAnswerNext()" class="w-full py-3 rounded-xl btn-gold text-sm">ตอบคำถาม & ไปต่อ <i class="fa-solid fa-arrow-right ml-1"></i></button>
+        body.innerHTML = `
+          <input type="text" id="q-text-input" class="romantic-input" placeholder="${q.placeholder || 'พิมพ์คำตอบ...'}" oninput="handleTextInput(this.value)">
+          <button class="btn-romantic" onclick="handleCorrectChoice(${idx})" style="width: 100%;">ส่งคำตอบ ❤️</button>
+        `;
+      } else if (q.type === 'slider') {
+        body.innerHTML = `
+          <div class="slider-container">
+            <input type="range" min="0" max="1000" value="100" class="romantic-slider" id="love-slider" oninput="handleSliderChange(this)">
+            <p style="margin-top: 15px; font-weight: bold; color: var(--gold-accent);" id="slider-val">100%</p>
+          </div>
+          <button class="btn-romantic" onclick="handleCorrectChoice(${idx})" style="width: 100%;">ยืนยันความรัก 💕</button>
         `;
       }
     }
 
-    function handleChoiceClick(chosenIdx, correctIdx) {
-      playSynthSound('pop');
-      const tooltip = document.getElementById('teasingTooltip');
+    function handleWrongChoice() {
+      wrongClickCount++;
+      const wrongBtn = document.getElementById('btn-wrong');
+      const correctBtn = document.getElementById('btn-correct');
 
-      if (chosenIdx === correctIdx) {
-        triggerFireworksEffect();
-        if (tooltip) tooltip.innerText = "ถูกต้องแล้วค่ะคนเก่ง! 💕";
-        setTimeout(() => { nextQuestion(); }, 1200);
-      } else {
-        const btn = document.getElementById(`optBtn_${chosenIdx}`);
-        if (btn) {
-          btn.style.transform = `scale(0.7) translate(${Math.random()*60 - 30}px, ${Math.random()*40 - 20}px)`;
-          btn.style.opacity = "0.5";
-        }
-        const quotes = window.appData.teasingQuotes;
-        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-        if (tooltip) tooltip.innerText = randomQuote;
+      // Shrink wrong button & Enlarge correct button
+      const shrinkFactor = Math.max(0.2, 1 - (wrongClickCount * 0.25));
+      const growFactor = 1 + (wrongClickCount * 0.15);
+
+      wrongBtn.style.transform = `scale(${shrinkFactor})`;
+      wrongBtn.style.opacity = `${shrinkFactor}`;
+      correctBtn.style.transform = `scale(${growFactor})`;
+
+      // Tease Popup Toast Message
+      const teaseMsg = appConfig.teases[Math.min(wrongClickCount - 1, appConfig.teases.length - 1)];
+      showRemoteToast(teaseMsg);
+
+      if (wrongClickCount >= appConfig.teases.length) {
+        wrongBtn.style.display = 'none';
       }
+    }
+
+    function handleCorrectChoice(idx) {
+      triggerFireworks();
+      currentQuestionIdx++;
+      if (currentQuestionIdx < appConfig.questions.length) {
+        renderQuestion(currentQuestionIdx);
+      } else {
+        nextStep();
+      }
+    }
+
+    function handleTextInput(val) {
+      syncAnswerToCloud(`Question_${currentQuestionIdx + 1}_Text`, val);
     }
 
     function handleSliderChange(slider) {
-      playSynthSound('pop');
-      const valText = document.getElementById('sliderValText');
       let val = parseInt(slider.value);
-
-      if (val < 50) {
-        slider.value = 100;
-        if (valText) valText.innerText = "1000% ❤️";
-        triggerFireworksEffect();
-      } else {
-        if (valText) valText.innerText = `${val}%`;
+      if (val < 500) {
+        slider.value = 1000; // Auto spring back to 1000%
+        val = 1000;
       }
+      document.getElementById('slider-val').innerText = `${val}% 💕`;
+      syncAnswerToCloud(`Love_Slider_Value`, `${val}%`);
     }
 
-    function handleTextAnswerNext() {
-      const val = document.getElementById('textAnsInput')?.value;
-      if (window.syncToRemote) {
-        window.syncToRemote({ textAnswer: val });
+    /* ==========================================================================
+       SCRATCH CARD ENGINE
+       ========================================================================== */
+    function initScratchCard() {
+      const canvas = document.getElementById('scratch-canvas');
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#c59b3f';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#1a0812';
+      ctx.font = '16px Prompt';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨ ขูดตรงนี้เพื่อเฉลย ✨', canvas.width / 2, canvas.height / 2);
+
+      let isDrawing = false;
+      function scratch(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2);
+        ctx.fill();
       }
-      nextQuestion();
+
+      canvas.addEventListener('mousedown', () => isDrawing = true);
+      canvas.addEventListener('mouseup', () => isDrawing = false);
+      canvas.addEventListener('mousemove', scratch);
+      canvas.addEventListener('touchstart', () => isDrawing = true);
+      canvas.addEventListener('touchend', () => isDrawing = false);
+      canvas.addEventListener('touchmove', scratch);
     }
 
-    function nextQuestion() {
-      if (currentQIndex < window.appData.questions.length - 1) {
-        currentQIndex++;
-        renderCurrentQuestion();
-      } else {
-        goToStep(4);
-      }
-    }
-
-    // SCRATCH CARD ENGINE
-    let scratchCanvas, scratchCtx, isScratching = false;
-
-    function initScratchCardCanvas() {
-      scratchCanvas = document.getElementById('scratchCanvas');
-      if (!scratchCanvas) return;
-      scratchCtx = scratchCanvas.getContext('2d');
-
-      const scratchImgEl = document.getElementById('scratchImage');
-      const scratchTextEl = document.getElementById('scratchSecretText');
-      if (scratchImgEl) scratchImgEl.src = window.appData.scratchImg;
-      if (scratchTextEl) scratchTextEl.innerText = window.appData.scratchText;
-
-      const parent = scratchCanvas.parentElement;
-      const width = parent.clientWidth || 320;
-      const height = parent.clientHeight || 320;
-      scratchCanvas.width = width;
-      scratchCanvas.height = height;
-
-      const grad = scratchCtx.createLinearGradient(0, 0, width, height);
-      grad.addColorStop(0, '#D4AF37');
-      grad.addColorStop(0.5, '#FFE5B4');
-      grad.addColorStop(1, '#AA771C');
-      scratchCtx.fillStyle = grad;
-      scratchCtx.fillRect(0, 0, width, height);
-
-      scratchCtx.fillStyle = '#2A0812';
-      scratchCtx.font = 'bold 16px Noto Sans Thai';
-      scratchCtx.textAlign = 'center';
-      scratchCtx.fillText('ใช้เมาส์/นิ้ว ขูดตรงนี้ 🪙', width / 2, height / 2);
-
-      scratchCanvas.onmousedown = startScratch;
-      scratchCanvas.ontouchstart = startScratch;
-      window.onmouseup = stopScratch;
-      window.ontouchend = stopScratch;
-      scratchCanvas.onmousemove = doScratch;
-      scratchCanvas.ontouchmove = doScratch;
-    }
-
-    function startScratch(e) {
-      isScratching = true;
-      doScratch(e);
-    }
-
-    function stopScratch() {
-      isScratching = false;
-    }
-
-    function doScratch(e) {
-      if (!isScratching) return;
-      e.preventDefault();
-
-      const rect = scratchCanvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-
-      scratchCtx.globalCompositeOperation = 'destination-out';
-      scratchCtx.beginPath();
-      scratchCtx.arc(x, y, 26, 0, Math.PI * 2);
-      scratchCtx.fill();
-
-      checkScratchPercentage();
-    }
-
-    function checkScratchPercentage() {
-      if (!scratchCanvas || !scratchCtx) return;
-      const imgData = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
-      let cleared = 0;
-      for (let i = 3; i < imgData.data.length; i += 4) {
-        if (imgData.data[i] === 0) cleared++;
-      }
-      const percent = Math.round((cleared / (imgData.data.length / 4)) * 100);
-      const textEl = document.getElementById('scratchPercentText');
-      if (textEl) textEl.innerText = `ขูดแล้ว: ${percent}%`;
-
-      if (percent > 40) {
-        document.getElementById('afterScratchBtn')?.classList.remove('hidden');
-      }
-    }
-
-    function renderVouchersGrid() {
-      const grid = document.getElementById('vouchersGrid');
-      if (!grid) return;
-
-      grid.innerHTML = window.appData.vouchers.map(v => `
-        <div class="glass-card p-4 rounded-2xl border border-champagne-500/30 flex flex-col justify-between space-y-3 relative overflow-hidden">
+    /* ==========================================================================
+       LOVE COUPONS ENGINE
+       ========================================================================== */
+    function renderCoupons() {
+      const container = document.getElementById('coupons-container');
+      container.innerHTML = '';
+      appConfig.coupons.forEach(coupon => {
+        const card = document.createElement('div');
+        card.className = 'coupon-card';
+        card.innerHTML = `
           <div>
-            <div class="text-xs text-champagne-400 font-cinzel font-bold mb-1">${v.code}</div>
-            <h4 class="text-sm sm:text-base font-bold text-rosegold-100 font-thai">${v.title}</h4>
+            <div class="coupon-title">${coupon.title}</div>
+            <div class="coupon-desc">${coupon.desc}</div>
           </div>
-          <button onclick="useVoucher(${v.id})" class="w-full py-2 rounded-xl ${v.used ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed' : 'btn-gold'} text-xs font-bold">
-            ${v.used ? 'แลกใช้งานแล้ว! ✨' : 'กดใช้คูปองนี้'}
-          </button>
-        </div>
-      `).join('');
+          <button class="btn-use-coupon" id="btn-cpn-${coupon.id}" onclick="useCoupon('${coupon.id}', '${coupon.title}')">กดใช้</button>
+        `;
+        container.appendChild(card);
+      });
     }
 
-    function useVoucher(id) {
-      const v = window.appData.vouchers.find(x => x.id === id);
-      if (!v || v.used) return;
+    function useCoupon(id, title) {
+      const btn = document.getElementById(`btn-cpn-${id}`);
+      if (btn.classList.contains('used')) return;
 
-      v.used = true;
-      playSynthSound('unlock');
-      triggerFireworksEffect();
-      renderVouchersGrid();
+      btn.innerText = 'ใช้แล้ว ❤️';
+      btn.classList.add('used');
+      triggerFireworks();
+      syncAnswerToCloud(`Redeemed_Coupon_${id}`, title);
+      showRemoteToast(`ใช้คูปอง "${title}" เรียบร้อยแล้ว!`);
+    }
 
-      if (window.syncToRemote) {
-        window.syncToRemote({ usedVoucher: v.title });
+    /* ==========================================================================
+       FINAL LANTERN & FIREWORKS
+       ========================================================================== */
+    function releaseLantern() {
+      const wish = document.getElementById('wish-input').value;
+      if (wish) {
+        syncAnswerToCloud(`Final_Wish`, wish);
       }
+      triggerFireworks();
+      showRemoteToast('ส่งคำอธิษฐานขึ้นสู่ท้องฟ้าแล้ว ✨');
     }
 
-    function releaseWishLantern() {
-      const wish = document.getElementById('wishInput')?.value;
-      if (!wish) return;
+    /* ==========================================================================
+       REALTIME COUNTER ENGINE
+       ========================================================================== */
+    function initLoveTimer() {
+      setInterval(() => {
+        const start = new Date(appConfig.startDate).getTime();
+        const now = new Date().getTime();
+        const diff = now - start;
 
-      playSynthSound('firework');
-      document.getElementById('wishSentMessage')?.classList.remove('hidden');
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-      const container = document.getElementById('lanternsContainer');
-      if (container) {
-        for (let i = 0; i < 5; i++) {
-          setTimeout(() => {
-            const lantern = document.createElement('div');
-            lantern.className = 'sky-lantern flex flex-col items-center';
-            lantern.style.left = `${10 + Math.random() * 80}%`;
-            lantern.innerHTML = `
-              <div class="w-12 h-16 bg-gradient-to-t from-yellow-500 via-orange-400 to-red-500 rounded-t-full rounded-b-md shadow-2xl border border-yellow-200 flex items-end justify-center pb-2 opacity-90 glow-gold">
-                <div class="w-3 h-3 bg-white rounded-full animate-ping"></div>
-              </div>
-              <div class="text-[9px] text-champagne-300 font-bold mt-1 bg-burgundy-950/80 px-2 py-0.5 rounded-full">${wish.substring(0, 15)}...</div>
-            `;
-            container.appendChild(lantern);
-          }, i * 600);
-        }
-      }
-
-      let fireCount = 0;
-      const interval = setInterval(() => {
-        triggerFireworksEffect();
-        fireCount++;
-        if (fireCount > 8) clearInterval(interval);
-      }, 800);
+        document.getElementById('cnt-days').innerText = days;
+        document.getElementById('cnt-hours').innerText = hours;
+        document.getElementById('cnt-mins').innerText = mins;
+        document.getElementById('cnt-secs').innerText = secs;
+      }, 1000);
     }
 
-    function initCanvasFX() {
-      const canvas = document.getElementById('bgCanvas');
-      if (!canvas) return;
+    /* ==========================================================================
+       BACKGROUND ANIMATED CANVAS (STARS & HEARTS)
+       ========================================================================== */
+    function initBackgroundCanvas() {
+      const canvas = document.getElementById('bg-canvas');
       const ctx = canvas.getContext('2d');
       let width = canvas.width = window.innerWidth;
       let height = canvas.height = window.innerHeight;
+
+      const particles = Array.from({ length: 45 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 3 + 1,
+        speedY: Math.random() * 0.8 + 0.2,
+        opacity: Math.random() * 0.6 + 0.2
+      }));
+
+      function render() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.y -= p.speedY;
+          if (p.y < 0) p.y = height;
+          ctx.fillStyle = `rgba(243, 207, 122, ${p.opacity})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        requestAnimationFrame(render);
+      }
+      render();
 
       window.addEventListener('resize', () => {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
       });
-
-      const particles = Array.from({ length: 60 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 2 + 1,
-        alpha: Math.random(),
-        speed: Math.random() * 0.5 + 0.2
-      }));
-
-      function animate() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach(p => {
-          p.y -= p.speed;
-          if (p.y < 0) p.y = height;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 229, 180, ${p.alpha})`;
-          ctx.fill();
-        });
-        requestAnimationFrame(animate);
-      }
-      animate();
     }
 
-    function triggerFireworksEffect() {
-      playSynthSound('firework');
-      const canvas = document.getElementById('fireworksCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const width = canvas.width = window.innerWidth;
-      const height = canvas.height = window.innerHeight;
-
-      const particles = [];
-      const colors = ['#D4AF37', '#F7C5CC', '#FFE5B4', '#E8A2A8', '#FFFFFF'];
-      const cx = width * (0.2 + Math.random() * 0.6);
-      const cy = height * (0.2 + Math.random() * 0.4);
-
-      for (let i = 0; i < 80; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 6 + 2;
-        particles.push({
-          x: cx,
-          y: cy,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          alpha: 1,
-          color: colors[Math.floor(Math.random() * colors.length)]
-        });
-      }
-
-      function render() {
-        ctx.clearRect(0, 0, width, height);
-        let alive = false;
-        particles.forEach(p => {
-          if (p.alpha > 0) {
-            alive = true;
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.08;
-            p.alpha -= 0.02;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = Math.max(0, p.alpha);
-            ctx.fill();
-          }
-        });
-        if (alive) requestAnimationFrame(render);
-        else ctx.clearRect(0, 0, width, height);
-      }
-      render();
+    function triggerFireworks() {
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
     }
 
-    function toggleBgMusic() {
-      initAudioContext();
-      const audio = document.getElementById('bgAudio');
-      const icon = document.getElementById('musicIcon');
-      if (!audio) return;
-
-      if (!audio.src || audio.src !== window.appData.bgMusicUrl) {
-        audio.src = window.appData.bgMusicUrl;
-      }
-
-      if (isMusicPlaying) {
-        audio.pause();
-        isMusicPlaying = false;
-        if (icon) icon.className = "fa-solid fa-music-slash";
-      } else {
-        audio.play().then(() => {
-          isMusicPlaying = true;
-          if (icon) icon.className = "fa-solid fa-music text-champagne-400 animate-spin";
-        }).catch(()=>{});
-      }
+    function triggerHeartStorm() {
+      confetti({ particleCount: 50, scalar: 2, shapes: ['circle'], colors: ['#ea9ab2', '#ff0055'] });
     }
 
-    function applyBgMedia() {
-      const container = document.getElementById('mediaBgContainer');
-      const url = window.appData.bgMediaUrl;
-      if (!container) return;
-
-      if (!url) {
-        container.innerHTML = "";
-        return;
-      }
-
-      if (url.endsWith('.mp4') || url.endsWith('.webm')) {
-        container.innerHTML = `<video src="${url}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>`;
-      } else {
-        container.innerHTML = `<img src="${url}" class="w-full h-full object-cover" />`;
-      }
+    function showRemoteToast(msg) {
+      const toast = document.getElementById('remote-toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4000);
     }
 
-    // ADMIN CONTROL PANEL
+    /* ==========================================================================
+       ADMIN CONTROL PANEL LOGIC
+       ========================================================================== */
     function openAdminModal() {
-      initAudioContext();
-      document.getElementById('adminModal')?.classList.remove('hidden');
-      document.getElementById('adminAuthView')?.classList.remove('hidden');
-      document.getElementById('adminContentView')?.classList.add('hidden');
-      const passInput = document.getElementById('adminPassInput');
-      if (passInput) passInput.value = "";
+      const pwd = prompt('กรุณาใส่รหัสผ่านแอดมิน:');
+      if (pwd === '1234') {
+        document.getElementById('admin-modal').style.display = 'flex';
+      } else if (pwd !== null) {
+        alert('รหัสผ่านไม่ถูกต้อง');
+      }
     }
 
     function closeAdminModal() {
-      document.getElementById('adminModal')?.classList.add('hidden');
-    }
-
-    function verifyAdminPass() {
-      const pass = document.getElementById('adminPassInput')?.value;
-      if (pass === window.appData.adminPass) {
-        playSynthSound('unlock');
-        document.getElementById('adminAuthView')?.classList.add('hidden');
-        document.getElementById('adminContentView')?.classList.remove('hidden');
-        populateAdminFields();
-      } else {
-        playSynthSound('pop');
-        alert("รหัสผ่าน Admin ไม่ถูกต้อง!");
-      }
+      document.getElementById('admin-modal').style.display = 'none';
     }
 
     function switchAdminTab(tabName) {
-      document.querySelectorAll('.admin-tab-btn').forEach(b => {
-        b.classList.remove('bg-rosegold-500/30', 'text-champagne-300', 'font-bold');
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('atab-monitor').style.display = tabName === 'monitor' ? 'block' : 'none';
+      document.getElementById('atab-remote').style.display = tabName === 'remote' ? 'block' : 'none';
+      document.getElementById('atab-content').style.display = tabName === 'content' ? 'block' : 'none';
+      document.getElementById('atab-firebase').style.display = tabName === 'firebase' ? 'block' : 'none';
+    }
+
+    function sendRemoteTrigger(action) {
+      if (!fbDb) return alert('กรุณาเชื่อมต่อ Firebase ในแท็บ Firebase Config ก่อนครับ');
+      fbDb.ref('remote_trigger').set({
+        action: action,
+        timestamp: Date.now()
       });
-      document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.add('hidden'));
-
-      const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
-      if (activeBtn) activeBtn.classList.add('bg-rosegold-500/30', 'text-champagne-300', 'font-bold');
-
-      const activeContent = document.getElementById(`tab-${tabName}`);
-      if (activeContent) activeContent.classList.remove('hidden');
-
-      if (tabName === 'json') {
-        const area = document.getElementById('jsonConfigTextarea');
-        if (area) area.value = JSON.stringify(window.appData, null, 2);
-      }
     }
 
-    function populateAdminFields() {
-      document.getElementById('cfgAnniversaryDate').value = window.appData.anniversaryDate;
-      document.getElementById('cfgLockCode').value = window.appData.lockCode;
-      document.getElementById('cfgAdminPass').value = window.appData.adminPass;
-      document.getElementById('cfgBgMusicUrl').value = window.appData.bgMusicUrl;
-      document.getElementById('cfgBgMediaUrl').value = window.appData.bgMediaUrl;
-      document.getElementById('cfgLetterText').value = window.appData.letterText;
-      document.getElementById('cfgScratchImg').value = window.appData.scratchImg;
-      document.getElementById('cfgScratchText').value = window.appData.scratchText;
-
-      renderAdminQuestionsList();
-      renderAdminVouchersList();
-    }
-
-    function renderAdminQuestionsList() {
-      const list = document.getElementById('adminQuestionsList');
-      if (!list) return;
-      list.innerHTML = window.appData.questions.map((q, i) => `
-        <div class="glass-card p-3 rounded-xl border border-rosegold-300/20 text-xs space-y-2">
-          <div class="flex justify-between items-center font-bold text-champagne-300">
-            <span>#${i+1} [${q.type.toUpperCase()}]</span>
-            <button onclick="removeQuestion(${i})" class="text-red-400 hover:text-white"><i class="fa-solid fa-trash"></i></button>
-          </div>
-          <div>
-            <label class="block text-[10px] text-rosegold-300 mb-0.5">ประเภทคำถาม</label>
-            <select onchange="window.appData.questions[${i}].type=this.value; renderAdminQuestionsList();" class="w-full p-2 rounded bg-burgundy-950 text-xs">
-              <option value="choice" ${q.type === 'choice' ? 'selected' : ''}>ตัวเลือก (Multiple Choice)</option>
-              <option value="slider" ${q.type === 'slider' ? 'selected' : ''}>แถบเลื่อน (Slider)</option>
-              <option value="text" ${q.type === 'text' ? 'selected' : ''}>พิมพ์ตอบ (Text Input)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[10px] text-rosegold-300 mb-0.5">หัวข้อคำถาม</label>
-            <input type="text" value="${q.title || ''}" onchange="window.appData.questions[${i}].title=this.value" class="w-full p-2 rounded bg-burgundy-950 text-xs">
-          </div>
-          ${q.type === 'choice' ? `
-            <div class="pt-1">
-              <label class="block text-[10px] text-rosegold-300 mb-1">ตัวเลือกตอบ (คั่นด้วยเครื่องหมายจุลภาค , )</label>
-              <input type="text" value="${(q.options \vert{}\vert{} []).join(', ')}" onchange="window.appData.questions[${i}].options=this.value.split(',').map(s=>s.trim())" class="w-full p-2 rounded bg-burgundy-950 text-xs">
-              <label class="block text-[10px] text-rosegold-300 mt-1 mb-0.5">ดัชนีคำตอบที่ถูกต้อง (เริ่มต้น 0)</label>
-              <input type="number" value="${q.correctIndex \vert{}\vert{} 0}" onchange="window.appData.questions[${i}].correctIndex=parseInt(this.value)" class="w-full p-2 rounded bg-burgundy-950 text-xs">
-            </div>
-          ` : ''}
-        </div>
-      `).join('');
-    }
-
-    function addNewQuestionPrompt() {
-      window.appData.questions.push({
-        id: Date.now(),
-        type: "choice",
-        title: "คำถามใหม่เกี่ยวกับเรา",
-        options: ["คำตอบถูก", "คำตอบผิด 1", "คำตอบผิด 2"],
-        correctIndex: 0
+    function sendRemoteMessage() {
+      const msg = document.getElementById('remote-msg-input').value;
+      if (!msg) return;
+      if (!fbDb) return alert('กรุณาเชื่อมต่อ Firebase ก่อนครับ');
+      fbDb.ref('remote_trigger').set({
+        action: 'message',
+        message: msg,
+        timestamp: Date.now()
       });
-      renderAdminQuestionsList();
-    }
-
-    function removeQuestion(idx) {
-      window.appData.questions.splice(idx, 1);
-      renderAdminQuestionsList();
-    }
-
-    function renderAdminVouchersList() {
-      const list = document.getElementById('adminVouchersList');
-      if (!list) return;
-      list.innerHTML = window.appData.vouchers.map((v, i) => `
-        <div class="glass-card p-2.5 rounded-xl border border-rosegold-300/20 text-xs flex justify-between items-center space-x-2">
-          <input type="text" value="${v.title}" onchange="window.appData.vouchers[${i}].title=this.value" class="w-full p-1.5 rounded bg-burgundy-950 text-xs">
-          <button onclick="removeVoucher(${i})" class="text-red-400 hover:text-white p-1"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      `).join('');
-    }
-
-    function addNewVoucherPrompt() {
-      window.appData.vouchers.push({
-        id: Date.now(),
-        title: "คูปองใหม่ 🎁",
-        code: "NEW-COUPON",
-        used: false
-      });
-      renderAdminVouchersList();
-    }
-
-    function removeVoucher(idx) {
-      window.appData.vouchers.splice(idx, 1);
-      renderAdminVouchersList();
+      document.getElementById('remote-msg-input').value = '';
     }
 
     function saveAdminSettings() {
-      window.appData.anniversaryDate = document.getElementById('cfgAnniversaryDate').value;
-      window.appData.lockCode = document.getElementById('cfgLockCode').value;
-      window.appData.adminPass = document.getElementById('cfgAdminPass').value;
-      window.appData.bgMusicUrl = document.getElementById('cfgBgMusicUrl').value;
-      window.appData.bgMediaUrl = document.getElementById('cfgBgMediaUrl').value;
-      window.appData.letterText = document.getElementById('cfgLetterText').value;
-      window.appData.scratchImg = document.getElementById('cfgScratchImg').value;
-      window.appData.scratchText = document.getElementById('cfgScratchText').value;
+      appConfig.passcode = document.getElementById('cfg-passcode').value;
+      appConfig.startDate = document.getElementById('cfg-startdate').value;
+      appConfig.youtubeId = extractYouTubeId(document.getElementById('cfg-ytmusic').value);
 
-      localStorage.setItem('anniversary_cfg', JSON.stringify(window.appData));
-      applyBgMedia();
-      renderVouchersGrid();
-      renderCurrentQuestion();
-      
+      localStorage.setItem('anniversary_config', JSON.stringify(appConfig));
+      if (fbDb) {
+        fbDb.ref('app_config').set(appConfig);
+      }
+
+      alert('บันทึกการตั้งค่าสำเร็จแล้ว!');
       closeAdminModal();
-      showCustomModal("บันทึกสำเร็จ", "การตั้งค่าทั้งหมดถูกบันทึกลงระบบเรียบร้อยแล้วค่ะ!");
     }
 
-    function remoteTrigger(action) {
-      if (window.syncToRemote) {
-        window.syncToRemote({ remoteTrigger: action, triggerTime: Date.now() });
-      }
+    function saveFirebaseConfig() {
+      const fbConfig = {
+        apiKey: document.getElementById('fb-apiKey').value.trim(),
+        databaseURL: document.getElementById('fb-databaseURL').value.trim(),
+        projectId: document.getElementById('fb-projectId').value.trim()
+      };
+
+      localStorage.setItem('firebase_config', JSON.stringify(fbConfig));
+      alert('บันทึก Firebase Config เรียบร้อย! ระบบจะทำการโหลดการเชื่อมต่อใหม่');
+      location.reload();
     }
 
-    function remoteTriggerPromptPopup() {
-      const msg = prompt("พิมพ์ข้อความป๊อปอัปที่จะส่งไปยังหน้าจอผู้เล่น:");
-      if (msg && window.syncToRemote) {
-        window.syncToRemote({ remoteTrigger: 'popup', remotePopupMsg: msg, triggerTime: Date.now() });
-      }
+    function extractYouTubeId(url) {
+      if (!url) return 'kJQP7kiw5Fk';
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : url;
     }
-
-    function copyJsonConfig() {
-      const text = document.getElementById('jsonConfigTextarea').value;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          alert("คัดลอก JSON ไปยัง Clipboard เรียบร้อยแล้ว!");
-        });
-      } else {
-        alert("คัดลอก JSON เรียบร้อยแล้ว!");
-      }
-    }
-
-    function importJsonConfig() {
-      try {
-        const text = document.getElementById('jsonConfigTextarea').value;
-        const parsed = JSON.parse(text);
-        window.appData = parsed;
-        localStorage.setItem('anniversary_cfg', JSON.stringify(window.appData));
-        location.reload();
-      } catch(e) {
-        alert("รูปแบบ JSON ไม่ถูกต้อง!");
-      }
-    }
-
-    function showCustomModal(title, msg) {
-      const modal = document.createElement('div');
-      modal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md";
-      modal.innerHTML = `
-        <div class="glass-modal p-6 rounded-3xl max-w-sm w-full text-center border border-champagne-400 space-y-4 shadow-2xl">
-          <h4 class="text-xl font-cinzel font-bold text-gradient-gold">${title}</h4>
-          <p class="text-sm text-rosegold-200 font-thai leading-relaxed">${msg}</p>
-          <button onclick="this.closest('.fixed').remove()" class="w-full py-2.5 rounded-xl btn-gold text-xs font-bold">ตกลง</button>
-        </div>
-      `;
-      document.body.appendChild(modal);
-    }
-
-    // Bind Functions to Window Global Scope
-    window.rotateDial = rotateDial;
-    window.attemptUnlock = attemptUnlock;
-    window.openWaxEnvelope = openWaxEnvelope;
-    window.goToStep = goToStep;
-    window.handleChoiceClick = handleChoiceClick;
-    window.handleSliderChange = handleSliderChange;
-    window.handleTextAnswerNext = handleTextAnswerNext;
-    window.nextQuestion = nextQuestion;
-    window.useVoucher = useVoucher;
-    window.releaseWishLantern = releaseWishLantern;
-    window.toggleBgMusic = toggleBgMusic;
-    window.openAdminModal = openAdminModal;
-    window.closeAdminModal = closeAdminModal;
-    window.verifyAdminPass = verifyAdminPass;
-    window.switchAdminTab = switchAdminTab;
-    window.addNewQuestionPrompt = addNewQuestionPrompt;
-    window.removeQuestion = removeQuestion;
-    window.renderAdminQuestionsList = renderAdminQuestionsList;
-    window.addNewVoucherPrompt = addNewVoucherPrompt;
-    window.removeVoucher = removeVoucher;
-    window.saveAdminSettings = saveAdminSettings;
-    window.remoteTrigger = remoteTrigger;
-    window.remoteTriggerPromptPopup = remoteTriggerPromptPopup;
-    window.copyJsonConfig = copyJsonConfig;
-    window.importJsonConfig = importJsonConfig;
-    window.triggerFireworksEffect = triggerFireworksEffect;
-    window.showCustomModal = showCustomModal;
-
-    // 4. FIREBASE REALTIME ENGINE
-    const firebaseConfig = {
-      apiKey: "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
-      authDomain: "my-anniversary-app.firebaseapp.com",
-      databaseURL: "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "my-anniversary-app",
-      storageBucket: "my-anniversary-app.firebasestorage.app",
-      messagingSenderId: "487064640701",
-      appId: "1:487064640701:web:0206b2da8138b7594f2bd4",
-      measurementId: "G-KVLWESYNZQ"
-    };
-
-    let db = null;
-    let sessionDocRef = null;
-    let lastProcessedTriggerTime = 0;
-
-    try {
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      db = getFirestore(app);
-
-      signInAnonymously(auth).then(() => {
-        sessionDocRef = doc(db, 'anniversary_app', 'live_session');
-        
-        onSnapshot(sessionDocRef, (snap) => {
-          if (snap.exists()) {
-            const data = snap.data();
-            
-            if (data.triggerTime && data.triggerTime > lastProcessedTriggerTime) {
-              lastProcessedTriggerTime = data.triggerTime;
-              if (data.remoteTrigger === 'fireworks') {
-                triggerFireworksEffect();
-              } else if (data.remoteTrigger === 'music') {
-                toggleBgMusic();
-              } else if (data.remoteTrigger === 'popup' && data.remotePopupMsg) {
-                showCustomModal('เซอร์ไพรส์จากแอดมิน! ❤️', data.remotePopupMsg);
-              }
-            }
-
-            const statusBox = document.getElementById('remoteStatusBox');
-            if (statusBox) {
-              statusBox.innerHTML = `
-                <div class="text-green-400">● เชื่อมต่อระบบ Firebase Realtime สำเร็จ</div>
-                <div><span class="text-champagne-300">อัปเดตล่าสุด:</span> ${new Date().toLocaleTimeString('th-TH')}</div>
-                ${data.textAnswer ? `<div class="mt-2 p-2 bg-burgundy-900/80 rounded border border-rosegold-300/20 text-champagne-300">💬 ข้อความจากแฟน: "${data.textAnswer}"</div>` : ''}
-                ${data.usedVoucher ? `<div class="mt-1 p-2 bg-burgundy-900/80 rounded border border-rosegold-300/20 text-champagne-300">🎁 คูปองที่ถูกใช้: "${data.usedVoucher}"</div>` : ''}
-              `;
-            }
-          }
-        }, (err) => { console.error("Firestore Error:", err); });
-      }).catch(err => console.error("Auth Error:", err));
-    } catch(e) {
-      console.error("Firebase Init Error:", e);
-    }
-
-    window.syncToRemote = function(payload) {
-      if (!db || !sessionDocRef) return;
-      setDoc(sessionDocRef, { ...payload, updatedAt: new Date().toISOString() }, { merge: true }).catch(err => console.error(err));
-    };
-
-    // 5. BOOTSTRAP APP ON DOM LOAD
-    window.addEventListener('DOMContentLoaded', () => {
-      initCanvasFX();
-      startLoveTimer();
-      renderCurrentQuestion();
-      renderVouchersGrid();
-      applyBgMedia();
-    });
   </script>
 </body>
 </html>
