@@ -3,320 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Journey ❤️</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Prompt:wght@200;300;400&display=swap" rel="stylesheet">
+    <title>A Little Space For Us 🤍</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-color: #faf9f6;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #333333;
+            --text-sub: #888888;
+            --accent: #e0a9af;
+            --accent-hover: #d4959c;
+            --border: #f0ece9;
+            --danger: #e76f51;
         }
 
-        body, html {
-            width: 100%;
-            height: 100%;
-            background-color: #050505;
-            color: #f4e8eb;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
             font-family: 'Prompt', sans-serif;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        /* --- Intro Screen --- */
-        #intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #12081a 0%, #000000 100%);
+            background-color: var(--bg-color);
+            background-size: cover;
+            background-position: center;
+            color: var(--text-main);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            transition: opacity 1.5s ease-in-out;
-            cursor: pointer;
-        }
-
-        .intro-text {
-            font-family: 'Charm', cursive;
-            font-size: 2rem;
-            color: #eebbcc;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        .intro-hint {
-            font-size: 0.9rem;
-            color: #888;
-            font-weight: 200;
-            letter-spacing: 2px;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        /* --- Main Content --- */
-        #main-content {
-            display: none;
-            position: relative;
-            z-index: 10;
-            padding: 10vh 20px;
             min-height: 100vh;
-            background: transparent;
+            padding: 20px;
+            transition: background 0.5s ease;
         }
 
-        .story-section {
-            max-width: 600px;
-            margin: 0 auto 30vh auto;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--border);
         }
 
-        .story-section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .text-line {
-            font-size: 1.15rem;
-            line-height: 2.2;
-            font-weight: 300;
-            color: #f7f0f2;
+        .hero-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 16px;
             margin-bottom: 20px;
+            display: none;
         }
 
-        .highlight {
-            font-family: 'Charm', cursive;
-            font-size: 2.2rem;
-            color: #ffb7c5;
-            display: block;
-            margin-bottom: 30px;
-            text-shadow: 0 0 15px rgba(255, 183, 197, 0.4);
+        h1 { font-size: 1.3rem; font-weight: 500; text-align: center; margin-bottom: 6px; }
+        p.subtitle { font-size: 0.85rem; color: var(--text-sub); text-align: center; margin-bottom: 25px; font-weight: 300; }
+
+        .form-group { margin-bottom: 20px; }
+        label { font-size: 0.88rem; font-weight: 400; display: block; margin-bottom: 8px; color: #555; }
+
+        .slider-container { text-align: center; }
+        .percent-display { font-size: 2rem; font-weight: 500; color: var(--accent); margin-bottom: 5px; }
+        input[type=range] {
+            -webkit-appearance: none; width: 100%; height: 6px;
+            background: #f0e6e7; border-radius: 5px; outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 20px; height: 20px;
+            border-radius: 50%; background: var(--accent); cursor: pointer;
         }
 
-        /* --- Live Counter --- */
-        .counter-container {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px 20px;
-            margin: 50px auto;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        textarea {
+            width: 100%; padding: 12px; border: 1px solid var(--border);
+            border-radius: 12px; background: #fafafa; font-family: 'Prompt', sans-serif;
+            font-size: 0.88rem; outline: none; resize: none;
         }
+        textarea:focus { border-color: var(--accent); background: #fff; }
+        .char-count { font-size: 0.75rem; text-align: right; color: var(--text-sub); margin-top: 4px; }
 
-        .counter-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 20px;
+        button {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            background: var(--accent); color: white; font-family: 'Prompt', sans-serif;
+            font-size: 0.92rem; cursor: pointer; transition: 0.3s;
         }
+        button:hover { background: var(--accent-hover); }
+        button:disabled { background: #e2dadb; cursor: not-allowed; }
 
-        .time-box {
-            text-align: center;
+        /* Chat */
+        #chatSection { display: none; }
+        .chat-box {
+            height: 300px; border: 1px solid var(--border);
+            border-radius: 16px; padding: 15px; overflow-y: auto;
+            background: rgba(255,255,255,0.8); display: flex; flex-direction: column; gap: 10px;
+            margin-bottom: 12px;
         }
+        .message {
+            max-width: 80%; padding: 10px 14px; border-radius: 14px;
+            font-size: 0.88rem; line-height: 1.4; word-break: break-word;
+        }
+        .message.admin { align-self: flex-start; background: #fff; border: 1px solid var(--border); color: #333; }
+        .message.fan { align-self: flex-end; background: var(--accent); color: #fff; }
 
-        .time-val {
-            font-size: 2.5rem;
-            font-weight: 400;
-            color: #ffffff;
-            font-family: 'Charm', cursive;
+        .chat-input-group { display: flex; gap: 8px; }
+        .chat-input-group input {
+            flex: 1; padding: 12px; border: 1px solid var(--border);
+            border-radius: 12px; outline: none; font-family: 'Prompt', sans-serif;
         }
-
-        .time-label {
-            font-size: 0.8rem;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
-
-        /* --- Particles/Stars Background --- */
-        #particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background-color: rgba(255, 200, 210, 0.8);
-            box-shadow: 0 0 10px rgba(255, 200, 210, 0.5);
-            animation: float-up linear infinite;
-        }
-
-        @keyframes float-up {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            20% { opacity: 1; transform: translateY(80vh) scale(1); }
-            80% { opacity: 1; transform: translateY(20vh) scale(1); }
-            100% { transform: translateY(-10vh) scale(0); opacity: 0; }
-        }
-
-        @media (max-width: 600px) {
-            .text-line { font-size: 1rem; line-height: 2; }
-            .highlight { font-size: 1.8rem; }
-            .time-val { font-size: 1.8rem; }
-            .counter-grid { gap: 15px; }
-            .story-section { margin-bottom: 20vh; }
-        }
+        .chat-input-group button { width: auto; padding: 0 18px; }
     </style>
 </head>
 <body>
 
-    <!-- Intro Screen -->
-    <div id="intro-screen" onclick="startJourney()">
-        <div class="intro-text">มีจดหมายถึงคุณ...</div>
-        <div class="intro-hint">แตะที่หน้าจอเพื่อเปิดอ่าน</div>
-    </div>
+    <!-- เครื่องเล่นเพลง BGM -->
+    <audio id="bgm" loop></audio>
 
-    <!-- Background Stars -->
-    <div id="particles"></div>
+    <div class="container">
+        <img id="coverImg" class="hero-img" alt="Cover Image">
 
-    <!-- Main Content -->
-    <div id="main-content">
-        
-        <div class="story-section">
-            <span class="highlight">ถึง... คนเก่งของฉัน</span>
-            <p class="text-line">ถ้าให้ย้อนกลับไปคิดดู ก็ยังรู้สึกแปลกใจอยู่เสมอ<br>ว่าคนสองคนที่มาจากคนละที่<br>โคจรมาเจอกันและผูกพันกันขนาดนี้ได้ยังไง</p>
-            <p class="text-line">แต่ที่รู้แน่ๆ คือ... ตั้งแต่วันที่มีเธอเข้ามา<br>โลกที่เคยดูธรรมดามันก็เปลี่ยนไป</p>
-        </div>
+        <!-- Form หน้าแรก -->
+        <form id="loveForm">
+            <h1 id="mainTitle">แค่ อยาก รู้ ความ ใน ใจ ... 🤍</h1>
+            <p class="subtitle" id="subTitle">ตอบตามความรู้สึกจริงๆ ได้เลยนะ</p>
 
-        <div class="story-section">
-            <span class="highlight">ขอบคุณที่เป็นความสบายใจ</span>
-            <p class="text-line">ขอบคุณที่ไม่ว่าวันนั้นฉันจะเจอเรื่องแย่แค่ไหน<br>แค่หันไปเห็นเธอยิ้มให้ หรือแค่ได้กอด<br>ทุกอย่างมันก็เบาลงเสมอ</p>
-            <p class="text-line">ความรักของเธอไม่ได้ต้องพยายามทำตัวให้เพอร์เฟกต์<br>แต่มันคือความสม่ำเสมอ คือพื้นที่ปลอดภัย<br>ที่ฉันสามารถเป็นตัวเองได้อย่างเต็มที่ที่สุด</p>
-        </div>
+            <div class="form-group slider-container">
+                <label id="lblSlider">เธอรักเราแค่ไหน?</label>
+                <div class="percent-display"><span id="loveVal">100</span>%</div>
+                <input type="range" id="loveRange" min="0" max="100" value="100">
+            </div>
 
-        <div class="story-section">
-            <span class="highlight">เราเดินทางด้วยกันมา...</span>
-            <div class="counter-container">
-                <p class="text-line" style="margin-bottom: 0; font-size: 0.9rem; color:#aaa;">ตั้งแต่จับมือกันวันแรก จนถึงวินาทีนี้</p>
-                <div class="counter-grid">
-                    <div class="time-box"><div class="time-val" id="years">0</div><div class="time-label">ปี</div></div>
-                    <div class="time-box"><div class="time-val" id="months">0</div><div class="time-label">เดือน</div></div>
-                    <div class="time-box"><div class="time-val" id="days">0</div><div class="time-label">วัน</div></div>
-                    <div class="time-box"><div class="time-val" id="hours">0</div><div class="time-label">ชั่วโมง</div></div>
-                    <div class="time-box"><div class="time-val" id="minutes">0</div><div class="time-label">นาที</div></div>
-                    <div class="time-box"><div class="time-val" id="seconds">0</div><div class="time-label">วินาที</div></div>
-                </div>
+            <div class="form-group">
+                <label id="lblMsg">อยากบอกอะไรกับเรามั้ย? ✨</label>
+                <textarea id="loveMsg" rows="3" placeholder="พิมพ์บอกความในใจตรงนี้ได้เลยน้า..." required></textarea>
+                <div class="char-count" id="charCount">0 / 50 ตัวอักษร</div>
+            </div>
+
+            <button type="submit" id="submitBtn" disabled>ส่งความรู้สึกให้เธอ 💌</button>
+        </form>
+
+        <!-- หน้า Live Chat -->
+        <div id="chatSection">
+            <h1>Our Live Space 💬</h1>
+            <p class="subtitle">คุยกันตรงนี้ได้เลยนะ</p>
+
+            <div class="chat-box" id="chatBox"></div>
+
+            <div class="chat-input-group">
+                <input type="text" id="chatInput" placeholder="พิมพ์ข้อความ..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+                <button onclick="sendChatMessage()">ส่ง</button>
             </div>
         </div>
-
-        <div class="story-section" style="margin-bottom: 10vh;">
-            <span class="highlight">จับมือกันแบบนี้ไปนานๆ นะ</span>
-            <p class="text-line">อนาคตข้างหน้าอาจจะมีทั้งวันที่ง่ายและวันที่ยาก<br>แต่อยากให้รู้ไว้ว่า... ในทุกๆ ก้าวต่อจากนี้<br>จะมีฉันอยู่ข้างๆ เธอเสมอ</p>
-            <p class="text-line" style="margin-top: 40px; font-weight: 400; color: #ffb7c5;">รักเธอที่สุดเลยนะ ❤️</p>
-        </div>
-
     </div>
 
     <script>
-        // ==========================================
-        // 1. ตั้งคู่วันที่เริ่มคบกันตรงนี้ครับ
-        // รูปแบบ: 'YYYY-MM-DDTHH:mm:ss'
-        // ตัวอย่าง: '2023-02-14T00:00:00' (14 ก.พ. 2023 เวลาเที่ยงคืน)
-        // ==========================================
-        const startDate = new Date('2023-02-14T00:00:00');
+        const firebaseConfig = {
+            databaseURL: "https://YOUR-PROJECT-default-rtdb.firebaseio.com" // ใส่ Database URL ของคุณ
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const sessionId = "session_" + Date.now();
 
-        // ฟังก์ชันเปิดหน้าเว็บ
-        function startJourney() {
-            const intro = document.getElementById('intro-screen');
-            const main = document.getElementById('main-content');
-            
-            intro.style.opacity = '0';
-            setTimeout(() => {
-                intro.style.display = 'none';
-                main.style.display = 'block';
-                createParticles();
-                
-                // ใช้ Intersection Observer ทำให้ข้อความค่อยๆ โผล่ตอนเลื่อนจอ
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                        }
-                    });
-                }, { threshold: 0.15 });
+        // โหลดการตั้งค่าจากหน้า Admin แบบ Realtime
+        db.ref('settings').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if(!data) return;
 
-                document.querySelectorAll('.story-section').forEach(section => {
-                    observer.observe(section);
-                });
+            if(data.title) document.getElementById('mainTitle').innerText = data.title;
+            if(data.subtitle) document.getElementById('subTitle').innerText = data.subtitle;
+            if(data.qSlider) document.getElementById('lblSlider').innerText = data.qSlider;
+            if(data.qMsg) document.getElementById('lblMsg').innerText = data.qMsg;
 
-            }, 1000);
-        }
-
-        // ฟังก์ชันนับเวลาแบบละเอียด
-        function updateCounter() {
-            const now = new Date();
-            
-            let years = now.getFullYear() - startDate.getFullYear();
-            let months = now.getMonth() - startDate.getMonth();
-            let days = now.getDate() - startDate.getDate();
-            
-            let hours = now.getHours() - startDate.getHours();
-            let minutes = now.getMinutes() - startDate.getMinutes();
-            let seconds = now.getSeconds() - startDate.getSeconds();
-
-            if (seconds < 0) { seconds += 60; minutes--; }
-            if (minutes < 0) { minutes += 60; hours--; }
-            if (hours < 0) { hours += 24; days--; }
-            if (days < 0) {
-                // หาว่าเดือนที่แล้วมีกี่วัน
-                const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-                days += lastMonth.getDate();
-                months--;
+            // รูปภาพ
+            if(data.imgUrl) {
+                const img = document.getElementById('coverImg');
+                img.src = data.imgUrl;
+                img.style.display = 'block';
             }
-            if (months < 0) { months += 12; years--; }
-
-            document.getElementById('years').innerText = years;
-            document.getElementById('months').innerText = months;
-            document.getElementById('days').innerText = days;
-            document.getElementById('hours').innerText = hours;
-            document.getElementById('minutes').innerText = minutes;
-            document.getElementById('seconds').innerText = seconds;
-        }
-
-        setInterval(updateCounter, 1000);
-        updateCounter();
-
-        // ฟังก์ชันสร้างหิ่งห้อย/ดวงดาวลอยเป็นฉากหลัง
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particleCount = 40; // จำนวนดวงดาว
-
-            for (let i = 0; i < particleCount; i++) {
-                let particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // สุ่มขนาด ตำแหน่ง และความเร็ว
-                let size = Math.random() * 4 + 1;
-                let left = Math.random() * 100;
-                let duration = Math.random() * 10 + 10;
-                let delay = Math.random() * 10;
-
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = left + 'vw';
-                particle.style.animationDuration = duration + 's';
-                particle.style.animationDelay = delay + 's';
-
-                container.appendChild(particle);
+            if(data.bgUrl) {
+                document.body.style.backgroundImage = `url('${data.bgUrl}')`;
             }
+
+            // เพลง
+            if(data.musicUrl) {
+                const audio = document.getElementById('bgm');
+                audio.src = data.musicUrl;
+                audio.play().catch(() => {}); // เล่นอัตโนมัติเมื่อผู้ใช้คลิกหน้าจอ
+            }
+        });
+
+        // Slider & Validation
+        const range = document.getElementById('loveRange');
+        range.addEventListener('input', (e) => document.getElementById('loveVal').textContent = e.target.value);
+
+        const msgInput = document.getElementById('loveMsg');
+        const submitBtn = document.getElementById('submitBtn');
+        msgInput.addEventListener('input', () => {
+            const len = msgInput.value.length;
+            document.getElementById('charCount').textContent = `${len} / 50 ตัวอักษร`;
+            submitBtn.disabled = len < 50;
+        });
+
+        // กดส่งฟอร์มเข้าสู่ Live Chat
+        document.getElementById('loveForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // บันทึกคำตอบแรก
+            db.ref(`chats/${sessionId}`).push({
+                sender: 'fan',
+                text: `[ตอบฟอร์ม: รัก ${range.value}%] ${msgInput.value}`,
+                time: Date.now()
+            });
+
+            // แจ้งเตือนแอดมินว่ามี Session ใหม่
+            db.ref(`active_sessions/${sessionId}`).set({
+                lastMsg: msgInput.value,
+                time: Date.now()
+            });
+
+            document.getElementById('loveForm').style.display = 'none';
+            document.getElementById('chatSection').style.display = 'block';
+
+            // ดึงข้อความแชต Realtime
+            db.ref(`chats/${sessionId}`).on('child_added', (snapshot) => {
+                const data = snapshot.val();
+                const msgDiv = document.createElement('div');
+                msgDiv.classList.add('message', data.sender);
+                msgDiv.innerText = data.text;
+                const box = document.getElementById('chatBox');
+                box.appendChild(msgDiv);
+                box.scrollTop = box.scrollHeight;
+            });
+        });
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            db.ref(`chats/${sessionId}`).push({
+                sender: 'fan',
+                text: text,
+                time: Date.now()
+            });
+            input.value = '';
         }
     </script>
 </body>
