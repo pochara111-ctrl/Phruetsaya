@@ -1,381 +1,1339 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Little Space For Us 🤍</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Our Special Anniversary ✨</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;700&family=Mitr:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  
+  <!-- YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
 
-    <style>
-        :root {
-            --bg-color: #faf9f6;
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --text-main: #333333;
-            --text-sub: #888888;
-            --accent: #e0a9af;
-            --accent-hover: #d4959c;
-            --border: #f0ece9;
-        }
+  <style>
+    :root {
+      --bg-deep: #1a0812;
+      --primary-rose: #ea9ab2;
+      --gold-accent: #f3cf7a;
+      --gold-dark: #c59b3f;
+      --glass-bg: rgba(255, 240, 245, 0.12);
+      --glass-border: rgba(255, 215, 225, 0.25);
+      --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(234, 154, 178, 0.2);
+      --text-light: #fff5f8;
+      --text-muted: #e6c8d2;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: var(--bg-color);
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            transition: background 0.5s ease;
-            position: relative;
-            overflow-x: hidden;
-        }
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-light);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
 
-        /* ปุ่มควบคุมเพลงลอยมุมขวาบน */
-        .music-btn {
-            position: fixed; top: 20px; right: 20px; z-index: 100;
-            background: white; border: 1px solid var(--border);
-            width: 44px; height: 44px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            font-size: 1.2rem; transition: 0.3s;
-        }
-        .music-btn.playing { animation: spin 4s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-        .container {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 30px 22px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            width: 100%; max-width: 450px;
-            border: 1px solid var(--border);
-            position: relative; z-index: 10;
-        }
+    #yt-player-container {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
 
-        /* นาฬิกานับวันครบรอบ */
-        .counter-box {
-            text-align: center; background: #fff5f6;
-            padding: 12px 15px; border-radius: 16px;
-            margin-bottom: 20px; border: 1px solid #fce4e6;
-        }
-        .counter-box .title { font-size: 0.78rem; color: #b57c83; font-weight: 500; }
-        .counter-box .days { font-size: 1.4rem; font-weight: 600; color: var(--accent); }
+    .audio-widget {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(30, 10, 20, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 8px 16px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
 
-        .hero-img {
-            width: 100%; height: 180px; object-fit: cover;
-            border-radius: 16px; margin-bottom: 20px; display: none;
-        }
+    .music-btn {
+      background: none;
+      border: none;
+      color: var(--gold-accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      outline: none;
+    }
 
-        h1 { font-size: 1.25rem; font-weight: 500; text-align: center; margin-bottom: 6px; }
-        p.subtitle { font-size: 0.85rem; color: var(--text-sub); text-align: center; margin-bottom: 20px; }
+    .music-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        .form-group { margin-bottom: 18px; }
-        label { font-size: 0.88rem; display: block; margin-bottom: 8px; color: #555; }
+    .app-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 460px;
+      min-height: 90vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .slider-container { text-align: center; }
-        .percent-display { font-size: 2rem; font-weight: 600; color: var(--accent); margin-bottom: 5px; }
-        input[type=range] {
-            -webkit-appearance: none; width: 100%; height: 6px;
-            background: #f0e6e7; border-radius: 5px; outline: none;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 22px; height: 22px;
-            border-radius: 50%; background: var(--accent); cursor: pointer;
-            box-shadow: 0 2px 6px rgba(224, 169, 175, 0.5);
-        }
+    .glass-card {
+      width: 100%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 28px 22px;
+      box-shadow: var(--card-shadow);
+      text-align: center;
+      position: relative;
+      animation: fadeIn 0.6s ease-out;
+    }
 
-        textarea {
-            width: 100%; padding: 12px; border: 1px solid var(--border);
-            border-radius: 12px; background: #fafafa; font-family: 'Prompt', sans-serif;
-            font-size: 0.88rem; outline: none; resize: none;
-        }
-        textarea:focus { border-color: var(--accent); background: #fff; }
-        .char-count { font-size: 0.75rem; text-align: right; color: var(--text-sub); margin-top: 4px; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-        /* ปุ่มปฏิกิริยาด่วน */
-        .quick-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-        .chip {
-            font-size: 0.78rem; background: #fff; border: 1px solid var(--border);
-            padding: 5px 10px; border-radius: 20px; cursor: pointer; transition: 0.2s;
-        }
-        .chip:hover { background: var(--accent); color: white; border-color: var(--accent); }
+    .step-view {
+      display: none;
+      width: 100%;
+    }
 
-        button.btn-primary {
-            width: 100%; padding: 14px; border: none; border-radius: 12px;
-            background: var(--accent); color: white; font-family: 'Prompt', sans-serif;
-            font-size: 0.92rem; font-weight: 500; cursor: pointer; transition: 0.3s;
-        }
-        button.btn-primary:hover { background: var(--accent-hover); }
-        button.btn-primary:disabled { background: #e2dadb; cursor: not-allowed; }
+    .step-view.active {
+      display: block;
+    }
 
-        /* Chat Section */
-        #chatSection { display: none; }
-        .chat-box {
-            height: 300px; border: 1px solid var(--border);
-            border-radius: 16px; padding: 15px; overflow-y: auto;
-            background: rgba(255,255,255,0.85); display: flex; flex-direction: column; gap: 10px;
-            margin-bottom: 12px;
-        }
-        .message {
-            max-width: 82%; padding: 10px 14px; border-radius: 14px;
-            font-size: 0.88rem; line-height: 1.4; word-break: break-word;
-        }
-        .message.admin { align-self: flex-start; background: #fff; border: 1px solid var(--border); color: #333; }
-        .message.fan { align-self: flex-end; background: var(--accent); color: #fff; }
+    .title-romantic {
+      font-family: 'Alex Brush', cursive;
+      font-size: 2.8rem;
+      color: var(--gold-accent);
+      text-shadow: 0 0 10px rgba(243, 207, 122, 0.4);
+      margin-bottom: 5px;
+    }
 
-        .chat-input-group { display: flex; gap: 8px; }
-        .chat-input-group input {
-            flex: 1; padding: 12px; border: 1px solid var(--border);
-            border-radius: 12px; outline: none; font-family: 'Prompt', sans-serif;
-        }
-        .chat-input-group button { width: auto; padding: 0 18px; }
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
 
-        /* เอฟเฟกต์หัวใจลอย */
-        .heart-particle {
-            position: fixed; bottom: -20px; font-size: 24px;
-            animation: floatUp 3s linear forwards; z-index: 999; pointer-events: none;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
-        }
-    </style>
+    .lock-dial-container {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 25px 0;
+    }
+
+    .lock-input {
+      width: 45px;
+      height: 55px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid var(--primary-rose);
+      border-radius: 12px;
+      color: var(--gold-accent);
+      font-size: 1.5rem;
+      font-family: 'Cinzel', serif;
+      text-align: center;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .lock-input:focus {
+      border-color: var(--gold-accent);
+      box-shadow: 0 0 15px rgba(243, 207, 122, 0.5);
+    }
+
+    .envelope-wrapper {
+      perspective: 1000px;
+      margin: 20px 0;
+      cursor: pointer;
+    }
+
+    .envelope {
+      width: 100%;
+      height: 220px;
+      background: #3b1424;
+      border-radius: 15px;
+      position: relative;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: transform 0.5s ease;
+    }
+
+    .envelope:hover {
+      transform: scale(1.02);
+    }
+
+    .wax-seal {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #c59b3f, #f3cf7a);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #1a0812;
+      font-size: 1.8rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      z-index: 5;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .timer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .timer-box {
+      background: rgba(0,0,0,0.3);
+      padding: 10px 5px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .timer-val {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      color: var(--gold-accent);
+      font-weight: bold;
+    }
+
+    .timer-lbl {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .media-box {
+      width: 100%;
+      max-height: 220px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 15px 0;
+      border: 1px solid var(--glass-border);
+    }
+
+    .media-box img, .media-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+      position: relative;
+    }
+
+    .btn-romantic {
+      background: linear-gradient(135deg, var(--primary-rose), #c86b85);
+      color: #fff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(234, 154, 178, 0.4);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      outline: none;
+    }
+
+    .btn-romantic:active {
+      transform: scale(0.95);
+    }
+
+    .btn-wrong {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .romantic-input {
+      width: 100%;
+      padding: 14px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 15px;
+      color: #fff;
+      font-family: 'Prompt', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    .romantic-input:focus {
+      border-color: var(--gold-accent);
+    }
+
+    .slider-container {
+      margin: 25px 0;
+    }
+
+    .romantic-slider {
+      width: 100%;
+      accent-color: var(--primary-rose);
+      height: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .scratch-wrapper {
+      position: relative;
+      width: 280px;
+      height: 180px;
+      margin: 15px auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      /* Prevent mobile pull-to-refresh while scratching */
+      touch-action: none; 
+    }
+
+    .scratch-reveal {
+      width: 100%;
+      height: 100%;
+      background: #2a0e1a;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
+
+    #scratch-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .coupons-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 15px 0;
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .coupon-card {
+      background: rgba(0,0,0,0.3);
+      border: 1px dashed var(--gold-accent);
+      padding: 12px 16px;
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+    }
+
+    .coupon-title {
+      font-weight: 500;
+      color: var(--gold-accent);
+      font-size: 0.9rem;
+    }
+
+    .coupon-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .btn-use-coupon {
+      background: var(--gold-accent);
+      color: #1a0812;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-use-coupon.used {
+      background: rgba(255,255,255,0.2);
+      color: var(--text-muted);
+      cursor: default;
+    }
+
+    .admin-gear {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: rgba(20, 5, 12, 0.7);
+      border: 1px solid var(--glass-border);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(15px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .admin-content {
+      width: 100%;
+      max-width: 650px;
+      max-height: 85vh;
+      background: #1a0a14;
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 25px;
+      overflow-y: auto;
+      color: var(--text-light);
+      text-align: left;
+    }
+
+    .admin-nav {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .admin-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .admin-tab.active {
+      background: var(--primary-rose);
+      color: #fff;
+    }
+
+    .admin-form-group {
+      margin-bottom: 15px;
+    }
+
+    .admin-label {
+      font-size: 0.85rem;
+      color: var(--gold-accent);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .admin-input, .admin-textarea {
+      width: 100%;
+      padding: 10px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.85rem;
+    }
+
+    .monitor-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      background: rgba(0,255,100,0.1);
+      color: #00ff88;
+      border: 1px solid rgba(0,255,100,0.3);
+    }
+
+    .remote-toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, var(--gold-accent), var(--gold-dark));
+      color: #1a0812;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 3000;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    .remote-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- ปุ่มควบคุมเพลง BGM -->
-    <button class="music-btn" id="musicBtn" title="เปิด/ปิด เพลง">🎵</button>
-    <audio id="bgm" loop></audio>
+  <canvas id="bg-canvas"></canvas>
 
-    <div class="container">
-        <!-- นับวันครบรอบ -->
-        <div class="counter-box">
-            <div class="title">เราเดินทางด้วยกันมาแล้ว 🤍</div>
-            <div class="days" id="dayCounter">0 วัน 0 ชั่วโมง</div>
-        </div>
+  <div id="yt-player-container"><div id="yt-player"></div></div>
 
-        <img id="coverImg" class="hero-img" alt="Cover Image">
+  <div class="audio-widget">
+    <button class="music-btn" id="music-toggle-btn" onclick="toggleAudio()">
+      <i class="fa-solid fa-compact-disc"></i>
+    </button>
+    <div class="music-title" id="music-title-text">Playing Love Theme</div>
+  </div>
 
-        <!-- Form หน้าแรก -->
-        <form id="loveForm">
-            <h1 id="mainTitle">แค่ อยาก รู้ ความ ใน ใจ ... 🤍</h1>
-            <p class="subtitle" id="subTitle">ตอบตามความรู้สึกจริงๆ ได้เลยนะ</p>
+  <div class="remote-toast" id="remote-toast">❤️ Surprise Message!</div>
 
-            <div class="form-group slider-container">
-                <label id="lblSlider">เธอรักเราแค่ไหน?</label>
-                <div class="percent-display"><span id="loveVal">100</span>%</div>
-                <input type="range" id="loveRange" min="0" max="100" value="100">
-            </div>
+  <div class="app-container">
 
-            <div class="form-group">
-                <label id="lblMsg">อยากบอกอะไรกับเรามั้ย? ✨</label>
-                <textarea id="loveMsg" rows="3" placeholder="พิมพ์บอกความในใจตรงนี้ได้เลยน้า..." required></textarea>
-                <div class="char-count" id="charCount">0 / 50 ตัวอักษร</div>
+    <!-- STEP 0 -->
+    <div class="step-view active" id="step-0">
+      <div class="glass-card">
+        <i class="fa-solid fa-lock-keyhole" style="font-size: 2.5rem; color: var(--gold-accent); margin-bottom: 15px;"></i>
+        <h1 class="title-romantic">Love Passcode</h1>
+        <p class="subtitle" id="lock-hint">ใส่รหัสผ่านวันครบรอบของเราเพื่อปลดล็อก ❤️</p>
+        
+        <div class="lock-dial-container" id="lock-inputs"></div>
 
-                <!-- ปุ่มตัวเลือกความรู้สึกด่วน -->
-                <div class="quick-chips">
-                    <span class="chip" onclick="addText('คิดถึงนะ ❤️')">คิดถึงนะ ❤️</span>
-                    <span class="chip" onclick="addText('ขอกอดหน่อย 🫂')">ขอกอดหน่อย 🫂</span>
-                    <span class="chip" onclick="addText('วันนี้เหนื่อยจัง 🥺')">วันนี้เหนื่อยจัง 🥺</span>
-                    <span class="chip" onclick="addText('รักที่สุด ✨')">รักที่สุด ✨</span>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-primary" id="submitBtn" disabled>ส่งความรู้สึกให้เธอ 💌</button>
-        </form>
-
-        <!-- หน้า Live Chat -->
-        <div id="chatSection">
-            <h1>Our Live Space 💬</h1>
-            <p class="subtitle">คุยกันตรงนี้ได้เลยนะ</p>
-
-            <div class="chat-box" id="chatBox"></div>
-
-            <div class="quick-chips" style="margin-bottom: 10px;">
-                <span class="chip" onclick="sendQuickChat('คิดถึงจัง ❤️')">คิดถึงจัง ❤️</span>
-                <span class="chip" onclick="sendQuickChat('ทำอะไรอยู่เหรอ? 🤔')">ทำอะไรอยู่เหรอ? 🤔</span>
-                <span class="chip" onclick="sendQuickChat('ส่งความรักให้อยู่นะ ✨')">ส่งความรักให้อยู่นะ ✨</span>
-            </div>
-
-            <div class="chat-input-group">
-                <input type="text" id="chatInput" placeholder="พิมพ์ข้อความ...">
-                <button class="btn-primary" id="sendBtn">ส่ง</button>
-            </div>
-        </div>
+        <button class="btn-romantic" onclick="unlockLoveLock()" style="width: 100%;">
+          <i class="fa-solid fa-key"></i> ปลดล็อกหัวใจ
+        </button>
+      </div>
     </div>
 
-    <!-- Firebase Script (Modular SDK v12) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, set, onChildAdded } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+    <!-- STEP 1 -->
+    <div class="step-view" id="step-1">
+      <div class="glass-card">
+        <h1 class="title-romantic">Happy Anniversary</h1>
+        <p class="subtitle">มีจดหมายฉบับพิเศษส่งถึงเธอ... กดเปิดสิคะ</p>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
-            authDomain: "my-anniversary-app.firebaseapp.com",
-            databaseURL: "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "my-anniversary-app",
-            storageBucket: "my-anniversary-app.firebasestorage.app",
-            messagingSenderId: "487064640701",
-            appId: "1:487064640701:web:0206b2da8138b7594f2bd4",
-            measurementId: "G-KVLWESYNZQ"
-        };
+        <div class="envelope-wrapper" onclick="openEnvelope()">
+          <div class="envelope" id="envelope-elem">
+            <div class="wax-seal">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+          </div>
+        </div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const sessionId = "session_" + Date.now();
-        const audio = document.getElementById('bgm');
-        const musicBtn = document.getElementById('musicBtn');
-        let isPlaying = false;
+        <div class="timer-grid">
+          <div class="timer-box"><div class="timer-val" id="cnt-days">0</div><div class="timer-lbl">DAYS</div></div>
+          <div class="timer-box"><div class="timer-val" id="cnt-hours">0</div><div class="timer-lbl">HOURS</div></div>
+          <div class="timer-box"><div class="timer-val" id="cnt-mins">0</div><div class="timer-lbl">MINS</div></div>
+          <div class="timer-box"><div class="timer-val" id="cnt-secs">0</div><div class="timer-lbl">SECS</div></div>
+        </div>
 
-        // 1. จัดการระบบเพลง BGM
-        musicBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audio.pause();
-                musicBtn.classList.remove('playing');
-                musicBtn.innerText = '🔇';
-            } else {
-                audio.play().then(() => {
-                    musicBtn.classList.add('playing');
-                    musicBtn.innerText = '🎵';
-                }).catch(() => {});
-            }
-            isPlaying = !isPlaying;
-        });
+        <button class="btn-romantic" id="start-btn" onclick="nextStep()" style="width: 100%; display: none;">
+          เปิดอ่านจดหมาย ✨
+        </button>
+      </div>
+    </div>
 
-        // เปิดเพลงอัตโนมัติเมื่อผู้ใช้คลิกส่วนไหนก็ได้ในหน้าเว็บครั้งแรก
-        document.body.addEventListener('click', () => {
-            if(!isPlaying && audio.src) {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    musicBtn.classList.add('playing');
-                    musicBtn.innerText = '🎵';
-                }).catch(() => {});
-            }
-        }, { once: true });
+    <!-- STEP 2 -->
+    <div class="step-view" id="step-question">
+      <div class="glass-card">
+        <div id="q-counter" style="font-size: 0.8rem; color: var(--gold-accent); margin-bottom: 8px;">QUESTION 1</div>
+        <h2 id="q-title" style="font-size: 1.3rem; margin-bottom: 12px;">-</h2>
+        
+        <div class="media-box" id="q-media" style="display: none;"></div>
 
-        // 2. ดึงการตั้งค่าแบบ Realtime
-        onValue(ref(db, 'settings'), (snapshot) => {
-            const data = snapshot.val();
-            if(!data) return;
+        <div id="q-body"></div>
+      </div>
+    </div>
 
-            if(data.title) document.getElementById('mainTitle').innerText = data.title;
-            if(data.subtitle) document.getElementById('subTitle').innerText = data.subtitle;
-            if(data.qSlider) document.getElementById('lblSlider').innerText = data.qSlider;
-            if(data.qMsg) document.getElementById('lblMsg').innerText = data.qMsg;
+    <!-- STEP 3 -->
+    <div class="step-view" id="step-scratch">
+      <div class="glass-card">
+        <h1 class="title-romantic">Secret Scratch Card</h1>
+        <p class="subtitle">ใช้นิ้วหรือเมาส์ขูดการ์ดเพื่อดูความลับที่ซ่อนอยู่ ❤️</p>
 
-            if(data.startDate) updateDayCounter(data.startDate);
+        <div class="scratch-wrapper">
+          <div class="scratch-reveal">
+            <i class="fa-solid fa-crown" style="font-size: 2rem; color: var(--gold-accent); margin-bottom: 10px;"></i>
+            <h3 style="font-size: 1.1rem; color: #fff;" id="scratch-text">เธอคือของขวัญที่ดีที่สุดในชีวิตเค้าเลยนะ!</h3>
+          </div>
+          <canvas id="scratch-canvas" width="280" height="180"></canvas>
+        </div>
 
-            if(data.imgUrl) {
-                const img = document.getElementById('coverImg');
-                img.src = data.imgUrl;
-                img.style.display = 'block';
-            }
-            if(data.bgUrl) {
-                document.body.style.backgroundImage = `url('${data.bgUrl}')`;
-            }
-            if(data.musicUrl && audio.src !== data.musicUrl) {
-                audio.src = data.musicUrl;
-            }
-        });
+        <button class="btn-romantic" onclick="nextStep()" style="width: 100%; margin-top: 15px;">
+          รับของขวัญถัดไป 🎁
+        </button>
+      </div>
+    </div>
 
-        // คำนวณวันครบรอบ
-        function updateDayCounter(startDateStr) {
-            const start = new Date(startDateStr);
-            const now = new Date();
-            const diffTime = Math.abs(now - start);
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            const diffHours = Math.floor((diffTime / (1000 * 60 * 60)) % 24);
-            document.getElementById('dayCounter').innerText = `${diffDays} วัน ${diffHours} ชั่วโมง`;
+    <!-- STEP 4 -->
+    <div class="step-view" id="step-coupons">
+      <div class="glass-card">
+        <h1 class="title-romantic">Love Vouchers</h1>
+        <p class="subtitle">คูปองสิทธิพิเศษสำหรับเธอคนเดียวเท่านั้น (กดใช้ได้จริงนะ!)</p>
+
+        <div class="coupons-grid" id="coupons-container"></div>
+
+        <button class="btn-romantic" onclick="nextStep()" style="width: 100%; margin-top: 15px;">
+          ไปหน้าสุดท้าย ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-view" id="step-final">
+      <div class="glass-card">
+        <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 2.5rem; color: var(--gold-accent); margin-bottom: 10px;"></i>
+        <h1 class="title-romantic">Forever & Always</h1>
+        <p class="subtitle" id="final-message">ขอบคุณสำหรับความรักและความหวังดีที่มีให้กันเสมอมานะรักคุณที่สุดในโลกเลย ❤️</p>
+
+        <div class="admin-form-group" style="margin-top: 20px;">
+          <input type="text" id="wish-input" class="romantic-input" placeholder="พิมพ์คำอธิษฐานของเราลงในโคมลอย..." style="text-align: center;">
+          <button class="btn-romantic" onclick="releaseLantern()" style="width: 100%;">
+            <i class="fa-solid fa-paper-plane"></i> ปล่อยโคมลอย & จุดพลุฉลอง 🎉
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="admin-gear" onclick="openAdminModal()">
+    <i class="fa-solid fa-gear"></i>
+  </div>
+
+  <!-- ADMIN CONTROL PANEL MODAL -->
+  <div class="admin-modal" id="admin-modal">
+    <div class="admin-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="color: var(--gold-accent);"><i class="fa-solid fa-user-shield"></i> Admin Realtime Control</h3>
+        <i class="fa-solid fa-xmark" onclick="closeAdminModal()" style="cursor: pointer; font-size: 1.3rem;"></i>
+      </div>
+
+      <div class="admin-nav">
+        <!-- ส่ง event เข้าไปในฟังก์ชันเพื่อแก้บัตการสลับแท็บ -->
+        <button class="admin-tab active" onclick="switchAdminTab(event, 'monitor')">Live Monitor</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'remote')">Remote Ctrl</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'content')">คำถาม & สื่อ</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'firebase')">Firebase Config</button>
+      </div>
+
+      <div id="atab-monitor">
+        <div style="margin-bottom: 15px;">
+          <span class="monitor-badge" id="live-online-status"><i class="fa-solid fa-circle"></i> Tracking Disabled</span>
+        </div>
+        <p class="admin-label">หน้าปัจจุบันที่แฟนกำลังดูอยู่:</p>
+        <div id="live-current-step" style="font-size: 1.1rem; color: #fff; font-weight: bold; margin-bottom: 15px;">-</div>
+
+        <p class="admin-label">คำตอบล่าสุด / ข้อความที่แฟนพิมพ์ตอบ:</p>
+        <div id="live-answers-box" style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 12px; font-size: 0.85rem; max-height: 150px; overflow-y: auto;">
+          ไม่มีข้อมูลตอบกลับในขณะนี้
+        </div>
+      </div>
+
+      <div id="atab-remote" style="display: none;">
+        <p class="admin-label">สั่งการแบบ Realtime ไปยังหน้าจอของแฟน:</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+          <button class="btn-romantic" onclick="sendRemoteTrigger('fireworks')" style="font-size: 0.8rem;">💥 จุดพลุฉลอง</button>
+          <button class="btn-romantic" onclick="sendRemoteTrigger('hearts')" style="font-size: 0.8rem;">❤️ พายุหัวใจ</button>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">ส่งข้อความป๊อปอัปเด้งด่วนสดๆ:</label>
+          <input type="text" id="remote-msg-input" class="admin-input" placeholder="ข้อความจะเด้งบนจอทันที...">
+          <button class="btn-romantic" onclick="sendRemoteMessage()" style="width: 100%; margin-top: 8px; font-size: 0.85rem;">ส่งข้อความด่วน</button>
+        </div>
+      </div>
+
+      <div id="atab-content" style="display: none;">
+        <div class="admin-form-group">
+          <label class="admin-label">รหัสผ่าน Love Lock (ตัวเลข 4 หลัก):</label>
+          <input type="text" id="cfg-passcode" class="admin-input" value="1402">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">วันเริ่มคบกัน (YYYY-MM-DD):</label>
+          <input type="text" id="cfg-startdate" class="admin-input" value="2022-02-14">
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">YouTube Music ID / Link (เพลงประกอบ):</label>
+          <input type="text" id="cfg-ytmusic" class="admin-input" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+        </div>
+        <!-- [New System] Editor จัดการชุดคำถามแบบ JSON เพื่อให้แก้ไขได้สะดวกจากหน้า Admin -->
+        <div class="admin-form-group">
+          <label class="admin-label">ตั้งค่าชุดคำถาม (JSON Data):</label>
+          <textarea id="cfg-questions" class="admin-textarea" rows="6" style="font-family: monospace;"></textarea>
+        </div>
+        <button class="btn-romantic" onclick="saveAdminSettings()" style="width: 100%; font-size: 0.85rem;">บันทึกการเปลี่ยนแปลงทั้งหมด</button>
+      </div>
+
+      <div id="atab-firebase" style="display: none;">
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+          นำค่า Firebase Config จาก console.firebase.google.com มาวางเพื่อเปิดใช้งานระบบ Cloud Realtime
+        </p>
+        <div class="admin-form-group"><label class="admin-label">API Key:</label><input type="text" id="fb-apiKey" class="admin-input"></div>
+        <div class="admin-form-group"><label class="admin-label">Database URL:</label><input type="text" id="fb-databaseURL" class="admin-input"></div>
+        <div class="admin-form-group"><label class="admin-label">Project ID:</label><input type="text" id="fb-projectId" class="admin-input"></div>
+        <button class="btn-romantic" onclick="saveFirebaseConfig()" style="width: 100%; font-size: 0.85rem;">เชื่อมต่อ Firebase Cloud</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let appConfig = {
+      passcode: "1402",
+      startDate: "2022-02-14T00:00:00",
+      youtubeId: "kJQP7kiw5Fk", 
+      questions: [
+        {
+          type: "choice",
+          title: "ข้อใดคือสถานที่ที่เราเจอกันครั้งแรก?",
+          correct: "คาเฟ่แมวสุดน่ารัก 🐱",
+          wrong: "ร้านหมูกระทะหน้ามหาลัย 🥓",
+          media: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80"
+        },
+        {
+          type: "choice",
+          title: "ใครเป็นคนเอ่ยปากจีบก่อนน้า?",
+          correct: "เธอแน่นอน ยอมรับมาซะดีๆ! 😜",
+          wrong: "เค้าเองมั้ง... หางานให้ตัวเองแล้ว",
+          media: ""
+        },
+        {
+          type: "slider",
+          title: "เธอรักเค้ามากขนาดไหนลองเลื่อนสิ?",
+          media: ""
+        },
+        {
+          type: "text",
+          title: "อยากบอกอะไรเค้าเนื่องในวันครบรอบปีนี้ไหมคะ?",
+          placeholder: "พิมพ์ความในใจตรงนี้ได้เลยน้า...",
+          media: ""
         }
+      ],
+      teases: [
+        "ไม่ใช่ข้อนี้สักหน่อย เลือกใหม่เร็ว!",
+        "แน่ะ ยังจะกดข้อนี้อีก งอนแล้วนะ!",
+        "กดผิดบ่อยขนาดนี้ อยากโดนหยิกใช่ไหมคะ!",
+        "โกรธแล้วนะ! 😡💢 จะจางหายไปละนะ!"
+      ],
+      coupons: [
+        { id: "c1", title: "คูปองพาไปกินชาบู/ปิ้งย่าง 1 มื้อ 🥩", desc: "ใช้ได้โดยไม่มีเงื่อนไขใดๆ ทั้งสิ้น" },
+        { id: "c2", title: "คูปองห้ามงอน 1 วันเต็ม 😇", desc: "เมื่อกดใช้ เค้ายอมให้เธองอนชนะทุกเรื่อง" },
+        { id: "c3", title: "คูปองนวดหลัง/นวดไหล่ 30 นาที 💆‍♀️", desc: "พร้อมบริการนวดระดับ VIP" }
+      ]
+    };
 
-        // 3. UI Handlers
-        const range = document.getElementById('loveRange');
-        range.addEventListener('input', (e) => document.getElementById('loveVal').textContent = e.target.value);
+    let fbApp = null;
+    let fbDb = null;
+    let currentStepIndex = 0;
+    let currentQuestionIdx = 0;
+    let wrongClickCount = 0;
+    let ytPlayer = null;
+    let isYtReady = false; 
+    let isAudioPlaying = false;
 
-        const msgInput = document.getElementById('loveMsg');
-        const submitBtn = document.getElementById('submitBtn');
-        msgInput.addEventListener('input', () => {
-            const len = msgInput.value.length;
-            document.getElementById('charCount').textContent = `${len} / 50 ตัวอักษร`;
-            submitBtn.disabled = len < 50;
-        });
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedConfig();
+      initBackgroundCanvas();
+      initLoveLockInputs();
+      initLoveTimer();
+      initScratchCard();
+      renderCoupons();
+      tryInitFirebase();
+    });
 
-        window.addText = (text) => {
-            msgInput.value = text;
-            msgInput.dispatchEvent(new Event('input'));
-        };
+    function loadSavedConfig() {
+      const localCfg = localStorage.getItem('anniversary_config');
+      if (localCfg) {
+        try {
+          appConfig = { ...appConfig, ...JSON.parse(localCfg) };
+        } catch(e) {}
+      }
+    }
 
-        // 4. เอฟเฟกต์หัวใจลอยกระจาย
-        function spawnHearts() {
-            for(let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.classList.add('heart-particle');
-                    heart.innerText = ['❤️', '💖', '🤍', '✨', '🌸'][Math.floor(Math.random() * 5)];
-                    heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    document.body.appendChild(heart);
-                    setTimeout(() => heart.remove(), 3000);
-                }, i * 100);
+    function tryInitFirebase() {
+      const fbCfgStr = localStorage.getItem('firebase_config');
+      if (fbCfgStr) {
+        try {
+          const fbConfig = JSON.parse(fbCfgStr);
+          if (fbConfig.apiKey && fbConfig.databaseURL) {
+            fbApp = firebase.initializeApp(fbConfig);
+            fbDb = firebase.database();
+            setupFirebaseRealtimeListeners();
+            updatePresence('online');
+          }
+        } catch(e) { console.error("Firebase init error", e); }
+      }
+    }
+
+    function setupFirebaseRealtimeListeners() {
+      if (!fbDb) return;
+      fbDb.ref('live_session').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          if (data.currentStep) {
+            document.getElementById('live-current-step').innerText = data.currentStep;
+          }
+          if (data.answers) {
+            let html = '';
+            for (let k in data.answers) {
+              html += `<div style="margin-bottom:6px;"><b>${k}:</b> ${data.answers[k]}</div>`;
             }
+            document.getElementById('live-answers-box').innerHTML = html;
+          }
         }
-
-        // 5. ส่งฟอร์มเข้าสู่ Live Chat
-        document.getElementById('loveForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            spawnHearts();
-
-            push(ref(db, `chats/${sessionId}`), {
-                sender: 'fan',
-                text: `[ตอบฟอร์ม: รัก ${range.value}%] ${msgInput.value}`,
-                time: Date.now()
-            });
-
-            set(ref(db, `active_sessions/${sessionId}`), {
-                lastMsg: msgInput.value,
-                time: Date.now()
-            });
-
-            document.getElementById('loveForm').style.display = 'none';
-            document.getElementById('chatSection').style.display = 'block';
-
-            onChildAdded(ref(db, `chats/${sessionId}`), (snapshot) => {
-                const data = snapshot.val();
-                const msgDiv = document.createElement('div');
-                msgDiv.classList.add('message', data.sender);
-                msgDiv.innerText = data.text;
-                const box = document.getElementById('chatBox');
-                box.appendChild(msgDiv);
-                box.scrollTop = box.scrollHeight;
-            });
-        });
-
-        // 6. ส่งแชต
-        function sendChatMessage(textOverride) {
-            const input = document.getElementById('chatInput');
-            const text = textOverride || input.value.trim();
-            if (!text) return;
-
-            push(ref(db, `chats/${sessionId}`), {
-                sender: 'fan',
-                text: text,
-                time: Date.now()
-            });
-            if(!textOverride) input.value = '';
+      });
+      fbDb.ref('remote_trigger').on('value', (snapshot) => {
+        const trigger = snapshot.val();
+        if (trigger && trigger.timestamp > Date.now() - 5000) {
+          if (trigger.action === 'fireworks') triggerFireworks();
+          if (trigger.action === 'hearts') triggerHeartStorm();
+          if (trigger.action === 'message') showRemoteToast(trigger.message);
         }
+      });
+      fbDb.ref('app_config/youtubeId').on('value', (snapshot) => {
+        const newYtId = snapshot.val();
+        if (newYtId && ytPlayer && isYtReady && typeof ytPlayer.loadVideoById === 'function') {
+          ytPlayer.loadVideoById(newYtId);
+        }
+      });
+    }
 
-        window.sendQuickChat = (text) => sendChatMessage(text);
-        document.getElementById('sendBtn').addEventListener('click', () => sendChatMessage());
-        document.getElementById('chatInput').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') sendChatMessage();
+    function updatePresence(status) {
+      if (!fbDb) return;
+      fbDb.ref('live_session/status').set({
+        online: status === 'online',
+        lastSeen: Date.now()
+      });
+    }
+
+    function syncCurrentStepToCloud(stepName) {
+      if (!fbDb) return;
+      fbDb.ref('live_session/currentStep').set(stepName);
+    }
+
+    function syncAnswerToCloud(key, value) {
+      if (!fbDb) return;
+      fbDb.ref(`live_session/answers/${key}`).set(value);
+    }
+
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('yt-player', {
+        height: '0',
+        width: '0',
+        videoId: appConfig.youtubeId || 'kJQP7kiw5Fk',
+        playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1 },
+        events: {
+          'onReady': () => {
+             isYtReady = true; 
+             console.log("YouTube Player Ready");
+          },
+          'onStateChange': (event) => {
+             // ซิงค์ปุ่ม UI เมื่อเล่น/หยุดเพลงจริงๆ
+             const btn = document.getElementById('music-toggle-btn');
+             if(event.data === YT.PlayerState.PLAYING) {
+                isAudioPlaying = true;
+                btn.innerHTML = '<i class="fa-solid fa-compact-disc fa-spin"></i>';
+             } else if (event.data === YT.PlayerState.PAUSED) {
+                isAudioPlaying = false;
+                btn.innerHTML = '<i class="fa-solid fa-compact-disc"></i>';
+             }
+          }
+        }
+      });
+    }
+
+    function toggleAudio() {
+      if (!isYtReady || !ytPlayer || typeof ytPlayer.playVideo !== 'function') {
+        alert("กำลังเชื่อมต่อระบบเพลง รอสักครู่นะคะ ❤️");
+        return;
+      }
+      if (isAudioPlaying) {
+        ytPlayer.pauseVideo();
+      } else {
+        ytPlayer.playVideo();
+      }
+    }
+
+    function initLoveLockInputs() {
+      const container = document.getElementById('lock-inputs');
+      container.innerHTML = '';
+      const codeLen = appConfig.passcode.length || 4;
+      for (let i = 0; i < codeLen; i++) {
+        const input = document.createElement('input');
+        input.type = 'password';
+        input.maxLength = 1;
+        input.className = 'lock-input';
+        input.dataset.idx = i;
+        input.addEventListener('input', (e) => {
+          if (e.target.value && i < codeLen - 1) {
+            container.children[i + 1].focus();
+          }
         });
-    </script>
+        container.appendChild(input);
+      }
+    }
+
+    function unlockLoveLock() {
+      const inputs = document.querySelectorAll('.lock-input');
+      let entered = '';
+      inputs.forEach(inp => entered += inp.value);
+
+      if (entered === appConfig.passcode) {
+        triggerFireworks();
+        switchStepView('step-1');
+        syncCurrentStepToCloud('Step 1: Opened Envelope Screen');
+        // เปิดเพลงออโต้เมื่อปลดล็อค (ถ้าบราวเซอร์อนุญาต)
+        if(isYtReady && ytPlayer && !isAudioPlaying) toggleAudio();
+      } else {
+        alert('รหัสผ่านไม่ถูกต้องนะคะ ลองใหม่อีกครั้งน้า ❤️');
+      }
+    }
+
+    function openEnvelope() {
+      const env = document.getElementById('envelope-elem');
+      env.style.transform = 'scale(0.8) rotateX(180deg)';
+      env.style.opacity = '0.3';
+      setTimeout(() => {
+        env.style.display = 'none';
+        document.getElementById('start-btn').style.display = 'block';
+        triggerFireworks();
+      }, 500);
+    }
+
+    function switchStepView(stepId) {
+      document.querySelectorAll('.step-view').forEach(s => s.classList.remove('active'));
+      const activeStep = document.getElementById(stepId);
+      if (activeStep) activeStep.classList.add('active');
+    }
+
+    function nextStep() {
+      currentStepIndex++;
+      if (currentStepIndex === 1) {
+        startQuestionChain();
+      } else if (currentStepIndex === 2) {
+        switchStepView('step-scratch');
+        syncCurrentStepToCloud('Step 3: Scratch Card');
+      } else if (currentStepIndex === 3) {
+        switchStepView('step-coupons');
+        syncCurrentStepToCloud('Step 4: Love Coupons');
+      } else if (currentStepIndex === 4) {
+        switchStepView('step-final');
+        syncCurrentStepToCloud('Step 5: Final Wish');
+      }
+    }
+
+    function startQuestionChain() {
+      currentQuestionIdx = 0;
+      renderQuestion(0);
+      switchStepView('step-question');
+    }
+
+    function renderQuestion(idx) {
+      wrongClickCount = 0;
+      const q = appConfig.questions[idx];
+      if (!q) {
+        nextStep();
+        return;
+      }
+
+      syncCurrentStepToCloud(`Question ${idx + 1}: ${q.title}`);
+      document.getElementById('q-counter').innerText = `QUESTION ${idx + 1} OF ${appConfig.questions.length}`;
+      document.getElementById('q-title').innerText = q.title;
+
+      const mediaBox = document.getElementById('q-media');
+      if (q.media) {
+        mediaBox.style.display = 'block';
+        mediaBox.innerHTML = `<img src="${q.media}" alt="Question Image">`;
+      } else {
+        mediaBox.style.display = 'none';
+      }
+
+      const body = document.getElementById('q-body');
+      body.innerHTML = '';
+
+      if (q.type === 'choice') {
+        body.innerHTML = `
+          <div class="btn-group">
+            <button class="btn-romantic" id="btn-correct" onclick="handleCorrectChoice(${idx})">${q.correct}</button>
+            <button class="btn-romantic btn-wrong" id="btn-wrong" onclick="handleWrongChoice()">${q.wrong}</button>
+          </div>
+        `;
+      } else if (q.type === 'text') {
+        body.innerHTML = `
+          <input type="text" id="q-text-input" class="romantic-input" placeholder="${q.placeholder || 'พิมพ์คำตอบ...'}" oninput="handleTextInput(this.value)">
+          <button class="btn-romantic" onclick="handleCorrectChoice(${idx})" style="width: 100%;">ส่งคำตอบ ❤️</button>
+        `;
+      } else if (q.type === 'slider') {
+        body.innerHTML = `
+          <div class="slider-container">
+            <input type="range" min="0" max="1000" value="100" class="romantic-slider" id="love-slider" oninput="handleSliderChange(this)">
+            <p style="margin-top: 15px; font-weight: bold; color: var(--gold-accent);" id="slider-val">100%</p>
+          </div>
+          <button class="btn-romantic" onclick="handleCorrectChoice(${idx})" style="width: 100%;">ยืนยันความรัก 💕</button>
+        `;
+      }
+    }
+
+    function handleWrongChoice() {
+      wrongClickCount++;
+      const wrongBtn = document.getElementById('btn-wrong');
+      const correctBtn = document.getElementById('btn-correct');
+
+      const shrinkFactor = Math.max(0.2, 1 - (wrongClickCount * 0.25));
+      const growFactor = 1 + (wrongClickCount * 0.15);
+
+      wrongBtn.style.transform = `scale(${shrinkFactor})`;
+      wrongBtn.style.opacity = `${shrinkFactor}`;
+      correctBtn.style.transform = `scale(${growFactor})`;
+
+      const teaseMsg = appConfig.teases[Math.min(wrongClickCount - 1, appConfig.teases.length - 1)];
+      showRemoteToast(teaseMsg);
+
+      if (wrongClickCount >= appConfig.teases.length) {
+        wrongBtn.style.display = 'none';
+      }
+    }
+
+    function handleCorrectChoice(idx) {
+      triggerFireworks();
+      currentQuestionIdx++;
+      if (currentQuestionIdx < appConfig.questions.length) {
+        renderQuestion(currentQuestionIdx);
+      } else {
+        nextStep();
+      }
+    }
+
+    function handleTextInput(val) {
+      syncAnswerToCloud(`Question_${currentQuestionIdx + 1}_Text`, val);
+    }
+
+    function handleSliderChange(slider) {
+      let val = parseInt(slider.value);
+      if (val < 500) {
+        slider.value = 1000;
+        val = 1000;
+      }
+      document.getElementById('slider-val').innerText = `${val}% 💕`;
+      syncAnswerToCloud(`Love_Slider_Value`, `${val}%`);
+    }
+
+    function initScratchCard() {
+      const canvas = document.getElementById('scratch-canvas');
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#c59b3f';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#1a0812';
+      ctx.font = '16px Prompt';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨ ขูดตรงนี้เพื่อเฉลย ✨', canvas.width / 2, canvas.height / 2);
+
+      let isDrawing = false;
+      function scratch(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        // รองรับทั้ง Mouse Event และ Touch Event อย่างปลอดภัย
+        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      canvas.addEventListener('mousedown', () => isDrawing = true);
+      canvas.addEventListener('mouseup', () => isDrawing = false);
+      canvas.addEventListener('mousemove', scratch);
+      
+      canvas.addEventListener('touchstart', (e) => { 
+          isDrawing = true; 
+          scratch(e); 
+      }, { passive: false });
+      canvas.addEventListener('touchend', () => isDrawing = false);
+      // แก้ไขบัคจอเลื่อนบนมือถือตอนขูด
+      canvas.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          scratch(e);
+      }, { passive: false });
+    }
+
+    function renderCoupons() {
+      const container = document.getElementById('coupons-container');
+      container.innerHTML = '';
+      appConfig.coupons.forEach(coupon => {
+        const card = document.createElement('div');
+        card.className = 'coupon-card';
+        card.innerHTML = `
+          <div>
+            <div class="coupon-title">${coupon.title}</div>
+            <div class="coupon-desc">${coupon.desc}</div>
+          </div>
+          <button class="btn-use-coupon" id="btn-cpn-${coupon.id}" onclick="useCoupon('${coupon.id}', '${coupon.title}')">กดใช้</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function useCoupon(id, title) {
+      const btn = document.getElementById(`btn-cpn-${id}`);
+      if (btn.classList.contains('used')) return;
+
+      btn.innerText = 'ใช้แล้ว ❤️';
+      btn.classList.add('used');
+      triggerFireworks();
+      syncAnswerToCloud(`Redeemed_Coupon_${id}`, title);
+      showRemoteToast(`ใช้คูปอง "${title}" เรียบร้อยแล้ว!`);
+    }
+
+    function releaseLantern() {
+      const wish = document.getElementById('wish-input').value;
+      if (wish) {
+        syncAnswerToCloud(`Final_Wish`, wish);
+      }
+      triggerFireworks();
+      showRemoteToast('ส่งคำอธิษฐานขึ้นสู่ท้องฟ้าแล้ว ✨');
+    }
+
+    function initLoveTimer() {
+      setInterval(() => {
+        const start = new Date(appConfig.startDate).getTime();
+        const now = new Date().getTime();
+        const diff = now - start;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('cnt-days').innerText = days;
+        document.getElementById('cnt-hours').innerText = hours;
+        document.getElementById('cnt-mins').innerText = mins;
+        document.getElementById('cnt-secs').innerText = secs;
+      }, 1000);
+    }
+
+    function initBackgroundCanvas() {
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      const particles = Array.from({ length: 45 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 3 + 1,
+        speedY: Math.random() * 0.8 + 0.2,
+        opacity: Math.random() * 0.6 + 0.2
+      }));
+
+      function render() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.y -= p.speedY;
+          if (p.y < 0) p.y = height;
+          ctx.fillStyle = `rgba(243, 207, 122, ${p.opacity})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        requestAnimationFrame(render);
+      }
+      render();
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+    }
+
+    function triggerFireworks() {
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function triggerHeartStorm() {
+      confetti({ particleCount: 50, scalar: 2, shapes: ['circle'], colors: ['#ea9ab2', '#ff0055'] });
+    }
+
+    function showRemoteToast(msg) {
+      const toast = document.getElementById('remote-toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
+    function openAdminModal() {
+      const pwd = prompt('กรุณาใส่รหัสผ่านแอดมิน (เว้นว่างไว้แล้วกด OK ได้เลยหากเป็นการทดสอบ):');
+      // นำข้อมูลปัจจุบันโหลดใส่ฟอร์ม Admin เสมอ
+      document.getElementById('cfg-passcode').value = appConfig.passcode;
+      document.getElementById('cfg-startdate').value = appConfig.startDate.split('T')[0];
+      document.getElementById('cfg-ytmusic').value = appConfig.youtubeId;
+      document.getElementById('cfg-questions').value = JSON.stringify(appConfig.questions, null, 2);
+
+      if (pwd === '1234' || pwd === '') {
+        document.getElementById('admin-modal').style.display = 'flex';
+      } else if (pwd !== null) {
+        alert('รหัสผ่านไม่ถูกต้อง');
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    function switchAdminTab(e, tabName) {
+      // แก้ไขบัค event โดยรับค่าตรงจากพารามิเตอร์แทนการเรียกแบบลอยๆ
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      if(e && e.target) e.target.classList.add('active');
+
+      document.getElementById('atab-monitor').style.display = tabName === 'monitor' ? 'block' : 'none';
+      document.getElementById('atab-remote').style.display = tabName === 'remote' ? 'block' : 'none';
+      document.getElementById('atab-content').style.display = tabName === 'content' ? 'block' : 'none';
+      document.getElementById('atab-firebase').style.display = tabName === 'firebase' ? 'block' : 'none';
+    }
+
+    function sendRemoteTrigger(action) {
+      if (!fbDb) return alert('กรุณาเชื่อมต่อ Firebase ในแท็บ Firebase Config ก่อนครับ');
+      fbDb.ref('remote_trigger').set({
+        action: action,
+        timestamp: Date.now()
+      });
+    }
+
+    function sendRemoteMessage() {
+      const msg = document.getElementById('remote-msg-input').value;
+      if (!msg) return;
+      if (!fbDb) return alert('กรุณาเชื่อมต่อ Firebase ก่อนครับ');
+      fbDb.ref('remote_trigger').set({
+        action: 'message',
+        message: msg,
+        timestamp: Date.now()
+      });
+      document.getElementById('remote-msg-input').value = '';
+    }
+
+    function saveAdminSettings() {
+      appConfig.passcode = document.getElementById('cfg-passcode').value;
+      appConfig.startDate = document.getElementById('cfg-startdate').value + "T00:00:00";
+      appConfig.youtubeId = extractYouTubeId(document.getElementById('cfg-ytmusic').value);
+
+      try {
+        const updatedQuestions = JSON.parse(document.getElementById('cfg-questions').value);
+        if(Array.isArray(updatedQuestions)) {
+            appConfig.questions = updatedQuestions;
+        }
+      } catch (err) {
+        alert("รูปแบบ JSON ในช่องคำถามไม่ถูกต้อง กรุณาตรวจสอบวงเล็บและเครื่องหมายลูกน้ำครับ");
+        return;
+      }
+
+      localStorage.setItem('anniversary_config', JSON.stringify(appConfig));
+      if (fbDb) {
+        fbDb.ref('app_config').set(appConfig);
+      }
+
+      alert('บันทึกการตั้งค่าและคำถามเรียบร้อยแล้ว!');
+      closeAdminModal();
+      
+      // ถ้าแก้ไขรหัสผ่านสำเร็จ ให้รีเฟรช input 
+      initLoveLockInputs();
+    }
+
+    function saveFirebaseConfig() {
+      const fbConfig = {
+        apiKey: document.getElementById('fb-apiKey').value.trim(),
+        databaseURL: document.getElementById('fb-databaseURL').value.trim(),
+        projectId: document.getElementById('fb-projectId').value.trim()
+      };
+
+      localStorage.setItem('firebase_config', JSON.stringify(fbConfig));
+      alert('บันทึก Firebase Config เรียบร้อย! ระบบจะทำการโหลดการเชื่อมต่อใหม่');
+      location.reload();
+    }
+
+    function extractYouTubeId(url) {
+      if (!url) return 'kJQP7kiw5Fk';
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : url;
+    }
+  </script>
 </body>
 </html>
