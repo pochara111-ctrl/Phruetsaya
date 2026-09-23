@@ -296,7 +296,7 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
         <div class="w-14 h-14 rounded-full bg-rosegold-50 border-2 border-rosegold-200 mb-2 flex items-center justify-center text-rosegold-400 text-xl shadow-sm">
           <i class="fa-solid fa-heart"></i>
         </div>
-        <h3 class="text-lg font-bold text-gray-800 font-thai tracking-wide">แฟนที่น่ารักของเค้า</h3>
+        <h3 class="text-lg font-bold text-gray-800 font-thai tracking-wide">แฟนที่น่ารักของเทอ</h3>
         <div class="flex items-center gap-1.5 mt-1">
           <div class="w-2 h-2 rounded-full bg-[#10B981] animate-pulse shadow-[0_0_6px_#10B981]"></div>
           <span class="text-[10px] text-[#10B981] font-bold uppercase tracking-wider">Online</span>
@@ -425,7 +425,7 @@ function bootSync(){
       const ok = await toggleBgMusic();
       if(!ok && !musicOn) showAudioPrompt();
     }
-    else if(c.action==="popup") showModal("เซอร์ไพรส์ถึงเธอ 💌", c.msg||"คิดถึงนะ ❤️");
+    else if(c.action==="popup") showModal("ข้อความถึงเธอ 💌", c.msg||"คิดถึงนะ ❤️");
   });
   
   // ซิงก์กล่องแชทของแฟนแบบมินิมอล (สีขาว)
@@ -436,7 +436,7 @@ function bootSync(){
     box.innerHTML = msgs.map(m => {
       const isMe = m.sender === "fan";
       return `<div class="max-w-[75%] px-4 py-2.5 ${isMe ? 'self-end bg-rosegold-500 text-white rounded-2xl rounded-br-sm shadow-sm' : 'self-start bg-white text-gray-800 rounded-2xl rounded-bl-sm shadow-sm border border-gray-100'}">
-        <div class="text-[9px] opacity-70 mb-1 ${isMe ? 'text-right' : 'text-left'}">${isMe ? 'เทอ' : 'เค้า'}</div>
+        <div class="text-[9px] opacity-70 mb-1 ${isMe ? 'text-right' : 'text-left'}">${isMe ? 'เค้า' : 'เทอ'}</div>
         <div class="leading-relaxed whitespace-pre-wrap break-words">${esc(m.text)}</div>
       </div>`;
     }).join("");
