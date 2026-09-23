@@ -52,8 +52,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
 .step-sec{animation:fadeIn .55s ease both}
 .polaroid{background:#fff;padding:10px 10px 34px;border-radius:6px;box-shadow:0 14px 34px rgba(0,0,0,.55);transform:rotate(-2deg)}
 .polaroid img{width:100%;height:190px;object-fit:cover;border-radius:3px;background:#2A0812;display:block}
-.cert-border{background:radial-gradient(ellipse at center, rgba(61,12,24,0.95) 0%, rgba(21,2,8,0.98) 100%);
-  border:2px solid #D4AF37;box-shadow:0 0 35px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.15)}
 </style>
 </head>
 <body class="h-full w-full flex flex-col relative bg-burgundy-950 text-rosegold-100">
@@ -169,6 +167,7 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
 
   <!-- STEP 6 (GRAND FINALE) -->
   <section id="step6" class="step-sec w-full max-w-xl glass-card rounded-3xl p-6 sm:p-8 text-center hidden">
+    <!-- POLAROID GALLERY -->
     <div id="galleryWrap" class="mb-8 hidden">
       <h3 class="text-lg font-cinzel font-bold text-gradient-gold mb-4">อัลบั้มความทรงจำของเรา</h3>
       <div class="flex items-center justify-center gap-3">
@@ -195,32 +194,59 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
       </div>
     </div>
 
-    <!-- GRAND FINALE VIEW -->
+    <!-- GRAND FINALE VIEW (แสดงหลังปล่อยโคมลอย) -->
     <div id="grandFinaleView" class="hidden space-y-6 animate-fade-in text-left">
-      <!-- CERTIFICATE CARD -->
-      <div id="loveCertCard" class="cert-border rounded-3xl p-6 sm:p-8 relative overflow-hidden text-center">
-        <div class="absolute -right-8 -top-8 w-28 h-28 bg-champagne-500/10 rounded-full blur-xl pointer-events-none"></div>
-        <div class="w-12 h-12 mx-auto rounded-full bg-champagne-500/20 border border-champagne-400 flex items-center justify-center text-champagne-300 text-xl mb-2 glow-gold">
-          <i class="fa-solid fa-infinity"></i>
-        </div>
+      
+      <!-- CERTIFICATE CARD (OPTIMIZED FOR HTML2CANVAS) -->
+      <div id="loveCertCard" class="relative mx-auto w-full max-w-lg rounded-2xl p-6 sm:p-8 text-center overflow-hidden" 
+           style="background-color: #1a040b; border: 3px solid #D4AF37; box-shadow: 0 0 25px rgba(212,175,55,0.25);">
         
-        <span class="text-[10px] font-cinzel tracking-[0.25em] text-champagne-400 uppercase font-bold">Endless Love Certificate</span>
-        <h3 id="certTitleText" class="text-xl sm:text-2xl font-cinzel font-bold text-gradient-gold mt-1 mb-3">ใบรับรองความรักชั่วนิรันดร์</h3>
-        
-        <div class="my-4 py-3 px-4 rounded-2xl bg-burgundy-950/60 border border-rosegold-300/20 inline-block w-full text-center">
-          <div class="text-[11px] text-rosegold-300 mb-0.5 font-cinzel">เส้นทางความรักของเราเดินทางมาแล้ว</div>
-          <div id="certDaysCount" class="text-lg sm:text-xl font-bold text-gradient-rosegold font-thai">...</div>
+        <!-- ขอบเส้นทองคู่สไตล์ประกาศนียบัตร -->
+        <div class="pointer-events-none absolute inset-2 rounded-xl border border-champagne-400/40"></div>
+        <div class="pointer-events-none absolute inset-3 rounded-lg border border-champagne-500/20"></div>
+
+        <div class="relative z-10">
+          <div class="w-14 h-14 mx-auto rounded-full flex items-center justify-center text-2xl mb-2 text-champagne-400"
+               style="background-color: rgba(212, 175, 55, 0.15); border: 1.5px solid #D4AF37;">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <div class="text-[11px] tracking-[0.3em] uppercase font-bold text-champagne-400 font-cinzel">
+            CERTIFICATE OF ENDLESS LOVE
+          </div>
+          <h3 id="certTitleText" class="text-xl sm:text-2xl font-bold mt-1 mb-3 text-champagne-300 font-cinzel">
+            ใบรับรองความรักชั่วนิรันดร์
+          </h3>
         </div>
 
-        <div class="p-4 rounded-2xl bg-burgundy-900/40 border border-rosegold-400/20 my-4 text-xs sm:text-sm font-thai leading-relaxed text-rosegold-200">
-          <p class="italic text-champagne-300 mb-2">" <span id="certWishText">ขอให้เรารักกันตลอดไป</span> "</p>
-          <p id="certMsgBody" class="text-[11px] text-rosegold-300"></p>
+        <div class="relative z-10 my-4 py-3 px-4 rounded-xl text-center" 
+             style="background-color: rgba(42, 8, 18, 0.85); border: 1px solid rgba(247, 197, 204, 0.25);">
+          <div class="text-[11px] text-rosegold-300 mb-0.5 font-cinzel tracking-wider">OUR JOURNEY TOGETHER</div>
+          <div id="certDaysCount" class="text-xl sm:text-2xl font-bold text-champagne-400 font-thai tracking-wide">
+            ...
+          </div>
         </div>
 
-        <div class="flex justify-between items-center pt-2 text-[10px] text-champagne-400/80 font-cinzel border-t border-rosegold-300/20">
-          <span>Forever &amp; Always</span>
-          <span id="certDateStamp">2026</span>
-          <span id="certSignatureText">Yours Truly ❤️</span>
+        <div class="relative z-10 p-4 rounded-xl my-4 text-xs sm:text-sm leading-relaxed" 
+             style="background-color: rgba(21, 2, 8, 0.7); border: 1px solid rgba(212, 175, 55, 0.25);">
+          <p class="text-champagne-300 font-semibold mb-2 font-thai text-sm">
+            " <span id="certWishText">ขอให้เรารักกันตลอดไป</span> "
+          </p>
+          <p id="certMsgBody" class="text-[11px] sm:text-xs text-rosegold-200 leading-relaxed font-thai"></p>
+        </div>
+
+        <div class="relative z-10 flex justify-between items-end pt-4 mt-4 border-t border-champagne-400/30 text-[10px] text-champagne-400/90 font-cinzel">
+          <div class="text-left">
+            <div class="text-[8px] text-rosegold-400 uppercase tracking-widest">ISSUED ON</div>
+            <div id="certDateStamp" class="font-bold text-[10px] text-champagne-300 mt-0.5">...</div>
+          </div>
+          <div class="text-center pb-0.5">
+            <i class="fa-solid fa-heart text-rosegold-400 text-xs"></i>
+            <div class="text-[8px] text-rosegold-400 tracking-widest mt-0.5">OFFICIAL SEAL</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[8px] text-rosegold-400 uppercase tracking-widest">SIGNED WITH LOVE</div>
+            <div id="certSignatureText" class="font-bold text-[11px] text-champagne-300 mt-0.5 font-thai">Yours Truly ❤️</div>
+          </div>
         </div>
       </div>
 
@@ -642,7 +668,6 @@ function releaseWish(){
   el("wishInputArea").classList.add("hidden");
   el("grandFinaleView").classList.remove("hidden");
 
-  // นำค่าที่ตั้งจาก Firebase มาแสดงบน Certificate
   el("certWishText").textContent = w;
   el("certDaysCount").textContent = `${totalDaysPassed} วัน แห่งความทรงจำ ❤️`;
   el("certTitleText").textContent = appData.certTitle || DEFAULTS.certTitle;
@@ -651,7 +676,6 @@ function releaseWish(){
   el("hugBtnLabel").textContent = appData.hugBtnText || DEFAULTS.hugBtnText;
   el("certDateStamp").textContent = new Date().toLocaleDateString("th-TH", {year:'numeric', month:'short', day:'numeric'});
 
-  // ซ่อนกล่อง Voice Note หากแอดมินยังไม่ได้ใส่ลิงก์
   if(!appData.voiceNoteUrl){
     el("voiceNoteBox").classList.add("hidden");
   } else {
@@ -712,19 +736,43 @@ function createHeartShower(){
   }
 }
 
-el("downloadCertBtn").onclick=()=>{
+// บันทึกภาพ Love Certificate แบบ HD คมชัด ไม่แตก และล็อกสัดส่วน
+el("downloadCertBtn").onclick = async () => {
   const cert = el("loveCertCard");
-  toast("กำลังจัดทำการ์ดรูปภาพสักครู่... 📸");
-  html2canvas(cert, { scale: 2, backgroundColor: "#150208" }).then(canvas => {
+  toast("กำลังสร้างภาพใบรับรองความรักแบบคมชัด... 📸");
+
+  try {
+    if (document.fonts) {
+      await document.fonts.ready;
+    }
+
+    const canvas = await html2canvas(cert, {
+      scale: 3,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: "#150208",
+      logging: false,
+      onclone: (clonedDoc) => {
+        const clonedCert = clonedDoc.getElementById("loveCertCard");
+        if (clonedCert) {
+          clonedCert.style.width = "520px";
+          clonedCert.style.maxWidth = "520px";
+          clonedCert.style.margin = "0 auto";
+        }
+      }
+    });
+
     const link = document.createElement("a");
-    link.download = `Our-Love-Certificate.png`;
-    link.href = canvas.toDataURL("image/png");
+    link.download = `Love-Certificate-${Date.now()}.png`;
+    link.href = canvas.toDataURL("image/png", 1.0);
     link.click();
-    toast("บันทึกการ์ดความรักเรียบร้อยแล้วค่ะ 🥰");
-    logActivity("บันทึกรูปภาพ Love Certificate ลงเครื่อง 💾","💾");
-  }).catch(()=>{
-    toast("ไม่สามารถบันทึกได้ ลองแคปหน้าจอแทนนะคะ");
-  });
+
+    toast("บันทึกการ์ดลงเครื่องเรียบร้อยแล้วค่ะ 🥰");
+    logActivity("บันทึกรูป Love Certificate (HD) สำเร็จ 💾", "🏆");
+  } catch (err) {
+    console.error("Capture failed:", err);
+    toast("ไม่สามารถบันทึกได้ ลองแคปหน้าจอแทนนะคะ 🥺");
+  }
 };
 
 let voiceAudio = null;
@@ -857,7 +905,6 @@ function applyConfigToUI(){
       ? `<video src="${esc(u)}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>`
       : `<img src="${esc(u)}" class="w-full h-full object-cover" alt="">`);
   
-  // อัปเดตข้อมูลบน Certificate และ Grand Finale
   el("certTitleText").textContent = appData.certTitle || DEFAULTS.certTitle;
   el("certMsgBody").textContent = appData.certMessage || DEFAULTS.certMessage;
   el("certSignatureText").textContent = appData.certSignature || DEFAULTS.certSignature;
