@@ -80,7 +80,7 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
     <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความลับใต้การ์ดขูด</label><input id="cfgScratchText" class="inp"></div>
   </div>
 
-  <!-- FINALE & VOICE NOTE (แท็บตั้งค่าฉากจบ) -->
+  <!-- FINALE & VOICE NOTE -->
   <div id="tab-finale" class="pane glass rounded-3xl p-5 space-y-4 hidden">
     <h3 class="text-sm font-bold text-champagne-300 uppercase"><i class="fa-solid fa-certificate mr-1.5"></i>ตั้งค่าฉากจบ &amp; ใบรับรองความรัก (Grand Finale)</h3>
     <div class="space-y-4">
@@ -261,7 +261,6 @@ const DEFAULTS = {
     {id:3,title:"คูปองนวดหลัง 30 นาที 💆",code:"MASSAGE-30M",used:false},
     {id:4,title:"คูปองตามใจ 1 ข้อ 💖",code:"WISH-GRANTED",used:false}
   ],
-  // ค่าเริ่มต้นสำหรับ Grand Finale ที่เพิ่มเข้ามา
   voiceNoteUrl:"https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3",
   certTitle:"ใบรับรองความรักชั่วนิรันดร์",
   certMessage:"คำอธิษฐานนี้ได้ถูกจารึกไว้บนดวงดาวเรียบร้อยแล้ว ขอบคุณที่เกิดมาเป็นของขวัญที่ดีที่สุด และขอให้อยู่เป็นความสุขให้กันแบบนี้ไปนานเท่านานเลยนะคะ ❤️",
@@ -351,7 +350,6 @@ function fillFields(){
   el("cfgTease").value=(cfg.teasingQuotes||[]).join("\n");
   el("cfgScratchText").value=cfg.scratchText||"";
 
-  // โหลดค่าฉากจบ
   el("cfgVoiceNote").value=cfg.voiceNoteUrl||"";
   el("cfgCertTitle").value=cfg.certTitle||DEFAULTS.certTitle;
   el("cfgCertMsg").value=cfg.certMessage||DEFAULTS.certMessage;
@@ -370,7 +368,6 @@ async function saveAll(){
   cfg.teasingQuotes=el("cfgTease").value.split("\n").map(s=>s.trim()).filter(Boolean);
   cfg.scratchText=el("cfgScratchText").value;
 
-  // บันทึกค่าฉากจบ
   cfg.voiceNoteUrl=el("cfgVoiceNote").value.trim();
   cfg.certTitle=el("cfgCertTitle").value.trim();
   cfg.certMessage=el("cfgCertMsg").value.trim();
@@ -449,6 +446,7 @@ el("galleryGrid").addEventListener("click",async e=>{
   cfg.gallery.splice(i,1);
   await pushConfig(); renderMedia(); toast("ลบรูปแล้ว 🗑️");
 });
+
 el("galleryGrid").addEventListener("input",e=>{
   const t=e.target; if(t.dataset.galcap==null) return;
   cfg.gallery[+t.dataset.galcap].cap=t.value;
