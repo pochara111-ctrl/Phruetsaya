@@ -382,7 +382,7 @@ function bootSync(){
       const ok = await toggleBgMusic();
       if(!ok && !musicOn) showAudioPrompt();
     }
-    else if(c.action==="popup") showModal("เซอร์ไพรส์ถึงเธอ 💌", c.msg||"คิดถึงนะ ❤️");
+    else if(c.action==="popup") showModal("ข้อความถึงเธอ 💌", c.msg||"คิดถึงนะ ❤️");
   });
   const me = M.ref(db, BASE+"/presence/"+CLIENT_ID);
   M.onDisconnect(me).remove();
