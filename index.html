@@ -195,13 +195,12 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
     </div>
 
     <!-- GRAND FINALE VIEW (แสดงหลังปล่อยโคมลอย) -->
-    <div id="grandFinaleView" class="hidden space-y-6 animate-fade-in text-left">
+    <div id="grandFinaleView" class="hidden space-y-6 animate-fade-in text-left mt-6">
       
       <!-- CERTIFICATE CARD (OPTIMIZED FOR HTML2CANVAS) -->
       <div id="loveCertCard" class="relative mx-auto w-full max-w-lg rounded-2xl p-6 sm:p-8 text-center overflow-hidden" 
            style="background-color: #1a040b; border: 3px solid #D4AF37; box-shadow: 0 0 25px rgba(212,175,55,0.25);">
         
-        <!-- ขอบเส้นทองคู่สไตล์ประกาศนียบัตร -->
         <div class="pointer-events-none absolute inset-2 rounded-xl border border-champagne-400/40"></div>
         <div class="pointer-events-none absolute inset-3 rounded-lg border border-champagne-500/20"></div>
 
@@ -250,8 +249,8 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
         </div>
       </div>
 
-      <!-- VOICE NOTE & INTERACTIVE BUTTONS -->
-      <div class="space-y-3">
+      <!-- INTERACTIVE BUTTONS -->
+      <div class="space-y-3 pt-2">
         <div id="voiceNoteBox" class="p-4 rounded-2xl glass-card border border-champagne-400/40 flex items-center justify-between gap-3">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-champagne-500/20 border border-champagne-400 flex items-center justify-center text-champagne-300 text-sm glow-gold">
@@ -272,16 +271,59 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
             <i class="fa-solid fa-heart animate-ping"></i><span id="hugBtnLabel">กอดเค้าแน่นๆ หน่อย 💕</span>
           </button>
           <button id="downloadCertBtn" class="py-3 px-4 rounded-xl glass-card border border-champagne-400 text-champagne-300 text-xs font-bold flex items-center justify-center gap-2 hover:bg-champagne-500/20">
-            <i class="fa-solid fa-download"></i><span>บันทึกการ์ดความรักลงเครื่อง</span>
+            <i class="fa-solid fa-download"></i><span>บันทึกรูปภาพ</span>
           </button>
         </div>
+      </div>
 
-        <button onclick="goToStep(1)" class="w-full py-2.5 text-center text-xs text-rosegold-400 hover:text-champagne-300 transition-colors">
-          <i class="fa-solid fa-rotate-left mr-1"></i> ย้อนกลับไปดูเส้นทางความรักตั้งแต่เริ่มต้น
+      <!-- ปุ่มเข้าสู่หน้าแชทแบบ Minimal -->
+      <div class="mt-8 border-t border-rosegold-300/20 pt-6">
+        <button data-goto="7" class="w-full py-4 rounded-xl bg-champagne-500/10 text-champagne-300 font-bold border border-champagne-500/30 hover:bg-champagne-500/20 flex items-center justify-center gap-2 transition-all">
+          <i class="fa-solid fa-comment-dots text-lg"></i> แชทหาเค้าสดๆ ตอนนี้เลย 💬
         </button>
       </div>
+
     </div>
   </section>
+
+  <!-- STEP 7 (MINIMAL LIVE CHAT) -->
+  <section id="step7" class="step-sec w-full max-w-md hidden my-auto">
+    <!-- ตัวกล่องแชทสีขาว มินิมอล -->
+    <div class="bg-white rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col h-[70vh] max-h-[650px] relative border border-white/20">
+      
+      <!-- Chat Header -->
+      <div class="px-6 py-5 bg-white border-b border-gray-100 flex flex-col items-center relative z-10 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+        <div class="w-14 h-14 rounded-full bg-rosegold-50 border-2 border-rosegold-200 mb-2 flex items-center justify-center text-rosegold-400 text-xl shadow-sm">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 font-thai tracking-wide">แฟนที่น่ารักของเค้า</h3>
+        <div class="flex items-center gap-1.5 mt-1">
+          <div class="w-2 h-2 rounded-full bg-[#10B981] animate-pulse shadow-[0_0_6px_#10B981]"></div>
+          <span class="text-[10px] text-[#10B981] font-bold uppercase tracking-wider">Online</span>
+        </div>
+      </div>
+
+      <!-- Chat Messages Container -->
+      <div id="fanChatBox" class="flex-1 overflow-y-auto p-5 space-y-4 bg-[#F9FAFB] flex flex-col text-sm font-thai">
+        <!-- ข้อความจะมาแสดงตรงนี้ -->
+      </div>
+
+      <!-- Chat Input -->
+      <div class="p-4 bg-white border-t border-gray-100 flex gap-2 items-center shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+        <input type="text" id="fanChatInput" class="flex-1 bg-[#F3F4F6] border-none focus:bg-white focus:ring-2 focus:ring-rosegold-300 rounded-full px-5 py-3 text-sm text-gray-800 placeholder-gray-400 transition-all outline-none" placeholder="ส่งข้อความหาเค้าตรงนี้เลย...">
+        <button id="fanSendChatBtn" class="w-11 h-11 rounded-full bg-rosegold-500 text-white hover:bg-rosegold-600 flex items-center justify-center shadow-md hover:shadow-lg transition-all shrink-0">
+          <i class="fa-solid fa-paper-plane text-sm translate-y-[1px] -translate-x-[1px]"></i>
+        </button>
+      </div>
+
+    </div>
+    
+    <!-- ปุ่มย้อนกลับ -->
+    <button onclick="goToStep(6)" class="w-full py-4 mt-2 text-center text-xs text-rosegold-400 hover:text-champagne-300 transition-colors font-bold">
+      <i class="fa-solid fa-chevron-left mr-1"></i> กลับไปหน้าใบรับรองความรัก
+    </button>
+  </section>
+
 </main>
 
 <div id="lanternsContainer" class="fixed inset-0 pointer-events-none z-20 overflow-hidden"></div>
@@ -352,7 +394,8 @@ if(FB_READY){
     try{ await U.signInAnonymously(U.getAuth(app)); }catch(e){ console.warn("anon auth:",e.code); }
     M=D; db=D.getDatabase(app);
     R={config:D.ref(db,BASE+"/config"), command:D.ref(db,BASE+"/command"),
-       activity:D.ref(db,BASE+"/activity"), answers:D.ref(db,BASE+"/answers"), stats:D.ref(db,BASE+"/stats")};
+       activity:D.ref(db,BASE+"/activity"), answers:D.ref(db,BASE+"/answers"), stats:D.ref(db,BASE+"/stats"),
+       chat:D.ref(db,BASE+"/chat")}; // อ้างอิงระบบแชท
   }catch(e){ console.error("Firebase init fail → local",e); M=null; }
 }
 function localLoad(){ try{const v=localStorage.getItem(LKEY); if(v) appData={...structuredClone(DEFAULTS),...JSON.parse(v)};}catch(e){} }
@@ -382,13 +425,40 @@ function bootSync(){
       const ok = await toggleBgMusic();
       if(!ok && !musicOn) showAudioPrompt();
     }
-    else if(c.action==="popup") showModal("ข้อความถึงเธอ 💌", c.msg||"คิดถึงนะ ❤️");
+    else if(c.action==="popup") showModal("เซอร์ไพรส์ถึงเธอ 💌", c.msg||"คิดถึงนะ ❤️");
   });
+  
+  // ซิงก์กล่องแชทของแฟนแบบมินิมอล (สีขาว)
+  M.onValue(M.query(R.chat, M.limitToLast(100)), s => {
+    const box = el("fanChatBox");
+    if(!s.exists()) { box.innerHTML = `<p class="text-center text-gray-400/60 my-auto text-xs">เริ่มต้นพูดคุยกับเค้าได้เลยนะ 🥰</p>`; return; }
+    const msgs = Object.values(s.val()).sort((a,b)=>a.ts-b.ts);
+    box.innerHTML = msgs.map(m => {
+      const isMe = m.sender === "fan";
+      return `<div class="max-w-[75%] px-4 py-2.5 ${isMe ? 'self-end bg-rosegold-500 text-white rounded-2xl rounded-br-sm shadow-sm' : 'self-start bg-white text-gray-800 rounded-2xl rounded-bl-sm shadow-sm border border-gray-100'}">
+        <div class="text-[9px] opacity-70 mb-1 ${isMe ? 'text-right' : 'text-left'}">${isMe ? 'เทอ' : 'เค้า'}</div>
+        <div class="leading-relaxed whitespace-pre-wrap break-words">${esc(m.text)}</div>
+      </div>`;
+    }).join("");
+    box.scrollTop = box.scrollHeight;
+  });
+
   const me = M.ref(db, BASE+"/presence/"+CLIENT_ID);
   M.onDisconnect(me).remove();
   M.set(me,{online:true,since:Date.now(),ua:navigator.userAgent.slice(0,80)});
   setInterval(()=>M.update(me,{last:Date.now()}).catch(()=>{}), 20000);
 }
+
+// การส่งข้อความแชทฝั่งแฟน
+const sendFanMsg = () => {
+  const v = el("fanChatInput").value.trim();
+  if(!v) return;
+  M.push(R.chat, { sender: "fan", text: v, ts: Date.now() });
+  el("fanChatInput").value = "";
+  logActivity("มีข้อความแชทใหม่จากแฟน 💬","💬");
+};
+el("fanSendChatBtn").onclick = sendFanMsg;
+el("fanChatInput").onkeydown = (e) => { if(e.key==="Enter") sendFanMsg(); };
 
 /* ═════════ SOUND FX & AUDIO UNLOCKER ═════════ */
 let ac=null;
@@ -450,11 +520,10 @@ function startTimer(){
 let currentStep=1;
 function goToStep(n){
   snd("pop"); currentStep=n;
-  for(let i=1;i<=6;i++) el("step"+i)?.classList.add("hidden");
+  for(let i=1;i<=7;i++) el("step"+i)?.classList.add("hidden");
   const s=el("step"+n);
   if(s){s.classList.remove("hidden");s.classList.remove("step-sec");void s.offsetWidth;s.classList.add("step-sec");}
   
-  // ปรับการเลื่อนหน้าจอให้ขึ้นบนสุดอย่างแม่นยำ
   window.scrollTo({top: 0, left: 0, behavior: "smooth"});
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
@@ -462,7 +531,7 @@ function goToStep(n){
   if(n===3) renderQuestion();
   if(n===4) requestAnimationFrame(()=>requestAnimationFrame(initScratch));
   if(n===6) renderGallery();
-  const nm={1:"หน้าแม่กุญแจ",2:"หน้าซองจดหมาย",3:"หน้าคำถาม",4:"การ์ดขูด",5:"คูปองความรัก",6:"อัลบั้ม & โคมลอย"};
+  const nm={1:"หน้าแม่กุญแจ",2:"หน้าซองจดหมาย",3:"หน้าคำถาม",4:"การ์ดขูด",5:"คูปองความรัก",6:"อัลบั้ม & โคมลอย",7:"ห้องแชทลับ"};
   logActivity(`เข้าสู่ ${nm[n]||n}`,"➡️");
 }
 
@@ -741,22 +810,14 @@ function createHeartShower(){
   }
 }
 
-// บันทึกภาพ Love Certificate แบบ HD คมชัด ไม่แตก และล็อกสัดส่วน
 el("downloadCertBtn").onclick = async () => {
   const cert = el("loveCertCard");
   toast("กำลังสร้างภาพใบรับรองความรักแบบคมชัด... 📸");
 
   try {
-    if (document.fonts) {
-      await document.fonts.ready;
-    }
-
+    if (document.fonts) { await document.fonts.ready; }
     const canvas = await html2canvas(cert, {
-      scale: 3,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: "#150208",
-      logging: false,
+      scale: 3, useCORS: true, allowTaint: true, backgroundColor: "#150208", logging: false,
       onclone: (clonedDoc) => {
         const clonedCert = clonedDoc.getElementById("loveCertCard");
         if (clonedCert) {
@@ -766,12 +827,10 @@ el("downloadCertBtn").onclick = async () => {
         }
       }
     });
-
     const link = document.createElement("a");
     link.download = `Love-Certificate-${Date.now()}.png`;
     link.href = canvas.toDataURL("image/png", 1.0);
     link.click();
-
     toast("บันทึกการ์ดลงเครื่องเรียบร้อยแล้วค่ะ 🥰");
     logActivity("บันทึกรูป Love Certificate (HD) สำเร็จ 💾", "🏆");
   } catch (err) {
