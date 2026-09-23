@@ -56,6 +56,7 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
 
   <div class="glass rounded-3xl p-2 flex gap-2 overflow-x-auto text-xs">
     <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="general">⚙️ ทั่วไป</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="finale">🏆 หน้าส่งท้าย &amp; เสียง</button>
     <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="media">🖼️ รูป &amp; วิดีโอ</button>
     <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="questions">❓ คำถาม</button>
     <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="vouchers">🎁 คูปอง</button>
@@ -73,16 +74,45 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
     </div>
     <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ลิงก์เพลงพื้นหลัง (.mp3)</label><input id="cfgMusic" class="inp" placeholder="https://.../song.mp3"></div>
     <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความในจดหมาย</label><textarea id="cfgLetter" rows="7" class="inp"></textarea></div>
-    <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความงอนเวลาตอบผิด (บรรทัดละ 1 ข้อความ เรียงจากเบา → งอนสุด)</label>
+    <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความงอนเวลาตอบผิด (บรรทัดละ 1 ข้อความ)</label>
       <textarea id="cfgTease" rows="5" class="inp"></textarea>
       <p class="text-[11px] text-rosegold-400 mt-1">กดผิดครบจำนวนบรรทัดนี้ ปุ่มผิดจะปลิวหายเหลือแต่ข้อที่ถูก</p></div>
     <div><label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความลับใต้การ์ดขูด</label><input id="cfgScratchText" class="inp"></div>
   </div>
 
+  <!-- FINALE & VOICE NOTE (แท็บตั้งค่าฉากจบ) -->
+  <div id="tab-finale" class="pane glass rounded-3xl p-5 space-y-4 hidden">
+    <h3 class="text-sm font-bold text-champagne-300 uppercase"><i class="fa-solid fa-certificate mr-1.5"></i>ตั้งค่าฉากจบ &amp; ใบรับรองความรัก (Grand Finale)</h3>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-champagne-300 mb-1">🎙️ ลิงก์ไฟล์ข้อความเสียง (.mp3) ให้แฟนกดฟัง</label>
+        <input id="cfgVoiceNote" class="inp" placeholder="https://.../my-voice-note.mp3">
+        <p class="text-[11px] text-rosegold-400 mt-1">ไฟล์เสียงพูดอวยพรหรือบอกรักสั้นๆ ที่อัปโหลดไว้</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-champagne-300 mb-1">หัวข้อใบรับรองความรัก</label>
+          <input id="cfgCertTitle" class="inp" placeholder="ใบรับรองความรักชั่วนิรันดร์">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความบนปุ่มส่งกอด</label>
+          <input id="cfgHugBtnText" class="inp" placeholder="กอดเค้าแน่นๆ หน่อย 💕">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-champagne-300 mb-1">ข้อความในใบรับรองความรัก (แสดงใต้คำอธิษฐานของแฟน)</label>
+        <textarea id="cfgCertMsg" rows="4" class="inp" placeholder="คำอธิษฐานนี้ได้ถูกจารึกไว้บนดวงดาวเรียบร้อยแล้ว..."></textarea>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-champagne-300 mb-1">คำลงท้ายใบรับรอง (มุมขวาล่าง)</label>
+        <input id="cfgCertSign" class="inp" placeholder="Yours Truly ❤️ (หรือชื่อคุณ)">
+      </div>
+    </div>
+  </div>
+
   <!-- MEDIA (URL ONLY) -->
   <div id="tab-media" class="pane glass rounded-3xl p-5 space-y-6 hidden">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-      <!-- BG -->
       <div class="space-y-2">
         <h3 class="text-xs font-bold text-champagne-300 uppercase">🌌 พื้นหลังเว็บ (ลิงก์รูป หรือ MP4)</h3>
         <div class="flex gap-2">
@@ -92,7 +122,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
         <div id="bgPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-36 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีพื้นหลัง</div>
       </div>
 
-      <!-- SCRATCH -->
       <div class="space-y-2">
         <h3 class="text-xs font-bold text-champagne-300 uppercase">🎫 รูปใต้การ์ดขูด</h3>
         <div class="flex gap-2">
@@ -102,7 +131,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
         <div id="scratchPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-36 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีรูป</div>
       </div>
 
-      <!-- LETTER -->
       <div class="space-y-2">
         <h3 class="text-xs font-bold text-champagne-300 uppercase">💌 รูปประกอบในจดหมาย</h3>
         <div class="flex gap-2">
@@ -112,10 +140,8 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
         <div id="letterPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-36 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีรูป</div>
       </div>
 
-      <!-- MUSIC -->
       <div class="space-y-2">
         <h3 class="text-xs font-bold text-champagne-300 uppercase">🎵 ทดลองฟังเพลงพื้นหลัง</h3>
-        <p class="text-[11px] text-rosegold-300">แก้ไขลิงก์เพลงได้ที่แท็บ "ทั่วไป" หรือใส่ตรงนี้ได้เลย</p>
         <div class="flex gap-2">
           <input id="quickMusicUrl" class="inp" placeholder="https://.../song.mp3">
           <button data-clear="bgMusicUrl" class="text-[11px] px-3 py-1.5 rounded-lg bg-red-900/50 border border-red-400/30 shrink-0">ลบ</button>
@@ -127,8 +153,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
     <!-- GALLERY -->
     <div class="space-y-3 pt-2">
       <h3 class="text-xs font-bold text-champagne-300 uppercase">📸 อัลบั้มรูปคู่ (โพลารอยด์ หน้าสุดท้าย)</h3>
-      
-      <!-- ADD VIA URL -->
       <div class="p-3 rounded-xl bg-burgundy-900/50 border border-rosegold-300/20 space-y-2">
         <label class="block text-xs font-semibold text-champagne-300">🔗 เพิ่มรูปด้วยลิงก์ URL</label>
         <div class="flex flex-col sm:flex-row gap-2">
@@ -137,7 +161,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
           <button id="addGalBtn" class="px-4 py-2 rounded-xl btn-gold text-xs whitespace-nowrap font-bold"><i class="fa-solid fa-plus mr-1"></i>เพิ่มรูป</button>
         </div>
       </div>
-
       <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
     </div>
   </div>
@@ -205,7 +228,7 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-6 opacity-0 transition-all duration-300 z-50 px-5 py-3 rounded-full text-xs font-bold btn-gold pointer-events-none"></div>
 
 <script type="module">
-/* ═════════ FIREBASE (ตัด Firebase Storage ออกแล้ว) ═════════ */
+/* ═════════ FIREBASE ═════════ */
 const firebaseConfig = {
   apiKey:            "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
   authDomain:        "my-anniversary-app.firebaseapp.com",
@@ -237,7 +260,13 @@ const DEFAULTS = {
     {id:2,title:"คูปองห้ามงอน 1 วันเต็ม 🥺",code:"NO-SULK-24H",used:false},
     {id:3,title:"คูปองนวดหลัง 30 นาที 💆",code:"MASSAGE-30M",used:false},
     {id:4,title:"คูปองตามใจ 1 ข้อ 💖",code:"WISH-GRANTED",used:false}
-  ]
+  ],
+  // ค่าเริ่มต้นสำหรับ Grand Finale ที่เพิ่มเข้ามา
+  voiceNoteUrl:"https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3",
+  certTitle:"ใบรับรองความรักชั่วนิรันดร์",
+  certMessage:"คำอธิษฐานนี้ได้ถูกจารึกไว้บนดวงดาวเรียบร้อยแล้ว ขอบคุณที่เกิดมาเป็นของขวัญที่ดีที่สุด และขอให้อยู่เป็นความสุขให้กันแบบนี้ไปนานเท่านานเลยนะคะ ❤️",
+  certSignature:"Yours Truly ❤️",
+  hugBtnText:"กอดเค้าแน่นๆ หน่อย 💕"
 };
 let cfg = structuredClone(DEFAULTS);
 
@@ -321,6 +350,14 @@ function fillFields(){
   el("cfgLetter").value=cfg.letterText||"";
   el("cfgTease").value=(cfg.teasingQuotes||[]).join("\n");
   el("cfgScratchText").value=cfg.scratchText||"";
+
+  // โหลดค่าฉากจบ
+  el("cfgVoiceNote").value=cfg.voiceNoteUrl||"";
+  el("cfgCertTitle").value=cfg.certTitle||DEFAULTS.certTitle;
+  el("cfgCertMsg").value=cfg.certMessage||DEFAULTS.certMessage;
+  el("cfgCertSign").value=cfg.certSignature||DEFAULTS.certSignature;
+  el("cfgHugBtnText").value=cfg.hugBtnText||DEFAULTS.hugBtnText;
+
   renderQ(); renderV(); renderMedia();
 }
 async function saveAll(){
@@ -332,6 +369,14 @@ async function saveAll(){
   cfg.letterText=el("cfgLetter").value;
   cfg.teasingQuotes=el("cfgTease").value.split("\n").map(s=>s.trim()).filter(Boolean);
   cfg.scratchText=el("cfgScratchText").value;
+
+  // บันทึกค่าฉากจบ
+  cfg.voiceNoteUrl=el("cfgVoiceNote").value.trim();
+  cfg.certTitle=el("cfgCertTitle").value.trim();
+  cfg.certMessage=el("cfgCertMsg").value.trim();
+  cfg.certSignature=el("cfgCertSign").value.trim();
+  cfg.hugBtnText=el("cfgHugBtnText").value.trim();
+
   await pushConfig();
   toast(M?"บันทึกขึ้น Firebase แล้ว ✅ หน้าแฟนอัปเดตทันที":"บันทึกลงเครื่องแล้ว 💾");
 }
@@ -344,17 +389,14 @@ el("inputBgUrl").addEventListener("change",async e=>{
   cfg.bgMediaType = (/\.(mp4|webm|mov)(\?.*)?$/i.test(val)) ? "video" : "image";
   await pushConfig(); renderMedia(); toast("บันทึกลิงก์พื้นหลังแล้ว ✅");
 });
-
 el("inputScratchUrl").addEventListener("change",async e=>{
   cfg.scratchImg = e.target.value.trim();
   await pushConfig(); renderMedia(); toast("บันทึกลิงก์รูปการ์ดขูดแล้ว ✅");
 });
-
 el("inputLetterUrl").addEventListener("change",async e=>{
   cfg.letterImg = e.target.value.trim();
   await pushConfig(); renderMedia(); toast("บันทึกลิงก์รูปจดหมายแล้ว ✅");
 });
-
 el("quickMusicUrl").addEventListener("change",async e=>{
   const val = e.target.value.trim();
   cfg.bgMusicUrl = val;
@@ -407,7 +449,6 @@ el("galleryGrid").addEventListener("click",async e=>{
   cfg.gallery.splice(i,1);
   await pushConfig(); renderMedia(); toast("ลบรูปแล้ว 🗑️");
 });
-
 el("galleryGrid").addEventListener("input",e=>{
   const t=e.target; if(t.dataset.galcap==null) return;
   cfg.gallery[+t.dataset.galcap].cap=t.value;
