@@ -6,6 +6,8 @@
 <title>Our Endless Love - Happy Anniversary</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<!-- ไลบรารีสำหรับบันทึกการ์ดเป็นไฟล์รูปภาพ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -51,6 +53,10 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
 .step-sec{animation:fadeIn .55s ease both}
 .polaroid{background:#fff;padding:10px 10px 34px;border-radius:6px;box-shadow:0 14px 34px rgba(0,0,0,.55);transform:rotate(-2deg)}
 .polaroid img{width:100%;height:190px;object-fit:cover;border-radius:3px;background:#2A0812;display:block}
+
+/* การตกแต่งการ์ดความรักพิเศษ */
+.cert-border{background:radial-gradient(ellipse at center, rgba(61,12,24,0.95) 0%, rgba(21,2,8,0.98) 100%);
+  border:2px solid #D4AF37;box-shadow:0 0 35px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.15)}
 </style>
 </head>
 <body class="h-full w-full flex flex-col relative bg-burgundy-950 text-rosegold-100">
@@ -74,7 +80,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
   </button>
 </header>
 
-<!-- เพิ่ม playsinline และ preload -->
 <audio id="bgAudio" loop preload="auto" playsinline></audio>
 
 <main class="relative z-10 flex-grow flex items-center justify-center p-4 pt-28 pb-12 w-full max-w-4xl mx-auto min-h-screen">
@@ -165,8 +170,9 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
     </div>
   </section>
 
-  <!-- STEP 6 -->
-  <section id="step6" class="step-sec w-full max-w-lg glass-card rounded-3xl p-6 sm:p-8 text-center hidden">
+  <!-- STEP 6 (GRAND FINALE) -->
+  <section id="step6" class="step-sec w-full max-w-xl glass-card rounded-3xl p-6 sm:p-8 text-center hidden">
+    <!-- POLAROID GALLERY -->
     <div id="galleryWrap" class="mb-8 hidden">
       <h3 class="text-lg font-cinzel font-bold text-gradient-gold mb-4">อัลบั้มความทรงจำของเรา</h3>
       <div class="flex items-center justify-center gap-3">
@@ -178,19 +184,83 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
         <button id="picNext" class="w-10 h-10 rounded-full glass-card border border-rosegold-300/30 text-champagne-300 shrink-0">›</button>
       </div>
     </div>
-    <div class="mb-6">
+
+    <!-- WISH FORM VIEW -->
+    <div id="wishInputArea">
       <div class="w-16 h-16 mx-auto rounded-full bg-champagne-500/10 border border-champagne-400/40 flex items-center justify-center glow-gold mb-3">
         <i class="fa-solid fa-fire-flame-curved text-3xl text-champagne-400"></i></div>
       <h2 class="text-2xl sm:text-3xl font-cinzel font-bold text-gradient-gold">อธิษฐานปล่อยโคมลอย</h2>
-      <p class="text-xs sm:text-sm text-rosegold-300 mt-1">พิมพ์คำอธิษฐานแล้วปล่อยโคมขึ้นฟ้าเพื่อให้คำอธิษฐานเป็นจริงนะะ</p>
+      <p class="text-xs sm:text-sm text-rosegold-300 mt-1">พิมพ์คำอธิษฐานแล้วปล่อยโคมขึ้นฟ้าเพื่อส่งไปให้ถึงดวงดาวนะ</p>
+      
+      <div class="space-y-4 my-6">
+        <textarea id="wishInput" rows="3" class="w-full p-4 rounded-2xl glass-card border border-rosegold-300/30 text-sm placeholder-rosegold-400/50 focus:outline-none focus:border-champagne-400" placeholder="พิมพ์คำอธิษฐานของเธอที่นี่..."></textarea>
+        <button id="wishBtn" class="w-full py-4 rounded-xl btn-gold text-base flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-paper-plane"></i><span>ปล่อยโคมลอย &amp; จุดพลุ</span></button>
+      </div>
     </div>
-    <div class="space-y-4 my-6">
-      <textarea id="wishInput" rows="3" class="w-full p-4 rounded-2xl glass-card border border-rosegold-300/30 text-sm placeholder-rosegold-400/50 focus:outline-none focus:border-champagne-400" placeholder="พิมพ์คำอธิษฐานของเธอที่นี่..."></textarea>
-      <button id="wishBtn" class="w-full py-4 rounded-xl btn-gold text-base flex items-center justify-center space-x-2">
-        <i class="fa-solid fa-paper-plane"></i><span>ปล่อยโคมลอย &amp; จุดพลุ</span></button>
-    </div>
-    <div id="wishSentMessage" class="hidden p-4 rounded-xl bg-rosegold-500/20 border border-rosegold-400/40 text-sm text-champagne-300 animate-fade-in">
-      ✨ คำอธิษฐานถูกส่งขึ้นฟ้าแล้ว ขอให้เรารักกันตลอดไปเลยนะคะะ ✨
+
+    <!-- GRAND FINALE & LOVE CERTIFICATE (แสดงหลังปล่อยโคมลอย) -->
+    <div id="grandFinaleView" class="hidden space-y-6 animate-fade-in text-left">
+      <!-- CERTIFICATE CARD -->
+      <div id="loveCertCard" class="cert-border rounded-3xl p-6 sm:p-8 relative overflow-hidden text-center">
+        <!-- ลายน้ำประดับ -->
+        <div class="absolute -right-8 -top-8 w-28 h-28 bg-champagne-500/10 rounded-full blur-xl pointer-events-none"></div>
+        <div class="w-12 h-12 mx-auto rounded-full bg-champagne-500/20 border border-champagne-400 flex items-center justify-center text-champagne-300 text-xl mb-2 glow-gold">
+          <i class="fa-solid fa-infinity"></i>
+        </div>
+        
+        <span class="text-[10px] font-cinzel tracking-[0.25em] text-champagne-400 uppercase font-bold">Endless Love Certificate</span>
+        <h3 class="text-xl sm:text-2xl font-cinzel font-bold text-gradient-gold mt-1 mb-3">ใบรับรองความรักชั่วนิรันดร์</h3>
+        
+        <div class="my-4 py-3 px-4 rounded-2xl bg-burgundy-950/60 border border-rosegold-300/20 inline-block w-full text-center">
+          <div class="text-[11px] text-rosegold-300 mb-0.5 font-cinzel">เส้นทางความรักของเราเดินทางมาแล้ว</div>
+          <div id="certDaysCount" class="text-lg sm:text-xl font-bold text-gradient-rosegold font-thai">...</div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-burgundy-900/40 border border-rosegold-400/20 my-4 text-xs sm:text-sm font-thai leading-relaxed text-rosegold-200">
+          <p class="italic text-champagne-300 mb-2">" <span id="certWishText">ขอให้เรารักกันตลอดไป</span> "</p>
+          <p class="text-[11px] text-rosegold-300">คำอธิษฐานนี้ได้ถูกจารึกไว้บนดวงดาวเรียบร้อยแล้ว ขอบคุณที่เกิดมาเป็นของขวัญที่ดีที่สุด และขอให้อยู่เป็นความสุขให้กันแบบนี้ไปนานเท่านานเลยนะคะ ❤️</p>
+        </div>
+
+        <div class="flex justify-between items-center pt-2 text-[10px] text-champagne-400/80 font-cinzel border-t border-rosegold-300/20">
+          <span>Forever &amp; Always</span>
+          <span id="certDateStamp">2026</span>
+          <span>Yours Truly ❤️</span>
+        </div>
+      </div>
+
+      <!-- VOICE NOTE & INTERACTIVE BUTTONS -->
+      <div class="space-y-3">
+        <!-- VOICE NOTE BOX (เปิดฟังเสียงพิเศษ) -->
+        <div id="voiceNoteBox" class="p-4 rounded-2xl glass-card border border-champagne-400/40 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-champagne-500/20 border border-champagne-400 flex items-center justify-center text-champagne-300 text-sm glow-gold">
+              <i class="fa-solid fa-microphone"></i>
+            </div>
+            <div class="text-left">
+              <div class="text-xs font-bold text-champagne-300">ข้อความเสียงพิเศษจากเค้า 🎙️</div>
+              <div class="text-[10px] text-rosegold-300">แตะเพื่อฟังสิ่งที่อยากบอกนะคะ</div>
+            </div>
+          </div>
+          <button id="playVoiceBtn" class="px-3.5 py-1.5 rounded-xl btn-gold text-xs font-bold whitespace-nowrap">
+            <i class="fa-solid fa-play mr-1"></i> ฟังเสียง
+          </button>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button id="sendHugBtn" class="py-3 px-4 rounded-xl btn-gold text-xs font-bold flex items-center justify-center gap-2 shadow-lg">
+            <i class="fa-solid fa-heart animate-ping"></i><span>กอดเค้าแน่นๆ หน่อย 💕</span>
+          </button>
+          <button id="downloadCertBtn" class="py-3 px-4 rounded-xl glass-card border border-champagne-400 text-champagne-300 text-xs font-bold flex items-center justify-center gap-2 hover:bg-champagne-500/20">
+            <i class="fa-solid fa-download"></i><span>บันทึกการ์ดความรักลงเครื่อง</span>
+          </button>
+        </div>
+
+        <button onclick="goToStep(1)" class="w-full py-2.5 text-center text-xs text-rosegold-400 hover:text-champagne-300 transition-colors">
+          <i class="fa-solid fa-rotate-left mr-1"></i> ย้อนกลับไปดูเส้นทางความรักตั้งแต่เริ่มต้น
+        </button>
+      </div>
     </div>
   </section>
 </main>
@@ -205,17 +275,18 @@ const firebaseConfig = {
   authDomain:        "my-anniversary-app.firebaseapp.com",
   databaseURL:       "https://my-anniversary-app-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId:         "my-anniversary-app",
-  storageBucket:     "my-anniversary-app.firebasestorage.app",
   messagingSenderId: "487064640701",
   appId:             "1:487064640701:web:0206b2da8138b7594f2bd4"
 };
 const ROOM_ID = "room-01";
 
+// ลิงก์ไฟล์เสียงบอกรัก (หากมีไฟล์เสียงที่อัปโหลดไว้ ให้เปลี่ยน URL ตรงนี้ได้เลย)
+const VOICE_NOTE_URL = "https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3";
+
 const DEFAULTS = {
   anniversaryDate:"2022-02-14T00:00", lockCode:"1402",
   lockHint:"หมุนรหัสวันครบรอบของเราเพื่อปลดล็อกสิ่งที่อยู่ข้างใน (วว/ดด)",
   adminPass:"1234",
-  // เปลี่ยนลิงก์ fallback ให้เสถียร ไม่ติด 403 Forbidden
   bgMusicUrl:"https://assets.mixkit.co/music/preview/mixkit-romantic-moment-1144.mp3",
   bgMediaUrl:"", bgMediaType:"", letterImg:"",
   letterText:"สุขสันต์วันครบรอบนะคะคนเก่ง...\nขอบคุณสำหรับทุกๆ รอยยิ้ม ความสุข และความรักที่มอบให้กันเสมอมา\nไม่ว่าจะผ่านไปนานเท่าไหร่ เค้าก็ยังรักเธอมากขึ้นทุกๆ วัน\nขอบคุณที่เป็นโลกทั้งใบให้กันนะคะ ❤️",
@@ -287,11 +358,8 @@ function bootSync(){
     const c=s.val(); if(!c||c.ts<=lastCmdTs) return; lastCmdTs=c.ts;
     if(c.action==="fireworks") burstFireworks(3);
     else if(c.action==="music") {
-      // สั่งเปิดเพลงจากทางไกล
       const ok = await toggleBgMusic();
-      if(!ok && !musicOn){
-        showAudioPrompt();
-      }
+      if(!ok && !musicOn) showAudioPrompt();
     }
     else if(c.action==="popup") showModal("เซอร์ไพรส์ถึงเธอ 💌", c.msg||"คิดถึงนะ ❤️");
   });
@@ -310,7 +378,6 @@ function initAudio(){
   if(ac.state==="suspended") ac.resume();
 }
 
-// Global Unlocker ปลดล็อกระบบเสียงทันทีเมื่อผู้ใช้สัมผัสหน้าจอครั้งแรก
 let audioUnlocked = false;
 function globalUnlockAudio(){
   if(audioUnlocked) return;
@@ -346,12 +413,14 @@ function snd(type){
 }
 
 /* ═════════ TIMER ═════════ */
+let totalDaysPassed = 0;
 function startTimer(){
   const tick=()=>{
     const st=new Date(appData.anniversaryDate||DEFAULTS.anniversaryDate).getTime();
     const diff=Math.max(0,Date.now()-(isNaN(st)?Date.now():st));
     const tot=Math.floor(diff/1000),days=Math.floor(tot/86400),h=Math.floor(tot%86400/3600),
           m=Math.floor(tot%3600/60),s=tot%60,y=Math.floor(days/365.25),rem=days-Math.floor(y*365.25);
+    totalDaysPassed = days;
     el("loveTimer").textContent=`${y>0?y+" ปี ":""}${rem} วัน ${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
   }; tick(); setInterval(tick,1000);
 }
@@ -569,26 +638,113 @@ function renderGallery(){
 el("picPrev").onclick=()=>{pic--;renderGallery();snd("pop");};
 el("picNext").onclick=()=>{pic++;renderGallery();snd("pop");};
 
-/* ═════════ WISH ═════════ */
+/* ═════════ WISH & GRAND FINALE ═════════ */
 function releaseWish(){
   const w=el("wishInput").value.trim();
   if(!w){ toast("พิมพ์คำอธิษฐานก่อนนะ ✨"); return; }
-  snd("firework"); el("wishSentMessage").classList.remove("hidden");
-  pushAnswer({q:"คำอธิษฐาน",type:"wish",answer:w}); bumpStat("wishes");
+  snd("firework");
+  
+  // ซ่อนกล่องพิมพ์ แล้วแสดงหน้า Grand Finale
+  el("wishInputArea").classList.add("hidden");
+  el("grandFinaleView").classList.remove("hidden");
+
+  // ใส่ข้อมูลลงในการ์ด Certificate
+  el("certWishText").textContent = w;
+  el("certDaysCount").textContent = `${totalDaysPassed} วัน แห่งความทรงจำ ❤️`;
+  el("certDateStamp").textContent = new Date().toLocaleDateString("th-TH", {year:'numeric', month:'short', day:'numeric'});
+
+  pushAnswer({q:"คำอธิษฐาน",type:"wish",answer:w}); 
+  bumpStat("wishes");
   logActivity(`ปล่อยโคมลอย: "${w.slice(0,40)}"`,"🏮");
+  
+  // สลับเข้าโหมด Night Sky ปล่อยโคมลอยเป็นชุด
   const box=el("lanternsContainer");
-  for(let i=0;i<6;i++) setTimeout(()=>{
+  for(let i=0;i<8;i++) setTimeout(()=>{
     const l=document.createElement("div");
     l.className="sky-lantern flex flex-col items-center";
     l.style.left=(8+Math.random()*84)+"%";
-    l.style.animationDuration=(11+Math.random()*5)+"s";
+    l.style.animationDuration=(12+Math.random()*5)+"s";
     l.innerHTML=`<div class="w-12 h-16 bg-gradient-to-t from-yellow-500 via-orange-400 to-red-500 rounded-t-full rounded-b-md shadow-2xl border border-yellow-200 flex items-end justify-center pb-2 opacity-90 glow-gold">
         <div class="w-3 h-3 bg-white rounded-full animate-ping"></div></div>
       <div class="text-[9px] text-champagne-300 font-bold mt-1 bg-burgundy-950/80 px-2 py-0.5 rounded-full max-w-[110px] truncate">${esc(w)}</div>`;
-    box.appendChild(l); setTimeout(()=>l.remove(),17000);
-  },i*550);
-  burstFireworks(8);
+    box.appendChild(l); setTimeout(()=>l.remove(),18000);
+  },i*450);
+
+  burstFireworks(10);
+  createHeartShower();
 }
+
+/* ═════════ GRAND FINALE ACTIONS ═════════ */
+// 1. ปุ่มส่งกอดแน่นๆ
+el("sendHugBtn").onclick=()=>{
+  snd("pop");
+  burstFireworks(3);
+  createHeartShower();
+  logActivity("แฟนกด 'กอดเค้าแน่นๆ หน่อย 💕' ส่งมาหาคุณ!","🤗");
+  toast("ส่งกอดและจุ๊บไปถึงเค้าแล้วน้าาา 💕");
+};
+
+// 2. เอฟเฟกต์หัวใจพุ่งขึ้นจอ
+function createHeartShower(){
+  const box=el("lanternsContainer");
+  const icons = ["❤️","💖","💕","✨","🥰"];
+  for(let i=0;i<25;i++){
+    setTimeout(()=>{
+      const h=document.createElement("div");
+      h.textContent = icons[Math.floor(Math.random()*icons.length)];
+      h.className = "fixed text-2xl sm:text-3xl pointer-events-none z-50 transition-all";
+      h.style.left = Math.random()*90 + 5 + "vw";
+      h.style.bottom = "0px";
+      h.style.opacity = "1";
+      box.appendChild(h);
+      
+      const duration = 2200 + Math.random()*1500;
+      h.animate([
+        { transform: 'translateY(0) scale(0.6) rotate(0deg)', opacity: 1 },
+        { transform: `translateY(-${window.innerHeight*0.8}px) scale(1.4) rotate(${Math.random()*60-30}deg)`, opacity: 0 }
+      ], { duration, easing: 'ease-out' });
+      
+      setTimeout(()=>h.remove(), duration);
+    }, i*90);
+  }
+}
+
+// 3. ปุ่มบันทึกการ์ดลงเครื่อง
+el("downloadCertBtn").onclick=()=>{
+  const cert = el("loveCertCard");
+  toast("กำลังจัดทำการ์ดรูปภาพสักครู่... 📸");
+  html2canvas(cert, { scale: 2, backgroundColor: "#150208" }).then(canvas => {
+    const link = document.createElement("a");
+    link.download = `Our-Love-Certificate.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    toast("บันทึกการ์ดความรักเรียบร้อยแล้วค่ะ 🥰");
+    logActivity("บันทึกรูปภาพ Love Certificate ลงเครื่อง 💾","💾");
+  }).catch(()=>{
+    toast("ไม่สามารถบันทึกได้ ลองแคปหน้าจอแทนนะคะ");
+  });
+};
+
+// 4. ตัวเล่น Voice Note
+let voiceAudio = null;
+el("playVoiceBtn").onclick=()=>{
+  initAudio();
+  if(!voiceAudio){
+    voiceAudio = new Audio(VOICE_NOTE_URL);
+    voiceAudio.onended = () => {
+      el("playVoiceBtn").innerHTML = `<i class="fa-solid fa-play mr-1"></i> ฟังอีกครั้ง`;
+    };
+  }
+  if(voiceAudio.paused){
+    voiceAudio.play().then(()=>{
+      el("playVoiceBtn").innerHTML = `<i class="fa-solid fa-pause mr-1"></i> กำลังเล่น...`;
+      logActivity("แฟนกำลังเปิดฟัง Voice Note 🎙️","🎙️");
+    }).catch(()=>toast("ไม่สามารถเปิดไฟล์เสียงได้ ❌"));
+  }else{
+    voiceAudio.pause();
+    el("playVoiceBtn").innerHTML = `<i class="fa-solid fa-play mr-1"></i> ฟังต่อ`;
+  }
+};
 
 /* ═════════ FX ═════════ */
 function initStardust(){
@@ -671,7 +827,6 @@ async function toggleBgMusic(){
   }
 }
 
-// แถบแจ้งเตือนเมื่อแอดมินสั่งเปิดเพลงทางไกล แต่เบราว์เซอร์ติดบล็อก
 function showAudioPrompt(){
   if(document.getElementById("audioPromptBar")) return;
   const bar = document.createElement("div");
