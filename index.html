@@ -74,7 +74,8 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
   </button>
 </header>
 
-<audio id="bgAudio" loop preload="none"></audio>
+<!-- เพิ่ม playsinline และ preload -->
+<audio id="bgAudio" loop preload="auto" playsinline></audio>
 
 <main class="relative z-10 flex-grow flex items-center justify-center p-4 pt-28 pb-12 w-full max-w-4xl mx-auto min-h-screen">
 
@@ -198,7 +199,7 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-6 opacity-0 transition-all duration-300 z-[60] px-5 py-3 rounded-full text-xs font-bold btn-gold pointer-events-none"></div>
 
 <script type="module">
-/* ═════════ FIREBASE CONFIG (ต้องตรงกับ admin.html) ═════════ */
+/* ═════════ FIREBASE CONFIG ═════════ */
 const firebaseConfig = {
   apiKey:            "AIzaSyBAKx91uCl8zITRNkLWreaSjkrI3KXmQzo",
   authDomain:        "my-anniversary-app.firebaseapp.com",
@@ -214,7 +215,8 @@ const DEFAULTS = {
   anniversaryDate:"2022-02-14T00:00", lockCode:"1402",
   lockHint:"หมุนรหัสวันครบรอบของเราเพื่อปลดล็อกสิ่งที่อยู่ข้างใน (วว/ดด)",
   adminPass:"1234",
-  bgMusicUrl:"https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  // เปลี่ยนลิงก์ fallback ให้เสถียร ไม่ติด 403 Forbidden
+  bgMusicUrl:"https://assets.mixkit.co/music/preview/mixkit-romantic-moment-1144.mp3",
   bgMediaUrl:"", bgMediaType:"", letterImg:"",
   letterText:"สุขสันต์วันครบรอบนะคะคนเก่ง...\nขอบคุณสำหรับทุกๆ รอยยิ้ม ความสุข และความรักที่มอบให้กันเสมอมา\nไม่ว่าจะผ่านไปนานเท่าไหร่ เค้าก็ยังรักเธอมากขึ้นทุกๆ วัน\nขอบคุณที่เป็นโลกทั้งใบให้กันนะคะ ❤️",
   scratchImg:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80",
@@ -238,7 +240,7 @@ let appData = structuredClone(DEFAULTS);
 const el=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 function toast(m){const t=el("toast");t.textContent=m;t.style.opacity="1";t.style.transform="translate(-50%,0)";
-  clearTimeout(t._tm);t._tm=setTimeout(()=>{t.style.opacity="0";t.style.transform="translate(-50%,24px)";},2200);}
+  clearTimeout(t._tm);t._tm=setTimeout(()=>{t.style.opacity="0";t.style.transform="translate(-50%,24px)";},2400);}
 
 /* ═════════ DATA LAYER ═════════ */
 const FB_READY = !!(firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("PASTE"));
@@ -281,10 +283,16 @@ function bootSync(){
     if(v){ appData={...structuredClone(DEFAULTS),...v}; localSave(); applyConfigToUI(); }
     else { M.set(R.config, appData).catch(()=>{}); }
   });
-  M.onValue(R.command, s=>{
+  M.onValue(R.command, async s=>{
     const c=s.val(); if(!c||c.ts<=lastCmdTs) return; lastCmdTs=c.ts;
     if(c.action==="fireworks") burstFireworks(3);
-    else if(c.action==="music") toggleBgMusic();
+    else if(c.action==="music") {
+      // สั่งเปิดเพลงจากทางไกล
+      const ok = await toggleBgMusic();
+      if(!ok && !musicOn){
+        showAudioPrompt();
+      }
+    }
     else if(c.action==="popup") showModal("เซอร์ไพรส์ถึงเธอ 💌", c.msg||"คิดถึงนะ ❤️");
   });
   const me = M.ref(db, BASE+"/presence/"+CLIENT_ID);
@@ -293,10 +301,32 @@ function bootSync(){
   setInterval(()=>M.update(me,{last:Date.now()}).catch(()=>{}), 20000);
 }
 
-/* ═════════ SOUND ═════════ */
+/* ═════════ SOUND FX & AUDIO UNLOCKER ═════════ */
 let ac=null;
-function initAudio(){const A=window.AudioContext||window.webkitAudioContext;if(!A)return;
-  if(!ac)ac=new A(); if(ac.state==="suspended")ac.resume();}
+function initAudio(){
+  const A=window.AudioContext||window.webkitAudioContext;
+  if(!A) return;
+  if(!ac) ac=new A();
+  if(ac.state==="suspended") ac.resume();
+}
+
+// Global Unlocker ปลดล็อกระบบเสียงทันทีเมื่อผู้ใช้สัมผัสหน้าจอครั้งแรก
+let audioUnlocked = false;
+function globalUnlockAudio(){
+  if(audioUnlocked) return;
+  audioUnlocked = true;
+  initAudio();
+  const a = el("bgAudio");
+  if(a && !a.src && appData.bgMusicUrl){
+    a.src = appData.bgMusicUrl;
+    a.load();
+  }
+  window.removeEventListener("pointerdown", globalUnlockAudio);
+  window.removeEventListener("keydown", globalUnlockAudio);
+}
+window.addEventListener("pointerdown", globalUnlockAudio, {once:true});
+window.addEventListener("keydown", globalUnlockAudio, {once:true});
+
 function snd(type){
   initAudio(); if(!ac) return;
   const now=ac.currentTime,g=ac.createGain(); g.connect(ac.destination);
@@ -600,14 +630,62 @@ function runFW(){
 
 /* ═════════ MUSIC / MEDIA ═════════ */
 let musicOn=false;
-function toggleBgMusic(){
-  initAudio(); const a=el("bgAudio"),ic=el("musicIcon");
-  if(!appData.bgMusicUrl){ toast("ยังไม่ได้ตั้งเพลง 🎵"); return; }
-  if(a.dataset.src!==appData.bgMusicUrl){ a.src=appData.bgMusicUrl; a.dataset.src=appData.bgMusicUrl; a.volume=.55; }
-  if(musicOn){ a.pause(); musicOn=false; ic.className="fa-solid fa-volume-xmark"; }
-  else a.play().then(()=>{musicOn=true;ic.className="fa-solid fa-volume-high text-champagne-400";})
-               .catch(()=>toast("เบราว์เซอร์บล็อกเสียง ลองกดอีกครั้ง"));
+async function toggleBgMusic(){
+  initAudio();
+  const a=el("bgAudio"), ic=el("musicIcon");
+  const musicUrl = (appData.bgMusicUrl||"").trim();
+  
+  if(!musicUrl){
+    toast("ยังไม่ได้ตั้งเพลง 🎵");
+    return false;
+  }
+  
+  if(a.dataset.src !== musicUrl){
+    a.src = musicUrl;
+    a.dataset.src = musicUrl;
+    a.load();
+  }
+
+  if(musicOn){
+    a.pause();
+    musicOn=false;
+    ic.className="fa-solid fa-volume-xmark";
+    return true;
+  }
+
+  try {
+    a.volume = 0.55;
+    await a.play();
+    musicOn = true;
+    ic.className = "fa-solid fa-volume-high text-champagne-400";
+    toast("กำลังเล่นเพลงคลอเบาๆ 🎵");
+    return true;
+  } catch(err) {
+    console.warn("Play error:", err);
+    if(err.name === "NotAllowedError"){
+      toast("แตะหน้าจอ 1 ครั้งก่อนเปิดเพลงนะคะ 🎵");
+    } else {
+      toast("ลิงก์เพลงเปิดไม่ได้ หรือถูกจำกัดการเข้าถึง ❌");
+    }
+    return false;
+  }
 }
+
+// แถบแจ้งเตือนเมื่อแอดมินสั่งเปิดเพลงทางไกล แต่เบราว์เซอร์ติดบล็อก
+function showAudioPrompt(){
+  if(document.getElementById("audioPromptBar")) return;
+  const bar = document.createElement("div");
+  bar.id = "audioPromptBar";
+  bar.className = "fixed top-20 left-1/2 -translate-x-1/2 z-50 glass-card px-4 py-2 rounded-full border border-champagne-400 text-xs text-champagne-300 flex items-center gap-2 cursor-pointer shadow-lg animate-bounce";
+  bar.innerHTML = `<i class="fa-solid fa-music"></i> <span>คุณแฟนส่งเสียงเพลงมาให้ แตะตรงนี้เพื่อฟัง 🎵</span>`;
+  bar.onclick = async ()=>{
+    await toggleBgMusic();
+    bar.remove();
+  };
+  document.body.appendChild(bar);
+  setTimeout(()=>bar.remove(), 12000);
+}
+
 function applyConfigToUI(){
   el("lockHint").textContent=appData.lockHint||DEFAULTS.lockHint;
   el("scratchImage").src=appData.scratchImg||DEFAULTS.scratchImg;
