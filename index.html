@@ -56,12 +56,22 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
 </head>
 <body class="min-h-screen w-full flex flex-col relative bg-burgundy-950 text-rosegold-100 overflow-y-auto">
 
-<!-- FAKE 404 ERROR PAGE (โหมดซ่อนเว็บ) -->
-<div id="error404View" class="fixed inset-0 z-[100] bg-white text-black flex flex-col items-center justify-center transition-opacity duration-1000" style="font-family: Arial, sans-serif;">
-  <div class="text-center w-full max-w-lg px-6">
-    <h1 class="text-[36px] font-bold mb-3 text-left">404 Not Found</h1>
-    <hr class="border-gray-300 mb-3 w-full border-[1.5px]">
-    <p class="text-[13px] text-center w-full">nginx</p>
+<!-- FAKE GITHUB 404 ERROR PAGE (โหมดซ่อนเว็บที่เนียนที่สุด) -->
+<div id="error404View" class="fixed inset-0 z-[100] bg-[#f6f8fa] text-[#24292f] flex flex-col items-center pt-24 sm:pt-32 transition-opacity duration-1000" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;">
+  <div class="text-center w-full max-w-2xl px-6 flex flex-col items-center">
+    <!-- GitHub Logo SVG -->
+    <svg height="48" viewBox="0 0 16 16" version="1.1" width="48" aria-hidden="true" class="mb-8 fill-[#24292f]">
+      <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-1.12.53-1.12.53.33.19.72.9.82 1.13.16.45.68 1.31 2.69.94 0 1.02.01 1.83.01 2.08 0 .21-.15.46-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+    </svg>
+    <h1 class="text-[40px] font-semibold tracking-tight mb-2">404</h1>
+    <p class="text-[20px] font-light mb-6"><strong>There isn't a GitHub Pages site here.</strong></p>
+    <p class="text-[14px] text-[#57606a] mb-6 text-center max-w-xl px-2 leading-relaxed">
+      If you're trying to publish one, read the full documentation to<br class="hidden sm:block"> learn how to set up <strong>GitHub Pages</strong> for your repository, or use the Jekyll theme chooser.
+    </p>
+    <div class="mt-2 text-[14px] text-[#57606a] flex gap-4 font-semibold">
+      <a href="#" class="text-[#0969da] hover:underline" onclick="event.preventDefault()">GitHub Status</a>
+      <a href="#" class="text-[#0969da] hover:underline" onclick="event.preventDefault()">@githubstatus</a>
+    </div>
   </div>
 </div>
 
@@ -203,12 +213,13 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
       </div>
     </div>
 
-    <!-- GRAND FINALE VIEW -->
+    <!-- GRAND FINALE VIEW (แสดงหลังปล่อยโคมลอย) -->
     <div id="grandFinaleView" class="hidden space-y-6 animate-fade-in text-left mt-6">
       
-      <!-- CERTIFICATE CARD -->
+      <!-- CERTIFICATE CARD (OPTIMIZED FOR HTML2CANVAS) -->
       <div id="loveCertCard" class="relative mx-auto w-full max-w-lg rounded-2xl p-6 sm:p-8 text-center overflow-hidden" 
            style="background-color: #1a040b; border: 3px solid #D4AF37; box-shadow: 0 0 25px rgba(212,175,55,0.25);">
+        
         <div class="pointer-events-none absolute inset-2 rounded-xl border border-champagne-400/40"></div>
         <div class="pointer-events-none absolute inset-3 rounded-lg border border-champagne-500/20"></div>
 
@@ -342,7 +353,6 @@ const firebaseConfig = {
 };
 const ROOM_ID = "room-01";
 
-// กำหนดให้เว็บขึ้นหน้า 404 หลอกๆ เป็นค่าเริ่มต้น (จนกว่าจะสลับใน admin)
 const DEFAULTS = {
   isLive: false,
   anniversaryDate:"2022-02-14T00:00", lockCode:"1402",
@@ -965,7 +975,7 @@ function applyConfigToUI(){
     setTimeout(() => errView.classList.add("hidden"), 1000);
   } else {
     errView.classList.remove("hidden");
-    errView.style.opacity = "1";
+    setTimeout(() => errView.style.opacity = "1", 10);
   }
 
   el("lockHint").textContent=appData.lockHint||DEFAULTS.lockHint;
