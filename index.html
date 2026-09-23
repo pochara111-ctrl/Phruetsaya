@@ -408,7 +408,7 @@ if(FB_READY){
     M=D; db=D.getDatabase(app);
     R={config:D.ref(db,BASE+"/config"), command:D.ref(db,BASE+"/command"),
        activity:D.ref(db,BASE+"/activity"), answers:D.ref(db,BASE+"/answers"), stats:D.ref(db,BASE+"/stats"),
-       chat:D.ref(db,BASE+"/chat")};
+       chat:D.ref(db,BASE+"/chat"), fanState:D.ref(db,BASE+"/fanState")};
   }catch(e){ console.error("Firebase init fail → local",e); M=null; }
 }
 function localLoad(){ try{const v=localStorage.getItem(LKEY); if(v) appData={...structuredClone(DEFAULTS),...JSON.parse(v)};}catch(e){} }
@@ -426,11 +426,20 @@ async function bumpStat(k,n=1){ if(!M) return;
 let lastCmdTs = Date.now();
 function bootSync(){
   if(!M){ localLoad(); applyConfigToUI(); return; }
+  
   M.onValue(R.config, s=>{
     const v=s.val();
     if(v){ appData={...structuredClone(DEFAULTS),...v}; localSave(); applyConfigToUI(); }
     else { M.set(R.config, appData).catch(()=>{}); }
   });
+
+  M.onValue(R.fanState, s => {
+    const val = s.val() || {};
+    appData.questionsDone = val.questionsDone === true;
+    appData.savedWishText = val.wishText || "";
+    if (currentStep === 6 && appData.savedWishText) renderWishStep();
+  });
+
   M.onValue(R.command, async s=>{
     const c=s.val(); if(!c||c.ts<=lastCmdTs) return; lastCmdTs=c.ts;
     if(c.action==="fireworks") burstFireworks(3);
@@ -530,7 +539,17 @@ function startTimer(){
 /* ═════════ ROUTER ═════════ */
 let currentStep=1;
 function goToStep(n){
-  snd("pop"); currentStep=n;
+  snd("pop"); 
+
+  if(n === 3) {
+    const qs = appData.questions || [];
+    if(qs.length === 0 || appData.questionsDone) {
+      logActivity(qs.length===0 ? "ข้ามหน้าคำถาม (ไม่มีข้อมูล) ⏩" : "ข้ามหน้าคำถาม (เคยทำแล้ว) ⏩", "⏩");
+      return goToStep(4);
+    }
+  }
+
+  currentStep=n;
   for(let i=1;i<=7;i++) el("step"+i)?.classList.add("hidden");
   const s=el("step"+n);
   if(s){s.classList.remove("hidden");s.classList.remove("step-sec");void s.offsetWidth;s.classList.add("step-sec");}
@@ -541,7 +560,10 @@ function goToStep(n){
 
   if(n===3) renderQuestion();
   if(n===4) requestAnimationFrame(()=>requestAnimationFrame(initScratch));
-  if(n===6) renderGallery();
+  if(n===6) {
+    renderGallery();
+    renderWishStep();
+  }
   const nm={1:"หน้าแม่กุญแจ",2:"หน้าซองจดหมาย",3:"หน้าคำถาม",4:"การ์ดขูด",5:"คูปองความรัก",6:"อัลบั้ม & โคมลอย",7:"ห้องแชทลับ"};
   logActivity(`เข้าสู่ ${nm[n]||n}`,"➡️");
 }
@@ -666,7 +688,16 @@ el("questionContainer").addEventListener("click",e=>{
     }
   }
 });
-function nextQ(){ if(qIndex<appData.questions.length-1){ qIndex++; renderQuestion(); } else goToStep(4); }
+
+function nextQ(){ 
+  if(qIndex < appData.questions.length-1){ 
+    qIndex++; renderQuestion(); 
+  } else { 
+    if(M) M.update(M.ref(db, BASE+"/fanState"), {questionsDone: true});
+    appData.questionsDone = true;
+    goToStep(4); 
+  } 
+}
 
 /* ═════════ SCRATCH ═════════ */
 let sc={cv:null,ctx:null,drawing:false,done:false,last:0,ready:false};
@@ -745,27 +776,40 @@ el("picPrev").onclick=()=>{pic--;renderGallery();snd("pop");};
 el("picNext").onclick=()=>{pic++;renderGallery();snd("pop");};
 
 /* ═════════ WISH & GRAND FINALE ═════════ */
+
+function renderWishStep(){
+  if(appData.savedWishText){
+    el("wishInputArea").classList.add("hidden");
+    el("grandFinaleView").classList.remove("hidden");
+
+    el("certWishText").textContent = appData.savedWishText;
+    el("certDaysCount").textContent = `${totalDaysPassed} วัน แห่งความทรงจำ ❤️`;
+    el("certTitleText").textContent = appData.certTitle || DEFAULTS.certTitle;
+    el("certMsgBody").textContent = appData.certMessage || DEFAULTS.certMessage;
+    el("certSignatureText").textContent = appData.certSignature || DEFAULTS.certSignature;
+    el("hugBtnLabel").textContent = appData.hugBtnText || DEFAULTS.hugBtnText;
+    el("certDateStamp").textContent = new Date().toLocaleDateString("th-TH", {year:'numeric', month:'short', day:'numeric'});
+
+    if(!appData.voiceNoteUrl){
+      el("voiceNoteBox").classList.add("hidden");
+    } else {
+      el("voiceNoteBox").classList.remove("hidden");
+    }
+  } else {
+    el("wishInputArea").classList.remove("hidden");
+    el("grandFinaleView").classList.add("hidden");
+  }
+}
+
 function releaseWish(){
   const w=el("wishInput").value.trim();
   if(!w){ toast("พิมพ์คำอธิษฐานก่อนนะ ✨"); return; }
   snd("firework");
+
+  if(M) M.update(M.ref(db, BASE+"/fanState"), {wishText: w});
+  appData.savedWishText = w;
   
-  el("wishInputArea").classList.add("hidden");
-  el("grandFinaleView").classList.remove("hidden");
-
-  el("certWishText").textContent = w;
-  el("certDaysCount").textContent = `${totalDaysPassed} วัน แห่งความทรงจำ ❤️`;
-  el("certTitleText").textContent = appData.certTitle || DEFAULTS.certTitle;
-  el("certMsgBody").textContent = appData.certMessage || DEFAULTS.certMessage;
-  el("certSignatureText").textContent = appData.certSignature || DEFAULTS.certSignature;
-  el("hugBtnLabel").textContent = appData.hugBtnText || DEFAULTS.hugBtnText;
-  el("certDateStamp").textContent = new Date().toLocaleDateString("th-TH", {year:'numeric', month:'short', day:'numeric'});
-
-  if(!appData.voiceNoteUrl){
-    el("voiceNoteBox").classList.add("hidden");
-  } else {
-    el("voiceNoteBox").classList.remove("hidden");
-  }
+  renderWishStep();
 
   pushAnswer({q:"คำอธิษฐาน",type:"wish",answer:w}); 
   bumpStat("wishes");
@@ -996,7 +1040,10 @@ function applyConfigToUI(){
 
   renderVouchers();
   if(currentStep===3) renderQuestion();
-  if(currentStep===6) renderGallery();
+  if(currentStep===6) {
+    renderGallery();
+    renderWishStep();
+  }
 }
 
 function showModal(title,msg){
