@@ -6,7 +6,6 @@
 <title>Our Endless Love - Happy Anniversary</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<!-- ไลบรารีสำหรับบันทึกการ์ดเป็นไฟล์รูปภาพ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,8 +52,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
 .step-sec{animation:fadeIn .55s ease both}
 .polaroid{background:#fff;padding:10px 10px 34px;border-radius:6px;box-shadow:0 14px 34px rgba(0,0,0,.55);transform:rotate(-2deg)}
 .polaroid img{width:100%;height:190px;object-fit:cover;border-radius:3px;background:#2A0812;display:block}
-
-/* การตกแต่งการ์ดความรักพิเศษ */
 .cert-border{background:radial-gradient(ellipse at center, rgba(61,12,24,0.95) 0%, rgba(21,2,8,0.98) 100%);
   border:2px solid #D4AF37;box-shadow:0 0 35px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.15)}
 </style>
@@ -172,7 +169,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
 
   <!-- STEP 6 (GRAND FINALE) -->
   <section id="step6" class="step-sec w-full max-w-xl glass-card rounded-3xl p-6 sm:p-8 text-center hidden">
-    <!-- POLAROID GALLERY -->
     <div id="galleryWrap" class="mb-8 hidden">
       <h3 class="text-lg font-cinzel font-bold text-gradient-gold mb-4">อัลบั้มความทรงจำของเรา</h3>
       <div class="flex items-center justify-center gap-3">
@@ -199,18 +195,17 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
       </div>
     </div>
 
-    <!-- GRAND FINALE & LOVE CERTIFICATE (แสดงหลังปล่อยโคมลอย) -->
+    <!-- GRAND FINALE VIEW -->
     <div id="grandFinaleView" class="hidden space-y-6 animate-fade-in text-left">
       <!-- CERTIFICATE CARD -->
       <div id="loveCertCard" class="cert-border rounded-3xl p-6 sm:p-8 relative overflow-hidden text-center">
-        <!-- ลายน้ำประดับ -->
         <div class="absolute -right-8 -top-8 w-28 h-28 bg-champagne-500/10 rounded-full blur-xl pointer-events-none"></div>
         <div class="w-12 h-12 mx-auto rounded-full bg-champagne-500/20 border border-champagne-400 flex items-center justify-center text-champagne-300 text-xl mb-2 glow-gold">
           <i class="fa-solid fa-infinity"></i>
         </div>
         
         <span class="text-[10px] font-cinzel tracking-[0.25em] text-champagne-400 uppercase font-bold">Endless Love Certificate</span>
-        <h3 class="text-xl sm:text-2xl font-cinzel font-bold text-gradient-gold mt-1 mb-3">ใบรับรองความรักชั่วนิรันดร์</h3>
+        <h3 id="certTitleText" class="text-xl sm:text-2xl font-cinzel font-bold text-gradient-gold mt-1 mb-3">ใบรับรองความรักชั่วนิรันดร์</h3>
         
         <div class="my-4 py-3 px-4 rounded-2xl bg-burgundy-950/60 border border-rosegold-300/20 inline-block w-full text-center">
           <div class="text-[11px] text-rosegold-300 mb-0.5 font-cinzel">เส้นทางความรักของเราเดินทางมาแล้ว</div>
@@ -219,19 +214,18 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
 
         <div class="p-4 rounded-2xl bg-burgundy-900/40 border border-rosegold-400/20 my-4 text-xs sm:text-sm font-thai leading-relaxed text-rosegold-200">
           <p class="italic text-champagne-300 mb-2">" <span id="certWishText">ขอให้เรารักกันตลอดไป</span> "</p>
-          <p class="text-[11px] text-rosegold-300">คำอธิษฐานนี้ได้ถูกจารึกไว้บนดวงดาวเรียบร้อยแล้ว ขอบคุณที่เกิดมาเป็นของขวัญที่ดีที่สุด และขอให้อยู่เป็นความสุขให้กันแบบนี้ไปนานเท่านานเลยนะคะ ❤️</p>
+          <p id="certMsgBody" class="text-[11px] text-rosegold-300"></p>
         </div>
 
         <div class="flex justify-between items-center pt-2 text-[10px] text-champagne-400/80 font-cinzel border-t border-rosegold-300/20">
           <span>Forever &amp; Always</span>
           <span id="certDateStamp">2026</span>
-          <span>Yours Truly ❤️</span>
+          <span id="certSignatureText">Yours Truly ❤️</span>
         </div>
       </div>
 
       <!-- VOICE NOTE & INTERACTIVE BUTTONS -->
       <div class="space-y-3">
-        <!-- VOICE NOTE BOX (เปิดฟังเสียงพิเศษ) -->
         <div id="voiceNoteBox" class="p-4 rounded-2xl glass-card border border-champagne-400/40 flex items-center justify-between gap-3">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-champagne-500/20 border border-champagne-400 flex items-center justify-center text-champagne-300 text-sm glow-gold">
@@ -247,10 +241,9 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;ov
           </button>
         </div>
 
-        <!-- ACTION BUTTONS -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button id="sendHugBtn" class="py-3 px-4 rounded-xl btn-gold text-xs font-bold flex items-center justify-center gap-2 shadow-lg">
-            <i class="fa-solid fa-heart animate-ping"></i><span>กอดเค้าแน่นๆ หน่อย 💕</span>
+            <i class="fa-solid fa-heart animate-ping"></i><span id="hugBtnLabel">กอดเค้าแน่นๆ หน่อย 💕</span>
           </button>
           <button id="downloadCertBtn" class="py-3 px-4 rounded-xl glass-card border border-champagne-400 text-champagne-300 text-xs font-bold flex items-center justify-center gap-2 hover:bg-champagne-500/20">
             <i class="fa-solid fa-download"></i><span>บันทึกการ์ดความรักลงเครื่อง</span>
@@ -280,9 +273,6 @@ const firebaseConfig = {
 };
 const ROOM_ID = "room-01";
 
-// ลิงก์ไฟล์เสียงบอกรัก (หากมีไฟล์เสียงที่อัปโหลดไว้ ให้เปลี่ยน URL ตรงนี้ได้เลย)
-const VOICE_NOTE_URL = "https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3";
-
 const DEFAULTS = {
   anniversaryDate:"2022-02-14T00:00", lockCode:"1402",
   lockHint:"หมุนรหัสวันครบรอบของเราเพื่อปลดล็อกสิ่งที่อยู่ข้างใน (วว/ดด)",
@@ -304,7 +294,12 @@ const DEFAULTS = {
     {id:2,title:"คูปองห้ามงอน 1 วันเต็ม 🥺",code:"NO-SULK-24H",used:false},
     {id:3,title:"คูปองนวดหลัง 30 นาที 💆",code:"MASSAGE-30M",used:false},
     {id:4,title:"คูปองตามใจ 1 ข้อ 💖",code:"WISH-GRANTED",used:false}
-  ]
+  ],
+  voiceNoteUrl:"https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3",
+  certTitle:"ใบรับรองความรักชั่วนิรันดร์",
+  certMessage:"คำอธิษฐานนี้ได้ถูกจารึกไว้บนดวงดาวเรียบร้อยแล้ว ขอบคุณที่เกิดมาเป็นของขวัญที่ดีที่สุด และขอให้อยู่เป็นความสุขให้กันแบบนี้ไปนานเท่านานเลยนะคะ ❤️",
+  certSignature:"Yours Truly ❤️",
+  hugBtnText:"กอดเค้าแน่นๆ หน่อย 💕"
 };
 let appData = structuredClone(DEFAULTS);
 
@@ -644,20 +639,29 @@ function releaseWish(){
   if(!w){ toast("พิมพ์คำอธิษฐานก่อนนะ ✨"); return; }
   snd("firework");
   
-  // ซ่อนกล่องพิมพ์ แล้วแสดงหน้า Grand Finale
   el("wishInputArea").classList.add("hidden");
   el("grandFinaleView").classList.remove("hidden");
 
-  // ใส่ข้อมูลลงในการ์ด Certificate
+  // นำค่าที่ตั้งจาก Firebase มาแสดงบน Certificate
   el("certWishText").textContent = w;
   el("certDaysCount").textContent = `${totalDaysPassed} วัน แห่งความทรงจำ ❤️`;
+  el("certTitleText").textContent = appData.certTitle || DEFAULTS.certTitle;
+  el("certMsgBody").textContent = appData.certMessage || DEFAULTS.certMessage;
+  el("certSignatureText").textContent = appData.certSignature || DEFAULTS.certSignature;
+  el("hugBtnLabel").textContent = appData.hugBtnText || DEFAULTS.hugBtnText;
   el("certDateStamp").textContent = new Date().toLocaleDateString("th-TH", {year:'numeric', month:'short', day:'numeric'});
+
+  // ซ่อนกล่อง Voice Note หากแอดมินยังไม่ได้ใส่ลิงก์
+  if(!appData.voiceNoteUrl){
+    el("voiceNoteBox").classList.add("hidden");
+  } else {
+    el("voiceNoteBox").classList.remove("hidden");
+  }
 
   pushAnswer({q:"คำอธิษฐาน",type:"wish",answer:w}); 
   bumpStat("wishes");
   logActivity(`ปล่อยโคมลอย: "${w.slice(0,40)}"`,"🏮");
   
-  // สลับเข้าโหมด Night Sky ปล่อยโคมลอยเป็นชุด
   const box=el("lanternsContainer");
   for(let i=0;i<8;i++) setTimeout(()=>{
     const l=document.createElement("div");
@@ -675,16 +679,15 @@ function releaseWish(){
 }
 
 /* ═════════ GRAND FINALE ACTIONS ═════════ */
-// 1. ปุ่มส่งกอดแน่นๆ
 el("sendHugBtn").onclick=()=>{
   snd("pop");
   burstFireworks(3);
   createHeartShower();
-  logActivity("แฟนกด 'กอดเค้าแน่นๆ หน่อย 💕' ส่งมาหาคุณ!","🤗");
+  const label = appData.hugBtnText || "กอดแน่นๆ";
+  logActivity(`แฟนกดปุ่ม '${label}' ส่งมาหาคุณ!`,"🤗");
   toast("ส่งกอดและจุ๊บไปถึงเค้าแล้วน้าาา 💕");
 };
 
-// 2. เอฟเฟกต์หัวใจพุ่งขึ้นจอ
 function createHeartShower(){
   const box=el("lanternsContainer");
   const icons = ["❤️","💖","💕","✨","🥰"];
@@ -709,7 +712,6 @@ function createHeartShower(){
   }
 }
 
-// 3. ปุ่มบันทึกการ์ดลงเครื่อง
 el("downloadCertBtn").onclick=()=>{
   const cert = el("loveCertCard");
   toast("กำลังจัดทำการ์ดรูปภาพสักครู่... 📸");
@@ -725,12 +727,14 @@ el("downloadCertBtn").onclick=()=>{
   });
 };
 
-// 4. ตัวเล่น Voice Note
 let voiceAudio = null;
 el("playVoiceBtn").onclick=()=>{
   initAudio();
-  if(!voiceAudio){
-    voiceAudio = new Audio(VOICE_NOTE_URL);
+  const voiceUrl = (appData.voiceNoteUrl||"").trim();
+  if(!voiceUrl){ toast("ยังไม่มีข้อความเสียงนะคะ 🥺"); return; }
+
+  if(!voiceAudio || voiceAudio.src !== voiceUrl){
+    voiceAudio = new Audio(voiceUrl);
     voiceAudio.onended = () => {
       el("playVoiceBtn").innerHTML = `<i class="fa-solid fa-play mr-1"></i> ฟังอีกครั้ง`;
     };
@@ -852,10 +856,18 @@ function applyConfigToUI(){
     (appData.bgMediaType==="video"||/\.(mp4|webm|ogv)(\?|$)/i.test(u)
       ? `<video src="${esc(u)}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>`
       : `<img src="${esc(u)}" class="w-full h-full object-cover" alt="">`);
+  
+  // อัปเดตข้อมูลบน Certificate และ Grand Finale
+  el("certTitleText").textContent = appData.certTitle || DEFAULTS.certTitle;
+  el("certMsgBody").textContent = appData.certMessage || DEFAULTS.certMessage;
+  el("certSignatureText").textContent = appData.certSignature || DEFAULTS.certSignature;
+  el("hugBtnLabel").textContent = appData.hugBtnText || DEFAULTS.hugBtnText;
+
   renderVouchers();
   if(currentStep===3) renderQuestion();
   if(currentStep===6) renderGallery();
 }
+
 function showModal(title,msg){
   const m=document.createElement("div");
   m.className="fixed inset-0 z-[55] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in";
