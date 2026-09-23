@@ -56,11 +56,12 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
 
   <div class="glass rounded-3xl p-2 flex gap-2 overflow-x-auto text-xs">
     <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="general">⚙️ ทั่วไป</button>
-    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="finale">🏆 หน้าส่งท้าย &amp; เสียง</button>
-    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="media">🖼️ รูป &amp; วิดีโอ</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="finale">🏆 หน้าส่งท้าย</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="chat">💬 แชทสด</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="media">🖼️ รูป/วิดีโอ</button>
     <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="questions">❓ คำถาม</button>
     <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="vouchers">🎁 คูปอง</button>
-    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="live">📡 Live &amp; Remote</button>
+    <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="live">📡 Live</button>
     <button class="tab px-3 py-2 rounded-xl whitespace-nowrap" data-tab="json">🧩 JSON</button>
   </div>
 
@@ -110,6 +111,23 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
     </div>
   </div>
 
+  <!-- CHAT (ระบบแชทแบบ Real-time) -->
+  <div id="tab-chat" class="pane glass rounded-3xl p-5 space-y-4 hidden">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-sm font-bold text-champagne-300 uppercase"><i class="fa-solid fa-message mr-1.5"></i>Live Chat กับแฟน</h3>
+      <button id="clearChatBtn" class="text-[11px] px-3 py-1.5 rounded-lg bg-red-900/50 border border-red-400/30 text-red-200">ล้างแชท</button>
+    </div>
+    <div class="p-3 rounded-2xl bg-burgundy-950/60 border border-champagne-500/20 flex flex-col">
+      <div id="adminChatBox" class="h-64 overflow-y-auto space-y-2 mb-3 pr-2 flex flex-col text-xs font-thai">
+        <!-- ข้อความจะมาแสดงตรงนี้ -->
+      </div>
+      <div class="flex gap-2">
+        <input type="text" id="adminChatInput" class="flex-1 bg-burgundy-900 border border-rosegold-300/20 rounded-xl px-3 py-2 text-xs text-rosegold-100 placeholder-rosegold-400/50 focus:outline-none focus:border-champagne-400" placeholder="พิมพ์ตอบกลับเทอตรงนี้...">
+        <button id="adminSendChatBtn" class="px-5 rounded-xl btn-gold text-xs font-bold shrink-0">ส่ง</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MEDIA (URL ONLY) -->
   <div id="tab-media" class="pane glass rounded-3xl p-5 space-y-6 hidden">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -121,7 +139,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
         </div>
         <div id="bgPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-36 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีพื้นหลัง</div>
       </div>
-
       <div class="space-y-2">
         <h3 class="text-xs font-bold text-champagne-300 uppercase">🎫 รูปใต้การ์ดขูด</h3>
         <div class="flex gap-2">
@@ -130,7 +147,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
         </div>
         <div id="scratchPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-36 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีรูป</div>
       </div>
-
       <div class="space-y-2">
         <h3 class="text-xs font-bold text-champagne-300 uppercase">💌 รูปประกอบในจดหมาย</h3>
         <div class="flex gap-2">
@@ -139,7 +155,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
         </div>
         <div id="letterPrev" class="rounded-xl overflow-hidden bg-burgundy-900 h-36 flex items-center justify-center text-[11px] text-rosegold-400">ยังไม่มีรูป</div>
       </div>
-
       <div class="space-y-2">
         <h3 class="text-xs font-bold text-champagne-300 uppercase">🎵 ทดลองฟังเพลงพื้นหลัง</h3>
         <div class="flex gap-2">
@@ -149,7 +164,6 @@ body{font-family:'Noto Sans Thai',sans-serif;background:#150208;color:#FFF0F2;mi
         <audio id="musicPrev" controls class="w-full hidden mt-2"></audio>
       </div>
     </div>
-
     <!-- GALLERY -->
     <div class="space-y-3 pt-2">
       <h3 class="text-xs font-bold text-champagne-300 uppercase">📸 อัลบั้มรูปคู่ (โพลารอยด์ หน้าสุดท้าย)</h3>
@@ -290,7 +304,8 @@ if(FB_READY){
     try{ await U.signInAnonymously(U.getAuth(app)); }catch(e){ console.warn("anon auth:",e.code); }
     M=D; db=D.getDatabase(app);
     R={config:D.ref(db,BASE+"/config"),command:D.ref(db,BASE+"/command"),presence:D.ref(db,BASE+"/presence"),
-       activity:D.ref(db,BASE+"/activity"),answers:D.ref(db,BASE+"/answers"),stats:D.ref(db,BASE+"/stats")};
+       activity:D.ref(db,BASE+"/activity"),answers:D.ref(db,BASE+"/answers"),stats:D.ref(db,BASE+"/stats"),
+       chat:D.ref(db,BASE+"/chat")}; // เพิ่ม reference แชท
     el("loginStatus").textContent="🔥 เชื่อมต่อ Firebase สำเร็จ";
     el("loginStatus").className="text-xs text-emerald-300";
   }catch(e){
@@ -321,7 +336,7 @@ async function doLogin(){
   el("panel").classList.remove("hidden");
   el("fbBadge").textContent = M ? "🔥 Firebase Online" : "💾 Local Mode";
   el("fbBadge").className = "text-[10px] px-2 py-1 rounded-full border "+(M?"border-emerald-400/40 text-emerald-300 bg-emerald-400/10":"border-amber-400/40 text-amber-300");
-  fillFields(); switchTab("general"); startLive();
+  fillFields(); switchTab("general"); startLive(); startChat();
 }
 el("loginBtn").onclick=doLogin;
 el("passInput").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
@@ -446,7 +461,6 @@ el("galleryGrid").addEventListener("click",async e=>{
   cfg.gallery.splice(i,1);
   await pushConfig(); renderMedia(); toast("ลบรูปแล้ว 🗑️");
 });
-
 el("galleryGrid").addEventListener("input",e=>{
   const t=e.target; if(t.dataset.galcap==null) return;
   cfg.gallery[+t.dataset.galcap].cap=t.value;
@@ -569,7 +583,7 @@ el("vList").addEventListener("click",e=>{
 el("addV").onclick=()=>{ (cfg.vouchers ||= []).push({id:Date.now(),title:"คูปองใหม่ 🎁",code:"NEW-"+String(Date.now()).slice(-4),used:false}); renderV(); };
 el("resetV").onclick=async()=>{ (cfg.vouchers||[]).forEach(v=>v.used=false); await pushConfig(); renderV(); toast("รีเซ็ตคูปองแล้ว ♻️"); };
 
-/* ═════════ LIVE MONITOR ═════════ */
+/* ═════════ LIVE MONITOR & CHAT ═════════ */
 function startLive(){
   if(!M){ el("feed").textContent="โหมดออฟไลน์ — ไม่มีข้อมูลสด"; return; }
   M.onValue(R.presence,s=>{
@@ -598,6 +612,39 @@ function startLive(){
         <div class="text-lg font-bold text-gradient-gold">${v}</div><div class="text-[10px] text-rosegold-300">${l}</div></div>`).join("");
   });
 }
+
+function startChat(){
+  if(!M) return;
+  M.onValue(M.query(R.chat, M.limitToLast(100)), s => {
+    const box = el("adminChatBox");
+    if(!s.exists()) { box.innerHTML = `<p class="text-center text-rosegold-400/50 my-auto">ยังไม่มีข้อความแชท</p>`; return; }
+    const msgs = Object.values(s.val()).sort((a,b)=>a.ts-b.ts);
+    box.innerHTML = msgs.map(m => {
+      const isMe = m.sender === "admin";
+      return `<div class="max-w-[85%] px-3 py-2 ${isMe ? 'self-end bg-champagne-500/20 border border-champagne-400/30 rounded-t-xl rounded-bl-xl text-champagne-100' : 'self-start bg-rosegold-500/20 border border-rosegold-400/30 rounded-t-xl rounded-br-xl text-rosegold-100'}">
+        <div class="text-[9px] opacity-60 mb-0.5">${isMe ? 'เค้า' : 'เทอ'}</div>
+        ${esc(m.text)}
+      </div>`;
+    }).join("");
+    box.scrollTop = box.scrollHeight;
+  });
+
+  const sendMsg = () => {
+    const v = el("adminChatInput").value.trim();
+    if(!v) return;
+    M.push(R.chat, { sender: "admin", text: v, ts: Date.now() });
+    el("adminChatInput").value = "";
+  };
+  el("adminSendChatBtn").onclick = sendMsg;
+  el("adminChatInput").onkeydown = (e) => { if(e.key==="Enter") sendMsg(); };
+  
+  el("clearChatBtn").onclick = async () => {
+    if(!confirm("ต้องการล้างแชททั้งหมดจริงหรือไม่?")) return;
+    await M.remove(R.chat);
+    toast("ล้างแชทเรียบร้อยแล้ว");
+  };
+}
+
 document.querySelectorAll("[data-cmd]").forEach(b=>b.onclick=async()=>{
   const a=b.dataset.cmd;
   let msg="";
